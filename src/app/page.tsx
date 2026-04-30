@@ -7,13 +7,17 @@ export default function Home() {
     <>
       <section className="relative min-h-[100dvh] overflow-hidden bg-black" aria-label="Hero">
         <div className="pointer-events-none absolute inset-0 z-0">
-          {/* eslint-disable-next-line @next/next/no-img-element -- animated GIF; next/image can affect playback */}
-          <img
-            src="/main.gif"
-            alt=""
+          <video
             className="h-full w-full object-cover object-center"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
             aria-hidden
-          />
+          >
+            <source src="/main.mp4" type="video/mp4" />
+          </video>
           <div
             className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/15 to-black/20"
             aria-hidden
