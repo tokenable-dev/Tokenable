@@ -1,26 +1,157 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #ffffff;
+  --accent: #00ffcc;
+  --card: #0a0a0a;
+  --card-item: #141414;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes about-gather-1 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
   }
+  50% {
+    transform: translate3d(-16px, 18px, 0);
+  }
+}
+
+@keyframes about-gather-2 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(18px, -5px, 0);
+  }
+}
+
+@keyframes about-gather-3 {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(-15px, -19px, 0);
+  }
+}
+
+@media (max-width: 767px) {
+  @keyframes about-gather-1 {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, 12px, 0);
+    }
+  }
+
+  @keyframes about-gather-2 {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, 3px, 0);
+    }
+  }
+
+  @keyframes about-gather-3 {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0);
+    }
+    50% {
+      transform: translate3d(0, -12px, 0);
+    }
+  }
+}
+
+.about-gather-1 {
+  animation: about-gather-1 2s ease-in-out infinite;
+  will-change: transform;
+}
+
+.about-gather-2 {
+  animation: about-gather-2 2s ease-in-out infinite;
+  will-change: transform;
+}
+
+.about-gather-3 {
+  animation: about-gather-3 2s ease-in-out infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-gather-1,
+  .about-gather-2,
+  .about-gather-3 {
+    animation: none;
+    will-change: auto;
+  }
+}
+
+/* About 카드: 테두리 링만 그라데이션(내부 배경 없음). see .about-outline-card */
+.about-outline-card {
+  position: relative;
+  isolation: isolate;
+}
+
+.about-outline-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  border-radius: inherit;
+  padding: 1px;
+  pointer-events: none;
+  background: linear-gradient(
+    107.46deg,
+    #ffffff -3.47%,
+    rgba(255, 255, 255, 0) 51.48%,
+    rgba(255, 255, 255, 0.8) 114.36%
+  );
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+html {
+  overflow-x: clip;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-ibm-plex-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Contact: Chrome/Safari autofill yellow/blue background → match dark card */
+.contact-form input:-webkit-autofill,
+.contact-form input:-webkit-autofill:hover,
+.contact-form input:-webkit-autofill:focus,
+.contact-form input:-webkit-autofill:active,
+.contact-form textarea:-webkit-autofill,
+.contact-form textarea:-webkit-autofill:hover,
+.contact-form textarea:-webkit-autofill:focus,
+.contact-form textarea:-webkit-autofill:active {
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+  box-shadow: 0 0 0 1000px rgb(11 13 16) inset;
+  -webkit-box-shadow: 0 0 0 1000px rgb(11 13 16) inset;
+  transition: background-color 99999s ease-out 0s;
 }

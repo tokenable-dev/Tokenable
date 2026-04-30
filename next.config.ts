@@ -1,7 +1,6 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
+/** Default Next output — fits Netlify’s Next runtime. Avoid `output: "standalone"` here (Docker/self-host only). */
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
