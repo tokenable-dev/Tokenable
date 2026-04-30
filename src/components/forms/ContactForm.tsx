@@ -1,34 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
-
-const CONTACT_LIVE_HOSTS = new Set(["tokenable.io", "www.tokenable.io"]);
+import { useState } from "react";
 
 export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
-  const [contactLive, setContactLive] = useState<boolean | null>(null);
-  const [prepNotice, setPrepNotice] = useState(false);
-
-  useEffect(() => {
-    setContactLive(CONTACT_LIVE_HOSTS.has(window.location.hostname));
-  }, []);
-
-  useEffect(() => {
-    if (contactLive) {
-      setPrepNotice(false);
-    }
-  }, [contactLive]);
-
-  const canSend = contactLive === true;
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (!canSend) {
-      setPrepNotice(true);
-      return;
-    }
-
     setErrorMessage("");
     setStatus("sending");
 
@@ -131,37 +110,17 @@ export function ContactForm() {
         </div>
 
         <div className="flex flex-col items-center gap-3 pt-2 sm:items-start">
-          {canSend ? (
-            <button
-              type="submit"
-              disabled={status === "sending"}
-              className="relative box-border flex h-[48px] w-full max-w-[250px] items-center justify-center gap-[10px] overflow-hidden rounded-[24px] border border-white/[0.18] bg-[rgba(11,13,16,0.92)] px-8 font-sans text-[16px] font-medium leading-none text-white shadow-[0_6px_28px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.12),inset_0_-1px_0_rgba(0,0,0,0.35)] backdrop-blur-[12px] backdrop-saturate-150 transition-[border-color,box-shadow,background-color,opacity] hover:border-white/25 hover:bg-[rgba(8,10,12,0.96)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.14),inset_0_-1px_0_rgba(0,0,0,0.4)] active:opacity-95 disabled:opacity-60 sm:h-[41px] sm:w-[250px] sm:max-w-none sm:px-[48px] sm:py-2"
-            >
-              <span
-                className="pointer-events-none absolute inset-0 rounded-[24px] bg-gradient-to-b from-white/[0.04] via-transparent to-[rgba(0,0,0,0.18)]"
-                aria-hidden
-              />
-              <span className="relative z-[1]">{status === "sending" ? "Sending…" : "Send"}</span>
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={() => setPrepNotice(true)}
-              className="relative box-border flex h-[48px] w-full max-w-[250px] cursor-not-allowed items-center justify-center gap-[10px] overflow-hidden rounded-[24px] border border-white/[0.12] bg-[rgba(11,13,16,0.55)] px-8 font-sans text-[16px] font-medium leading-none text-white/55 shadow-[0_6px_28px_rgba(0,0,0,0.35)] backdrop-blur-[12px] sm:h-[41px] sm:w-[250px] sm:max-w-none sm:px-[48px] sm:py-2"
-            >
-              <span
-                className="pointer-events-none absolute inset-0 rounded-[24px] bg-gradient-to-b from-white/[0.02] via-transparent to-[rgba(0,0,0,0.12)]"
-                aria-hidden
-              />
-              <span className="relative z-[1]">Send</span>
-            </button>
-          )}
-          {prepNotice && !canSend ? (
-            <p className="max-w-md text-center font-sans text-base leading-snug text-white/70 sm:text-left" role="status" aria-live="polite">
-              We&apos;re finishing our move to <span className="text-white/90">tokenable.io</span>. Message sending will be available once the new site is live at that
-              address — thanks for your patience.
-            </p>
-          ) : null}
+          <button
+            type="submit"
+            disabled={status === "sending"}
+            className="relative box-border flex h-[48px] w-full max-w-[250px] items-center justify-center gap-[10px] overflow-hidden rounded-[24px] border border-white/[0.18] bg-[rgba(11,13,16,0.92)] px-8 font-sans text-[16px] font-medium leading-none text-white shadow-[0_6px_28px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(255,255,255,0.12),inset_0_-1px_0_rgba(0,0,0,0.35)] backdrop-blur-[12px] backdrop-saturate-150 transition-[border-color,box-shadow,background-color,opacity] hover:border-white/25 hover:bg-[rgba(8,10,12,0.96)] hover:shadow-[0_8px_32px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(255,255,255,0.14),inset_0_-1px_0_rgba(0,0,0,0.4)] active:opacity-95 disabled:opacity-60 sm:h-[41px] sm:w-[250px] sm:max-w-none sm:px-[48px] sm:py-2"
+          >
+            <span
+              className="pointer-events-none absolute inset-0 rounded-[24px] bg-gradient-to-b from-white/[0.04] via-transparent to-[rgba(0,0,0,0.18)]"
+              aria-hidden
+            />
+            <span className="relative z-[1]">{status === "sending" ? "Sending…" : "Send"}</span>
+          </button>
           {status === "success" ? (
             <p className="font-sans text-base text-[rgb(0,169,129)]">Thanks — your message was sent.</p>
           ) : null}
