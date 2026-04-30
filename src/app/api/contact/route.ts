@@ -3,8 +3,31 @@ import { Resend } from "resend";
 
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-const DEFAULT_TO = "luke@tokenable.io";
+/** Primary inbox when CONTACT_TO is missing or invalid. */
+const DEFAULT_RECIPIENTS = ["luke@tokenable.io"];
 const DEFAULT_FROM = "Tokenable Contact <onboarding@resend.dev>";
+
+function contactRecipients(envRaw: string | undefined): string[] {
+  const raw = envRaw?.trim();
+  if (!raw) {
+    return [...DEFAULT_RECIPIENTS];
+  }
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const part of raw.split(",")) {
+    const addr = part.trim();
+    if (!addr || !emailOk(addr)) {
+      continue;
+    }
+    const key = addr.toLowerCase();
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    out.push(addr);
+  }
+  return out.length > 0 ? out : [...DEFAULT_RECIPIENTS];
+}
 
 export async function POST(req: Request) {
   const key = process.env.RESEND_API_KEY;
@@ -42,16 +65,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid email address." }, { status: 400 });
   }
 
-  const rawTo = process.env.CONTACT_TO?.trim() || DEFAULT_TO;
-  const to = emailOk(rawTo) ? rawTo : DEFAULT_TO;
-
+  const to = contactRecipients(process.env.CONTACT_TO);
   const from = process.env.RESEND_FROM_EMAIL?.trim() || DEFAULT_FROM;
 
   const resend = new Resend(key);
 
   const { error } = await resend.emails.send({
     from,
-    to: [to],
+    to,
     replyTo: em,
     subject: `[Tokenable contact] ${fn} ${ln}`,
     text: [`Name: ${fn} ${ln}`, `Email: ${em}`, "", msg].join("\n"),
