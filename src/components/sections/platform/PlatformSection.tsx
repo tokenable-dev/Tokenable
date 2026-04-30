@@ -121,7 +121,7 @@ export function PlatformSection() {
       <div className="mx-auto flex w-full max-w-[1280px] flex-col items-center">
         <header className="flex w-full flex-col items-center text-center">
           <div className="mx-auto flex w-full max-w-[993px] justify-center px-4 sm:px-6">
-            <h2 className="inline-grid w-max max-w-full -translate-x-3 grid-cols-[auto_auto] items-start gap-x-2 font-medium leading-[1.2] tracking-normal text-[clamp(1.125rem,5vw,75px)] sm:-translate-x-8 sm:gap-x-3 md:-translate-x-12 md:gap-x-4 lg:-translate-x-16">
+            <h2 className="inline-grid w-max max-w-full -translate-x-3 grid-cols-[auto_auto] items-start gap-x-2 font-medium leading-[1.2] tracking-normal text-[clamp(1.2rem,5.2vw,78px)] sm:-translate-x-8 sm:gap-x-3 md:-translate-x-12 md:gap-x-4 lg:-translate-x-16">
               <span className="col-start-1 row-start-1 flex items-center justify-end self-center pt-[0.12em]">
                 <Image
                   src="/star.png"
@@ -139,7 +139,7 @@ export function PlatformSection() {
               </span>
             </h2>
           </div>
-          <p className="mt-6 w-full max-w-[993px] px-2 text-center text-sm font-normal leading-normal text-white sm:text-base lg:text-[17px]">
+          <p className="mt-6 w-full max-w-[993px] px-2 text-center text-base font-normal leading-normal text-white sm:text-[17px] lg:text-[19px]">
             Tokenable removes every barrier - access, fees, settlement, and regulation - through a
             dual-entity, two-token architecture.
           </p>
@@ -150,8 +150,8 @@ export function PlatformSection() {
             <article key={phase.label} className={phaseCardClass(index)}>
               <div className="mb-6 text-left">
                 <StarBullet size={22} className="mb-2 block h-[22px] w-[22px] shrink-0" />
-                <p className="text-sm italic leading-normal text-white">{phase.label}</p>
-                <h3 className="mt-2 text-[24px] font-bold leading-snug text-white">{phase.title}</h3>
+                <p className="text-[0.9375rem] italic leading-normal text-white sm:text-base">{phase.label}</p>
+                <h3 className="mt-2 text-[26px] font-bold leading-snug text-white sm:text-[27px]">{phase.title}</h3>
               </div>
               <ul className="flex flex-col gap-[10px]">
                 {phase.items.map((item) => (
@@ -160,7 +160,7 @@ export function PlatformSection() {
                     className="mx-auto flex min-h-[80px] w-full max-w-[360px] items-center gap-[10px] rounded-[10px] bg-[rgba(152,161,159,0.2)] py-[15px] pl-[10px] pr-[10px]"
                   >
                     <StarBullet size={18} className="shrink-0 self-center" />
-                    <span className="min-w-0 flex-1 text-left text-[16px] font-normal leading-snug text-white sm:text-[17px] md:text-[18px]">
+                    <span className="min-w-0 flex-1 text-left text-[17px] font-normal leading-snug text-white sm:text-[18px] md:text-[19px]">
                       {item}
                     </span>
                   </li>

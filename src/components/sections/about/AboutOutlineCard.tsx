@@ -19,10 +19,10 @@ export function AboutOutlineCard({ title, children, variant, className = "" }: A
   return (
     <div className={`about-outline-card shrink-0 rounded-[12px] ${variantWidth[variant]} ${className}`}>
       <div className="relative z-[1] flex flex-col gap-[10px] bg-transparent p-[25px]">
-        <h2 className="text-[clamp(1.25rem,5vw,1.5rem)] font-bold leading-snug tracking-tight text-white sm:text-[24px]">
+        <h2 className="text-[clamp(1.3125rem,5.2vw,1.5625rem)] font-bold leading-snug tracking-tight text-white sm:text-[26px]">
           {title}
         </h2>
-        <p className="text-[15px] font-normal leading-relaxed text-white sm:text-[16px] sm:leading-[1.5]">
+        <p className="text-[16px] font-normal leading-relaxed text-white sm:text-[17px] sm:leading-[1.5]">
           {children}
         </p>
       </div>

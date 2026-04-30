@@ -32,7 +32,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${ibmPlexSans.variable} h-full scroll-smooth antialiased`}>
-      <body className="flex min-h-[100dvh] flex-col bg-black font-sans text-white">
+      <body className="flex min-h-[100dvh] flex-col bg-black font-sans text-[17px] text-white sm:text-[17px] md:text-[18px]">
         <Navbar />
         <main className="flex flex-1 flex-col">{children}</main>
       </body>

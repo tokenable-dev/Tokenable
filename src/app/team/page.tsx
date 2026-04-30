@@ -61,10 +61,10 @@ export default function TeamPage() {
     >
       <div className="mx-auto max-w-[1100px]">
         <header className="mx-auto mb-16 max-w-4xl text-center sm:mb-20 md:mb-24">
-          <h1 className="font-sans text-[clamp(2rem,6vw,65px)] font-semibold leading-[1.4] tracking-normal text-white">
+          <h1 className="font-sans text-[clamp(2.125rem,6.2vw,68px)] font-semibold leading-[1.4] tracking-normal text-white">
             Meet the Brains
           </h1>
-          <p className="mt-5 font-sans text-[clamp(1.0625rem,2.5vw,28px)] font-normal leading-[1.4] tracking-normal text-white sm:mt-6">
+          <p className="mt-5 font-sans text-[clamp(1.125rem,2.6vw,29px)] font-normal leading-[1.4] tracking-normal text-white sm:mt-6">
             The Operating System for Tokenized Asset Markets
           </p>
         </header>
@@ -95,7 +95,7 @@ export default function TeamPage() {
                   className="my-4 h-px w-full bg-gradient-to-r from-white/18 via-white/10 to-transparent sm:max-w-md"
                   aria-hidden
                 />
-                <p className="font-sans text-[14px] font-normal leading-[1.4] tracking-normal text-[rgb(245,245,245)]">
+                <p className="font-sans text-[15px] font-normal leading-[1.45] tracking-normal text-[rgb(245,245,245)] sm:text-[16px]">
                   {m.bio}
                 </p>
               </div>

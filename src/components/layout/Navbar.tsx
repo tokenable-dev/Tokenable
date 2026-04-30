@@ -4,13 +4,13 @@ import Link from "next/link";
 const links = [
   { href: "/#about", label: "About" },
   { href: "/team", label: "Team" },
-  { href: "https://tokenable-dev.com/", label: "Service" },
   { href: "/contact", label: "Contact" },
+  { href: "https://tokenable-dev.com/", label: "Service" },
 ] as const;
 
 const LOGO_SLOT = "flex w-9 shrink-0 items-center justify-start";
 
-/** 글래스모피즘: 얇은 밝은 보더 + 블러 + 상단 하이라이트(렌즈 느낌). 우측 패딩만 줄여 Contact 끝 여백 최소화 */
+/** 글래스모피즘: 얇은 밝은 보더 + 블러 + 상단 하이라이트(렌즈 느낌). 우측 패딩만 줄여 메뉴 끝 여백 최소화 */
 export function Navbar() {
   return (
     <header className="pointer-events-none fixed top-[max(30px,env(safe-area-inset-top))] right-0 left-0 z-50 flex justify-center pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]">
@@ -40,7 +40,7 @@ export function Navbar() {
           <ul className="m-0 flex list-none items-center gap-2 sm:gap-3 md:gap-6 lg:gap-10">
             {links.map(({ href, label }) => {
               const className =
-                "-my-1 inline-flex min-h-[44px] min-w-[44px] items-center justify-center whitespace-nowrap rounded-md px-0.5 text-[12px] font-medium leading-none tracking-wide text-white antialiased transition-colors duration-200 hover:text-[var(--accent)] sm:px-1 sm:text-[13px] md:text-[14px] lg:text-[16px]";
+                "-my-1 inline-flex min-h-[44px] min-w-[44px] items-center justify-center whitespace-nowrap rounded-md px-0.5 text-[13px] font-medium leading-none tracking-wide text-white antialiased transition-colors duration-200 hover:text-[var(--accent)] sm:px-1 sm:text-[14px] md:text-[15px] lg:text-[17px]";
               const isExternal = href.startsWith("http");
               return (
                 <li key={href} className="flex items-center">
