@@ -1,6 +1,17 @@
 import { ContactForm } from "@/components/forms/ContactForm";
 
+const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+
+function contactInboxForDisplay(): string {
+  const first = process.env.CONTACT_TO?.split(",")[0]?.trim() ?? "";
+  if (first && emailOk(first)) {
+    return first;
+  }
+  return "tokenable.dev@gmail.com";
+}
+
 export default function ContactPage() {
+  const inboxEmail = contactInboxForDisplay();
   return (
     <section
       className="min-h-screen scroll-mt-[102px] bg-black px-4 pt-[max(140px,calc(110px+env(safe-area-inset-top)))] pb-[max(6rem,env(safe-area-inset-bottom))] sm:px-6 sm:pt-[168px] lg:pt-[180px]"
@@ -18,7 +29,7 @@ export default function ContactPage() {
               </p>
             </div>
 
-            <ContactForm />
+            <ContactForm inboxEmail={inboxEmail} />
           </div>
         </div>
       </div>

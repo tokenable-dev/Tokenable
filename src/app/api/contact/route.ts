@@ -3,14 +3,22 @@ import { Resend } from "resend";
 
 const emailOk = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
 
-/** Primary inbox when CONTACT_TO is missing or invalid. */
-const DEFAULT_RECIPIENTS = ["luke@tokenable.io"];
+/** Primary inbox (To) when CONTACT_TO is missing or invalid. */
+const DEFAULT_TO = "tokenable.dev@gmail.com";
+/** Until tokenable.io is verified in Resend, use this From (only reliable To is often the Resend account email). */
 const DEFAULT_FROM = "Tokenable Contact <onboarding@resend.dev>";
 
-function contactRecipients(envRaw: string | undefined): string[] {
-  const raw = envRaw?.trim();
-  if (!raw) {
-    return [...DEFAULT_RECIPIENTS];
+function contactInbox(envRaw: string | undefined): string {
+  const first = envRaw?.split(",")[0]?.trim();
+  if (first && emailOk(first)) {
+    return first;
+  }
+  return DEFAULT_TO;
+}
+
+function parseCcList(raw: string | undefined, excludeLower: string): string[] {
+  if (!raw?.trim()) {
+    return [];
   }
   const seen = new Set<string>();
   const out: string[] = [];
@@ -20,13 +28,18 @@ function contactRecipients(envRaw: string | undefined): string[] {
       continue;
     }
     const key = addr.toLowerCase();
-    if (seen.has(key)) {
+    if (key === excludeLower || seen.has(key)) {
       continue;
     }
     seen.add(key);
     out.push(addr);
   }
-  return out.length > 0 ? out : [...DEFAULT_RECIPIENTS];
+  return out;
+}
+
+/** Resend only delivers test `from` to the account email — CC/BCC to other addresses returns 403. */
+function isResendSandboxFrom(fromHeader: string): boolean {
+  return fromHeader.toLowerCase().includes("@resend.dev");
 }
 
 export async function POST(req: Request) {
@@ -65,14 +78,23 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Invalid email address." }, { status: 400 });
   }
 
-  const to = contactRecipients(process.env.CONTACT_TO);
+  const primary = contactInbox(process.env.CONTACT_TO);
+  const to = [primary];
   const from = process.env.RESEND_FROM_EMAIL?.trim() || DEFAULT_FROM;
+  let cc = parseCcList(process.env.CONTACT_CC, primary.toLowerCase());
+  if (isResendSandboxFrom(from) && cc.length > 0) {
+    console.warn(
+      "[api/contact] CC omitted: onboarding@resend.dev only allows your Resend account email. After tokenable.io is verified, set RESEND_FROM_EMAIL to @tokenable.io to CC others.",
+    );
+    cc = [];
+  }
 
   const resend = new Resend(key);
 
   const { error } = await resend.emails.send({
     from,
     to,
+    ...(cc.length > 0 ? { cc } : {}),
     replyTo: em,
     subject: `[Tokenable contact] ${fn} ${ln}`,
     text: [`Name: ${fn} ${ln}`, `Email: ${em}`, "", msg].join("\n"),
@@ -80,7 +102,19 @@ export async function POST(req: Request) {
 
   if (error) {
     console.error("[api/contact]", error);
-    return NextResponse.json({ error: "Could not send email. Try again later." }, { status: 502 });
+    const detail =
+      error && typeof error === "object" && "message" in error && typeof (error as { message: unknown }).message === "string"
+        ? (error as { message: string }).message
+        : "";
+    const isDev = process.env.NODE_ENV === "development";
+    return NextResponse.json(
+      {
+        error: isDev && detail
+          ? `Email failed: ${detail}`
+          : "Could not send email. If using onboarding@resend.dev, Resend may block CC to other domains until tokenable.io is verified.",
+      },
+      { status: 502 },
+    );
   }
 
   return NextResponse.json({ ok: true });

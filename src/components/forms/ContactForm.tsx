@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 
-export function ContactForm() {
+type ContactFormProps = {
+  /** Primary inbox (matches server CONTACT_TO); shown so visitors know where the message is delivered. */
+  inboxEmail: string;
+};
+
+export function ContactForm({ inboxEmail }: ContactFormProps) {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -47,8 +52,18 @@ export function ContactForm() {
       className="contact-form w-full max-w-xl lg:max-w-none lg:justify-self-end"
       onSubmit={onSubmit}
       noValidate
+      aria-describedby="contact-delivery-notice"
     >
       <div className="space-y-10">
+        <p
+          id="contact-delivery-notice"
+          className="rounded-lg border border-white/[0.09] bg-white/[0.03] px-3 py-2.5 font-sans text-[14px] leading-snug text-white/70 sm:text-[15px]"
+        >
+          Team inbox:{" "}
+          <span className="break-all font-medium text-white/90" translate="no">
+            {inboxEmail}
+          </span>
+        </p>
         <fieldset className="min-w-0 border-0 p-0">
           <legend className="mb-4 font-sans text-lg font-bold text-white">Name</legend>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-6">
@@ -109,7 +124,7 @@ export function ContactForm() {
           />
         </div>
 
-        <div className="flex flex-col items-center gap-3 pt-2 sm:items-start">
+        <div className="flex flex-col items-center gap-2.5 pt-2 sm:items-start">
           <button
             type="submit"
             disabled={status === "sending"}
@@ -121,8 +136,23 @@ export function ContactForm() {
             />
             <span className="relative z-[1]">{status === "sending" ? "Sending…" : "Send"}</span>
           </button>
+          {status === "sending" ? (
+            <p className="max-w-full text-center font-sans text-[14px] leading-snug text-white/55 sm:text-left sm:text-[15px]" role="status" aria-live="polite">
+              Sending to{" "}
+              <span className="break-all font-medium text-white/75" translate="no">
+                {inboxEmail}
+              </span>
+              …
+            </p>
+          ) : null}
           {status === "success" ? (
-            <p className="font-sans text-base text-[rgb(0,169,129)]">Thanks — your message was sent.</p>
+            <p className="max-w-full text-center font-sans text-[15px] leading-snug text-[rgb(0,169,129)] sm:text-left sm:text-base" role="status" aria-live="polite">
+              Sent to{" "}
+              <span className="break-all font-medium" translate="no">
+                {inboxEmail}
+              </span>
+              .
+            </p>
           ) : null}
           {status === "error" && errorMessage ? (
             <p className="font-sans text-base text-red-400/95">{errorMessage}</p>
