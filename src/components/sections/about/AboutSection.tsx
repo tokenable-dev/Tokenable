@@ -43,8 +43,8 @@ export function AboutSection() {
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-8 pt-4 sm:px-8 md:hidden">
         <div className="flex flex-col gap-14">
           <div className={inView ? "about-gather-1" : ""}>
-            <AboutOutlineCard variant={1} title="Alternatives assets">
-              We tokeniaze and create markets <br />
+            <AboutOutlineCard variant={1} title="Alternative assets">
+              We tokenize and create markets <br />
               for investments in high value and scarce assets <br />
               that people have passion for. Art, collectibles, sports, and <br />
               entertainment are tokenized and traded.
@@ -52,8 +52,8 @@ export function AboutSection() {
           </div>
           <div className={inView ? "about-gather-2" : ""}>
             <AboutOutlineCard variant={2} title="Collectibles as tokenized assets">
-              Tokenable works allows collectors to turn high-end items <br />
-              into a liquid tokens enabling crypto-native liquidity and <br />
+              Tokenable allows collectors to turn high-end items <br />
+              into liquid tokens, enabling crypto-native liquidity and <br />
               trading while increasing security and authentication.
             </AboutOutlineCard>
           </div>
@@ -74,8 +74,8 @@ export function AboutSection() {
         <div className="relative min-h-[min(100svh,980px)] lg:min-h-[min(100svh,1020px)]">
           <div className="absolute top-[7%] right-[8%] z-[11] w-full max-w-[480px] md:top-[8%] md:right-[9%] lg:top-[9%] lg:right-[11%] xl:right-[12%]">
             <div className={inView ? "about-gather-1" : ""}>
-              <AboutOutlineCard variant={1} title="Alternatives assets">
-                We tokeniaze and create markets <br />
+              <AboutOutlineCard variant={1} title="Alternative assets">
+                We tokenize and create markets <br />
                 for investments in high value and scarce assets <br />
                 that people have passion for. Art, collectibles, sports, and <br />
                 entertainment are tokenized and traded.
@@ -86,8 +86,8 @@ export function AboutSection() {
           <div className="absolute left-[6%] top-1/2 z-[11] w-full max-w-[480px] -translate-y-1/2 md:left-[7%] lg:left-[8%] xl:left-[9%]">
             <div className={inView ? "about-gather-2" : ""}>
               <AboutOutlineCard variant={2} title="Collectibles as tokenized assets">
-                Tokenable works allows collectors to turn high-end items <br />
-                into a liquid tokens enabling crypto-native liquidity and <br />
+                Tokenable allows collectors to turn high-end items <br />
+                into liquid tokens, enabling crypto-native liquidity and <br />
                 trading while increasing security and authentication.
               </AboutOutlineCard>
             </div>

@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-const DEFAULT_FORMSPREE_ENDPOINT = "https://formspree.io/f/REPLACE_ME";
-
 function formspreeErrorMessage(data: unknown): string {
   if (data && typeof data === "object") {
     const d = data as Record<string, unknown>;
@@ -34,10 +32,9 @@ export function ContactForm() {
     setErrorMessage("");
     setStatus("sending");
 
-    const endpoint =
-      process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT?.trim() || DEFAULT_FORMSPREE_ENDPOINT;
+    const endpoint = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT?.trim();
 
-    if (endpoint.includes("REPLACE_ME")) {
+    if (!endpoint) {
       setStatus("error");
       setErrorMessage("Contact form is not configured. Set NEXT_PUBLIC_FORMSPREE_ENDPOINT to your Formspree URL.");
       return;

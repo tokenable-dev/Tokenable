@@ -10,7 +10,7 @@ const links = [
 
 const LOGO_SLOT = "flex w-9 shrink-0 items-center justify-start";
 
-/** 글래스모피즘: 얇은 밝은 보더 + 블러 + 상단 하이라이트(렌즈 느낌). 우측 패딩만 줄여 메뉴 끝 여백 최소화 */
+/** Glass nav: thin light border, blur, top highlight. Tighter end padding for menu spacing. */
 export function Navbar() {
   return (
     <header className="pointer-events-none fixed top-[max(30px,env(safe-area-inset-top))] right-0 left-0 z-50 flex justify-center pl-[max(1rem,env(safe-area-inset-left))] pr-[max(1rem,env(safe-area-inset-right))]">
