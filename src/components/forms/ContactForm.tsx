@@ -2,12 +2,30 @@
 
 import { useState } from "react";
 
-type ContactFormProps = {
-  /** Primary inbox (matches server CONTACT_TO); shown so visitors know where the message is delivered. */
-  inboxEmail: string;
-};
+const DEFAULT_FORMSPREE_ENDPOINT = "https://formspree.io/f/REPLACE_ME";
 
-export function ContactForm({ inboxEmail }: ContactFormProps) {
+function formspreeErrorMessage(data: unknown): string {
+  if (data && typeof data === "object") {
+    const d = data as Record<string, unknown>;
+    if (typeof d.error === "string") {
+      return d.error;
+    }
+    const errors = d.errors;
+    if (errors && typeof errors === "object" && !Array.isArray(errors)) {
+      for (const v of Object.values(errors as Record<string, unknown>)) {
+        if (Array.isArray(v) && typeof v[0] === "string") {
+          return v[0];
+        }
+        if (typeof v === "string") {
+          return v;
+        }
+      }
+    }
+  }
+  return "Could not send. Try again later.";
+}
+
+export function ContactForm() {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -16,26 +34,43 @@ export function ContactForm({ inboxEmail }: ContactFormProps) {
     setErrorMessage("");
     setStatus("sending");
 
+    const endpoint =
+      process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT?.trim() || DEFAULT_FORMSPREE_ENDPOINT;
+
+    if (endpoint.includes("REPLACE_ME")) {
+      setStatus("error");
+      setErrorMessage("Contact form is not configured. Set NEXT_PUBLIC_FORMSPREE_ENDPOINT to your Formspree URL.");
+      return;
+    }
+
     const form = e.currentTarget;
     const fd = new FormData(form);
-    const body = {
-      firstName: String(fd.get("firstName") ?? "").trim(),
-      lastName: String(fd.get("lastName") ?? "").trim(),
-      email: String(fd.get("email") ?? "").trim(),
-      message: String(fd.get("message") ?? "").trim(),
-    };
+    const firstName = String(fd.get("firstName") ?? "").trim();
+    const lastName = String(fd.get("lastName") ?? "").trim();
+    const email = String(fd.get("email") ?? "").trim();
+    const message = String(fd.get("message") ?? "").trim();
+    const name = `${firstName} ${lastName}`.trim();
 
     try {
-      const res = await fetch("/api/contact", {
+      const res = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          message,
+          _subject: `[Tokenable contact] ${name}`,
+        }),
       });
-      const data = (await res.json().catch(() => ({}))) as { error?: string };
+
+      const data = await res.json().catch(() => ({}));
 
       if (!res.ok) {
         setStatus("error");
-        setErrorMessage(data.error ?? "Something went wrong.");
+        setErrorMessage(formspreeErrorMessage(data));
         return;
       }
 
@@ -52,18 +87,8 @@ export function ContactForm({ inboxEmail }: ContactFormProps) {
       className="contact-form w-full max-w-xl lg:max-w-none lg:justify-self-end"
       onSubmit={onSubmit}
       noValidate
-      aria-describedby="contact-delivery-notice"
     >
       <div className="space-y-10">
-        <p
-          id="contact-delivery-notice"
-          className="rounded-lg border border-white/[0.09] bg-white/[0.03] px-3 py-2.5 font-sans text-[14px] leading-snug text-white/70 sm:text-[15px]"
-        >
-          Team inbox:{" "}
-          <span className="break-all font-medium text-white/90" translate="no">
-            {inboxEmail}
-          </span>
-        </p>
         <fieldset className="min-w-0 border-0 p-0">
           <legend className="mb-4 font-sans text-lg font-bold text-white">Name</legend>
           <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-6">
@@ -136,22 +161,13 @@ export function ContactForm({ inboxEmail }: ContactFormProps) {
             />
             <span className="relative z-[1]">{status === "sending" ? "Sending…" : "Send"}</span>
           </button>
-          {status === "sending" ? (
-            <p className="max-w-full text-center font-sans text-[14px] leading-snug text-white/55 sm:text-left sm:text-[15px]" role="status" aria-live="polite">
-              Sending to{" "}
-              <span className="break-all font-medium text-white/75" translate="no">
-                {inboxEmail}
-              </span>
-              …
-            </p>
-          ) : null}
           {status === "success" ? (
-            <p className="max-w-full text-center font-sans text-[15px] leading-snug text-[rgb(0,169,129)] sm:text-left sm:text-base" role="status" aria-live="polite">
-              Sent to{" "}
-              <span className="break-all font-medium" translate="no">
-                {inboxEmail}
-              </span>
-              .
+            <p
+              className="max-w-full text-center font-sans text-[15px] leading-snug text-[rgb(0,169,129)] sm:text-left sm:text-base"
+              role="status"
+              aria-live="polite"
+            >
+              Thanks — your message was sent. We’ll get back to you soon.
             </p>
           ) : null}
           {status === "error" && errorMessage ? (

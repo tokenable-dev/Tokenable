@@ -14,21 +14,21 @@ const members: Member[] = [
     image: "/Thomas.png",
     name: "Thomas Park",
     role: "Co-Founder, CEO",
-    bio: "Founder and CEO of Retium a registered Crowdfunding and Broker Dealer platform which allows issuers to raise capital while fully compliant with securities regulations.",
+    bio: "Founder and CEO of REITIUM, a registered Crowdfunding and Broker Dealer platform which allows issuers to raise capital while fully compliant with securities regulations.",
   },
   {
     slug: "rohit",
     image: "/Rohit.png",
     name: "Rohit Wad",
     role: "Advisory CTO",
-    bio: "Advises on scalable trading architecture, security, and distributed systems for institutional-grade tokenized markets.",
+    bio: "Former CTO of Binance; previously at Microsoft, Google, and Meta. Advises on scalable trading architecture, security, and distributed systems for institutional-grade tokenized markets.",
   },
   {
     slug: "steven",
     image: "/Steven.png",
     name: "Steven Christie",
     role: "Chief Compliance Officer (CCO)",
-    bio: "Oversees regulatory alignment with SEC, FINRA, and CSA frameworks, embedding compliance into every product and listing workflow.",
+    bio: "Former CCO of Binance and Kraken. Oversees regulatory alignment with SEC, FINRA, and CSA frameworks, embedding compliance into every product and listing workflow.",
   },
   {
     slug: "luke",
@@ -56,15 +56,15 @@ const members: Member[] = [
 export default function TeamPage() {
   return (
     <section
-      className="min-h-screen scroll-mt-[102px] bg-black px-4 pt-[max(140px,calc(110px+env(safe-area-inset-top)))] pb-[max(6rem,env(safe-area-inset-bottom))] sm:px-8 sm:pt-[168px] lg:px-12 lg:pt-[180px]"
+      className="min-h-screen scroll-mt-[102px] bg-black px-4 pt-[max(108px,calc(88px+env(safe-area-inset-top)))] pb-[max(6rem,env(safe-area-inset-bottom))] sm:px-8 sm:pt-[136px] lg:px-12 lg:pt-[148px]"
       aria-label="Team"
     >
       <div className="mx-auto max-w-[1100px]">
-        <header className="mx-auto mb-16 max-w-4xl text-center sm:mb-20 md:mb-24">
+        <header className="mx-auto mb-10 max-w-4xl text-center sm:mb-12 md:mb-14">
           <h1 className="font-sans text-[clamp(2.125rem,6.2vw,68px)] font-semibold leading-[1.4] tracking-normal text-white">
             Meet the Brains
           </h1>
-          <p className="mt-5 font-sans text-[clamp(1.125rem,2.6vw,29px)] font-normal leading-[1.4] tracking-normal text-white sm:mt-6">
+          <p className="mt-3 font-sans text-[clamp(1.125rem,2.6vw,29px)] font-normal leading-[1.4] tracking-normal text-white sm:mt-4">
             The Operating System for Tokenized Asset Markets
           </p>
         </header>
