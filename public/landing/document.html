@@ -323,6 +323,26 @@ class Component extends DCLogic {
       scrim.style.opacity = '0';
       scrim.style.pointerEvents = 'none';
     };
+    const centerSuccessOnMobile = () => {
+      widget.dataset.pinnedTop = '0';
+      card.style.display = 'block';
+      card.style.position = 'fixed';
+      card.style.top = '50%';
+      card.style.left = '50%';
+      card.style.right = 'auto';
+      card.style.bottom = 'auto';
+      card.style.transform = 'translate(-50%,-50%)';
+      card.style.zIndex = '1001';
+      card.style.maxHeight = 'calc(100dvh - 32px)';
+      card.style.overflowY = 'auto';
+      widget.style.top = 'auto';
+      widget.style.right = '26px';
+      widget.style.bottom = '26px';
+      widget.style.zIndex = '1001';
+      scrim.style.opacity = '1';
+      scrim.style.pointerEvents = 'auto';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
     const close = () => {
       card.style.display = 'none';
       card.style.position = 'relative';
@@ -431,7 +451,7 @@ class Component extends DCLogic {
           return;
         }
         successMsg.textContent = 'Thanks, ' + name.split(' ')[0] + '. We\u2019ll be in touch soon.';
-        if (isMobileView()) pinToTop();
+        if (isMobileView()) centerSuccessOnMobile();
         form.style.display = 'none';
         success.style.display = 'block';
         setTimeout(close, 2600);
