@@ -59,7 +59,7 @@
   }
   @media (min-width: 769px) {
     #vault {
-      min-height: 100vh !important;
+      min-height: 100svh !important;
       justify-content: center !important;
       overflow: hidden !important;
     }
@@ -67,7 +67,35 @@
       transform: translateY(-12px);
     }
     #cardsCanvas {
-      height: clamp(360px, 56vh, 560px) !important;
+      /* Relative sizing so cards stay visible across many desktop heights */
+      height: clamp(320px, min(54vh, calc(100dvh - 300px)), 560px) !important;
+    }
+  }
+  @media (max-width: 768px) {
+    #vault {
+      min-height: 100svh !important;
+      justify-content: center !important;
+      overflow: visible !important;
+      padding-top: clamp(72px, 10vh, 90px) !important;
+      padding-bottom: clamp(12px, 3vh, 24px) !important;
+    }
+    #topNav {
+      justify-content: center !important;
+      padding-left: 18px !important;
+      padding-right: 18px !important;
+    }
+    #heroCopy {
+      transform: translateY(10px);
+    }
+    #cardsCanvas {
+      /*
+       * Device-adaptive height:
+       * - never too small (260px)
+       * - tracks viewport on most phones (~48dvh)
+       * - capped for tall devices
+       */
+      height: clamp(260px, min(48dvh, calc(100dvh - 290px)), 430px) !important;
+      margin-top: -8px !important;
     }
   }
   #wlName:-webkit-autofill,
