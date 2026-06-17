@@ -2,36 +2,38 @@
  * Tokenable waitlist → Google Sheets
  *
  * Setup:
- * 1. Create a Google Sheet (row 1 headers: Submitted At | Name | Email | Telegram ID | Source)
- * 2. Extensions → Apps Script → paste this file → Save
+ * 1. Set SPREADSHEET_ID below to your sheet ID (from the spreadsheet URL).
+ * 2. Extensions → Apps Script on that sheet → paste this file → Save
  * 3. Deploy → New deployment → Web app
  *    - Execute as: Me
  *    - Who has access: Anyone
- * 4. Copy the Web app URL into .env:
+ * 4. Copy the Web app URL into .env / Netlify:
  *    NEXT_PUBLIC_WAITLIST_SHEETS_URL=https://script.google.com/macros/s/.../exec
- * 5. Set WAITLIST_SHEETS_SECRET below and the same value in .env:
- *    NEXT_PUBLIC_WAITLIST_SHEETS_SECRET=your-random-string
- *
- * If you already have a sheet without "Telegram ID", insert a column D with that header.
+ * 5. SHEETS_SECRET must match NEXT_PUBLIC_WAITLIST_SHEETS_SECRET
  */
 
+const SPREADSHEET_ID = "1nAzbuEc47-oxATc29D4Q9Z-gpJNjSP_h-OY7X0yPykg";
 const SHEETS_SECRET = "Cv2GkIIZtvorvY1ZZcsXmLGmKiMFsZosd70RDaGe";
 
 function doPost(e) {
   try {
+    if (!e || !e.postData || !e.postData.contents) {
+      return jsonResponse({ ok: false, error: "No post data" });
+    }
+
     const body = JSON.parse(e.postData.contents);
     if (body.secret !== SHEETS_SECRET) {
-      return jsonResponse({ ok: false, error: "Unauthorized" }, 401);
+      return jsonResponse({ ok: false, error: "Unauthorized" });
     }
 
     const name = String(body.name || "").trim();
     const email = String(body.email || "").trim();
     const telegram = String(body.telegram || "").trim();
     if (!name || !email) {
-      return jsonResponse({ ok: false, error: "Missing name or email" }, 400);
+      return jsonResponse({ ok: false, error: "Missing name or email" });
     }
 
-    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
+    const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheets()[0];
     if (sheet.getLastRow() === 0) {
       sheet.appendRow(["Submitted At", "Name", "Email", "Telegram ID", "Source"]);
     }
@@ -40,11 +42,11 @@ function doPost(e) {
 
     return jsonResponse({ ok: true });
   } catch (err) {
-    return jsonResponse({ ok: false, error: String(err) }, 500);
+    return jsonResponse({ ok: false, error: String(err) });
   }
 }
 
-function jsonResponse(payload, _status) {
+function jsonResponse(payload) {
   return ContentService.createTextOutput(JSON.stringify(payload)).setMimeType(
     ContentService.MimeType.JSON,
   );

@@ -312,6 +312,7 @@ class Component extends DCLogic {
         const saveToSheets = sheetsUrl
           ? fetch(sheetsUrl, {
               method: 'POST',
+              mode: 'no-cors',
               headers: { 'Content-Type': 'text/plain;charset=utf-8' },
               body: JSON.stringify({ secret: sheetsSecret, name, email, telegram }),
             }).catch((err) => console.warn('[waitlist] Google Sheets sync failed', err))
