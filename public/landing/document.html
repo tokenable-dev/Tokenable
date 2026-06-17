@@ -84,6 +84,9 @@
       padding-left: 18px !important;
       padding-right: 18px !important;
     }
+    #navLogo {
+      transform: translateX(-17px);
+    }
     #heroCopy {
       transform: translateY(10px);
     }
@@ -369,7 +372,14 @@ class Component extends DCLogic {
       widget.style.zIndex = '1001';
       scrim.style.opacity = '1';
       scrim.style.pointerEvents = 'auto';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const scrollTopNow = () => {
+        window.scrollTo(0, 0);
+        document.documentElement.scrollTop = 0;
+        document.body.scrollTop = 0;
+      };
+      scrollTopNow();
+      requestAnimationFrame(scrollTopNow);
+      setTimeout(scrollTopNow, 120);
     };
     const close = () => {
       card.style.display = 'none';
