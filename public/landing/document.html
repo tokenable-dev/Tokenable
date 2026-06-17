@@ -1,0 +1,957 @@
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+
+<script src="/landing/three.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #0a0a0b; }
+  * { box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+  ::selection { background: #2F6BFF; color: #0a0a0b; }
+  .tk-wm { background-color: currentColor; -webkit-mask: url("/landing/logo.svg") left center/contain no-repeat; mask: url("/landing/logo.svg") left center/contain no-repeat; }
+  @keyframes tkFloat1 { 0%{transform:translate(0,0) rotate(-8deg) scale(1)} 50%{transform:translate(40px,-30px) rotate(2deg) scale(1.04)} 100%{transform:translate(0,0) rotate(-8deg) scale(1)} }
+  @keyframes tkFloat2 { 0%{transform:translate(0,0) rotate(6deg)} 50%{transform:translate(-32px,28px) rotate(-4deg)} 100%{transform:translate(0,0) rotate(6deg)} }
+  @keyframes tkFloat3 { 0%{transform:translate(0,0) rotate(-3deg)} 50%{transform:translate(24px,34px) rotate(5deg)} 100%{transform:translate(0,0) rotate(-3deg)} }
+  @keyframes tkBar { 0%{opacity:.35;transform:scaleY(.94)} 50%{opacity:.7;transform:scaleY(1.06)} 100%{opacity:.35;transform:scaleY(.94)} }
+  @keyframes tkDot { 0%{transform:translateY(0)} 50%{transform:translateY(-14px)} 100%{transform:translateY(0)} }
+  @keyframes tkMarquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  @keyframes tkScrollHint { 0%{transform:translateY(0);opacity:.4} 50%{transform:translateY(5px);opacity:1} 100%{transform:translateY(0);opacity:.4} }
+  @keyframes tkSpin { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+  @keyframes heroMergeL { from{opacity:0; transform:translateX(-22vw)} to{opacity:1; transform:translateX(0)} }
+  @keyframes heroMergeR { from{opacity:0; transform:translateX(22vw)} to{opacity:1; transform:translateX(0)} }
+  @keyframes tkBars { 0%,100%{transform:scaleY(.5)} 50%{transform:scaleY(1)} }
+  @keyframes tkStar { 0%,100%{transform:rotate(0) scale(1)} 50%{transform:rotate(20deg) scale(1.14)} }
+  @keyframes tkArrowX { 0%,100%{transform:translateX(-3px)} 50%{transform:translateX(6px)} }
+  @keyframes tkRot { from{transform:rotate(0)} to{transform:rotate(360deg)} }
+  @keyframes tkFlag { 0%,100%{transform:skewX(-5deg)} 50%{transform:skewX(7deg)} }
+  @keyframes tkSweep { 0%,100%{transform:rotate(-15deg)} 50%{transform:rotate(17deg)} }
+  @keyframes tkPulse { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.07);opacity:.82} }
+  .tk-link { transition: opacity .18s ease; }
+  .tk-link:hover { opacity: .55; }
+  .tk-navitem:hover .tk-dropdown, .tk-navitem.open .tk-dropdown { opacity:1 !important; visibility:visible !important; pointer-events:auto !important; transform:translateX(-50%) translateY(0) !important; }
+  .tk-navitem:hover .tk-caret, .tk-navitem.open .tk-caret { transform:rotate(180deg); }
+  .tk-ditem { transition: background .15s ease; }
+  .tk-ditem:hover { background:rgba(255,255,255,.06); }
+  .tk-burger { display:none; }
+  .tk-mobilemenu { display:none; }
+  .tk-mlink { transition:background .15s ease; }
+  .tk-mlink:hover { background:rgba(255,255,255,.07); }
+  @media (min-width:861px) { .tk-burger { display:none !important; } .tk-mobilemenu { display:none !important; } }
+  @media (max-width:860px) { .tk-navlinks { display:none !important; } .tk-navcta { display:none !important; } .tk-burger { display:inline-flex !important; } .tk-mobilemenu.open { display:block !important; } }
+  .tk-card-hover { transition: background .2s ease, transform .2s ease; }
+  .tk-foot-link { transition: opacity .16s ease, transform .16s ease; display:inline-block; }
+  .tk-foot-link:hover { opacity:.5; transform: translateX(3px); }
+  .tk-mkt:hover { border-color:#2F6BFF !important; }
+  .tk-team:hover { border-color:#c8c8cc !important; }
+  @keyframes wlGlow {
+    0%, 100% { box-shadow: 0 10px 28px rgba(47,107,255,.40); transform: scale(1); }
+    50% { box-shadow: 0 16px 48px rgba(47,107,255,.88), 0 0 0 7px rgba(47,107,255,.10); transform: scale(1.05); }
+  }
+  #wlPill { animation: wlGlow 2.1s ease-in-out infinite; will-change: transform, box-shadow; }
+  #wlPill:hover { animation-play-state: paused; transform: translateY(-2px) scale(1.06); background:#4d82ff !important; box-shadow: 0 18px 48px rgba(47,107,255,.6) !important; }
+  @media (prefers-reduced-motion: reduce) { #wlPill { animation: none; } }
+  @keyframes heroReveal {
+    0%   { opacity:0; transform:translateY(40px); filter:blur(14px); letter-spacing:.05em; }
+    50%  { opacity:1; filter:blur(2px); }
+    100% { opacity:1; transform:translateY(0); filter:blur(0); letter-spacing:-.025em; }
+  }
+  #heroTitle { animation: heroReveal 2.2s cubic-bezier(.16,.84,.3,1) .25s both; }
+  @media (prefers-reduced-motion: reduce) { #heroTitle { animation: none; } }
+</style>
+</helmet>
+
+<div style="background:#0a0a0b; color:#fff; overflow-x:clip;">
+
+  <!-- ================= NAV ================= -->
+  <nav id="topNav" style="position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:22px 34px; transition:background .25s ease, border-color .25s ease; border-bottom:1px solid transparent;">
+    <a href="#top" style="display:flex; align-items:center; text-decoration:none;">
+      <img id="navLogo" src="/landing/logo.svg" alt="TOKENABLE" style="width:158px; height:auto;">
+    </a>
+    </nav>
+
+  <!-- ================= 3D ROTATING CARDS ================= -->
+  <section id="vault" data-screen-label="Hero" style="position:relative; background:#08060f; color:#fff; padding:clamp(78px,10vh,98px) clamp(18px,5vw,34px) clamp(24px,4vh,44px); overflow:hidden; min-height:100vh; display:flex; flex-direction:column; justify-content:center; gap:clamp(4px,1vh,14px); box-sizing:border-box;">
+    <!-- ===== SHOWROOM: realistic collector's vault ===== -->
+    <div id="bgShowroom" aria-hidden="true" style="position:absolute; inset:0; z-index:0; pointer-events:none; perspective:1200px; perspective-origin:50% 40%; overflow:hidden;">
+      <!-- realistic collector's-vault photo (CEO-provided), graded darker & less neon -->
+      <img src="/landing/showroom-bg.jpg" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 46%; filter:brightness(.6) contrast(1.08) saturate(.88);">
+      <!-- cool top + bottom depth grade -->
+      <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(8,6,18,.5) 0%, rgba(8,6,18,.08) 26%, rgba(6,4,14,.18) 64%, rgba(5,3,11,.62) 100%);"></div>
+      <!-- cinematic vignette -->
+      <div style="position:absolute; inset:0; background:radial-gradient(118% 100% at 50% 40%, transparent 40%, rgba(0,0,0,.7) 100%);"></div>
+      <!-- soft key spotlight where the cards stand -->
+      <div style="position:absolute; left:50%; top:48%; width:780px; height:780px; transform:translate(-50%,-50%); background:radial-gradient(circle, rgba(160,130,255,.16) 0%, rgba(120,100,220,.05) 42%, transparent 68%);"></div>
+      <!-- floor cap shadow grounding the cards -->
+      <div style="position:absolute; left:50%; bottom:11%; width:620px; height:120px; transform:translateX(-50%); background:radial-gradient(ellipse at center, rgba(0,0,0,.58) 0%, transparent 72%); filter:blur(13px);"></div>
+    </div>
+    <!-- theme toggle moved into the nav -->
+    <div style="position:relative; z-index:2; max-width:1200px; margin:0 auto; text-align:center;">
+      <h1 id="heroTitle" style="margin:0 auto; max-width:920px; font-family:'Newsreader',serif; font-weight:400; font-size:clamp(40px,5.6vw,76px); line-height:1.05; letter-spacing:-.025em; text-wrap:balance;">Own a piece of the world&rsquo;s greatest collectibles</h1>
+      <button id="wlHero" type="button" style="margin:clamp(20px,3vh,30px) auto 0; display:inline-flex; align-items:center; gap:11px; background:#2F6BFF; color:#fff; border:none; cursor:pointer; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px; letter-spacing:.02em; padding:16px 30px; border-radius:100px; box-shadow:0 14px 34px rgba(47,107,255,.45), inset 0 1px 0 rgba(255,255,255,.25); transition:transform .18s cubic-bezier(.22,.61,.36,1), box-shadow .18s ease, background .18s ease;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>Join the Waitlist</button>
+    </div>
+    <div id="cardsCanvas" style="position:relative; z-index:2; width:100%; max-width:1200px; height:clamp(420px,64vh,620px); margin:0 auto;">
+      <div id="cardsFallback" style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; gap:24px;">
+        <div style="width:200px; height:300px; border-radius:14px; background:linear-gradient(160deg,#1c1c20,#0e0e10); border:1px solid rgba(255,255,255,.08);"></div>
+        <div style="width:220px; height:330px; border-radius:14px; background:linear-gradient(160deg,#26201a,#120d08); border:1px solid rgba(47,107,255,.25);"></div>
+        <div style="width:200px; height:300px; border-radius:14px; background:linear-gradient(160deg,#1c1c20,#0e0e10); border:1px solid rgba(255,255,255,.08);"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WAITLIST FLOATING WIDGET ================= -->
+  <div id="wlWidget" style="position:fixed; right:26px; bottom:26px; z-index:200; font-family:'Inter',sans-serif;">
+    <!-- collapsed pill -->
+    <button id="wlPill" style="display:inline-flex; align-items:center; gap:11px; background:#2F6BFF; color:#fff; border:none; cursor:pointer; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:15px; letter-spacing:.02em; padding:16px 24px; border-radius:100px; box-shadow:0 12px 34px rgba(47,107,255,.4); transition:transform .18s ease, box-shadow .18s ease;">
+      <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>
+      Join the Waitlist
+    </button>
+    <!-- expanded card -->
+    <div id="wlCard" style="display:none; width:344px; background:#141416; border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:26px 26px 22px; box-shadow:0 30px 70px rgba(0,0,0,.6); position:relative;">
+      <button id="wlClose" aria-label="Close" style="position:absolute; top:16px; right:16px; background:none; border:none; cursor:pointer; color:#7a7a82; font-family:'JetBrains Mono',monospace; font-size:18px; line-height:1; transition:color .15s ease;">✕</button>
+      <div id="wlForm">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; color:#2F6BFF;">WAITLIST</div>
+        <h3 style="margin:12px 0 0; font-family:'Newsreader',serif; font-weight:400; font-size:28px; letter-spacing:-.01em; color:#fbfbfb;">Be first in line.</h3>
+        <p style="margin:8px 0 20px; font-size:13.5px; line-height:1.5; color:#9a9aa0;">Get early access to authenticated, vaulted collectibles.</p>
+        <input id="wlName" type="text" placeholder="Full name" autocomplete="name" style="width:100%; box-sizing:border-box; background:#0c0c0d; border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:13px 14px; color:#fbfbfb; font-family:'Inter',sans-serif; font-size:14px; outline:none; margin-bottom:10px; transition:border-color .15s ease;">
+        <input id="wlEmail" type="email" placeholder="Email address" autocomplete="email" style="width:100%; box-sizing:border-box; background:#0c0c0d; border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:13px 14px; color:#fbfbfb; font-family:'Inter',sans-serif; font-size:14px; outline:none; margin-bottom:10px; transition:border-color .15s ease;">
+        <input id="wlTelegram" type="text" placeholder="Telegram ID (optional)" autocomplete="off" inputmode="text" style="width:100%; box-sizing:border-box; background:#0c0c0d; border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:13px 14px; color:#fbfbfb; font-family:'Inter',sans-serif; font-size:14px; outline:none; margin-bottom:6px; transition:border-color .15s ease;">
+        <div id="wlError" style="min-height:16px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.02em; color:#ff6b5e; margin-bottom:8px;"></div>
+        <button id="wlSubmit" style="width:100%; display:inline-flex; align-items:center; justify-content:center; gap:9px; background:#2F6BFF; color:#fff; border:none; cursor:pointer; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14px; letter-spacing:.03em; padding:15px; border-radius:11px; transition:background .15s ease;">Join Waitlist <span style="font-size:15px;">→</span></button>
+        <p style="margin:14px 0 0; text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.06em; color:#6a6a70;">NO SPAM. EVER.</p>
+      </div>
+      <div id="wlSuccess" style="display:none; text-align:center; padding:14px 0 8px;">
+        <div style="width:54px; height:54px; margin:0 auto; border-radius:50%; background:rgba(47,107,255,.14); display:flex; align-items:center; justify-content:center;"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2F6BFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 6"></path></svg></div>
+        <h3 style="margin:18px 0 0; font-family:'Newsreader',serif; font-weight:400; font-size:26px; letter-spacing:-.01em; color:#fbfbfb;">You're on the list.</h3>
+        <p id="wlSuccessMsg" style="margin:10px 0 6px; font-size:13.5px; line-height:1.5; color:#9a9aa0;">We'll be in touch soon.</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  componentDidMount() {
+    this._raf = null;
+    this._tabState = -1;
+    this.mode = 'sell';
+    this.initHow();
+    this.bindScroll();
+    this.waitThree();
+    this.setupTicket();
+    this.setupNav();
+    this.setupFaq();
+    this.setupWaitlist();
+    this.playHeroIntro();
+    this.injectThemeStyle();
+    this._theme = 'showroom';
+    document.documentElement.setAttribute('data-theme', 'showroom');
+    this.applyCardTheme(false);
+  }
+
+  injectThemeStyle() {
+    if (document.getElementById('tk-theme-style')) return;
+    const st = document.createElement('style');
+    st.id = 'tk-theme-style';
+    st.textContent = [
+      'html[data-theme="showroom"] #vault{background:#08060f!important;color:#fff!important}',
+      'html[data-theme="showroom"] #bgShowroom{opacity:1!important}',
+      'html[data-theme="showroom"] #heroTitle{color:#fff!important}',
+      '#wlPill{display:none!important}'
+    ].join('\n');
+    document.head.appendChild(st);
+  }
+
+  componentDidUpdate() {
+    // WebGL materials aren't React-managed; re-assert after any remount
+    this.applyCardTheme(false);
+  }
+
+  applyCardTheme(light) {
+    if (!this._rimMats || !this._rimMats.length) return;
+    const T = window.THREE;
+    for (let i = 0; i < this._rimMats.length; i++) {
+      const m = this._rimMats[i];
+      const fade = this._rimFades[i];
+      if (light) {
+        // on white: clear shell reads from dark reflections + edge presence (not blown-out specular)
+        m.color.setHex(0x959dac);
+        m.transmission = 0.05;
+        m.envMapIntensity = 2.4;
+        m.roughness = 0.07;
+        m.clearcoatRoughness = 0.02;
+        fade[1] = 0.86;
+      } else {
+        m.color.setHex(0xe6e9ee);
+        m.transmission = 0.35;
+        m.envMapIntensity = 1.6;
+        m.roughness = 0.09;
+        m.clearcoatRoughness = 0.03;
+        fade[1] = 0.4;
+      }
+      m.needsUpdate = true;
+      // edge/side panels read better lighter on white
+      const s = this._sideMats[i];
+      if (s) { s.color.setHex(light ? 0x2a2d33 : 0x0d0d10); s.needsUpdate = true; }
+    }
+    // brighten the rig in white mode so the bevel catches a crisp specular highlight
+    if (this._cardLights) {
+      const L = this._cardLights;
+      if (L.d1) L.d1.intensity = light ? 1.3 : 1.1;
+      if (L.camAmb) L.camAmb.intensity = light ? 0.32 : 0;
+      if (L.dRim) L.dRim.intensity = light ? 0.6 : 0;
+    }
+  }
+
+  playHeroIntro() {
+    const hl1 = document.getElementById('heroL1');
+    const hl2 = document.getElementById('heroL2');
+    if (!hl1 || !hl2) { this._introDone = true; return; }
+    // if not at the top, skip the intro entirely
+    if (window.scrollY > 40) {
+      hl1.style.animation = 'none'; hl2.style.animation = 'none';
+      this._introDone = true;
+      return;
+    }
+    // CSS keyframes (heroMergeL/R) handle the merge; gate parallax until it finishes
+    setTimeout(() => { this._introDone = true; }, 1120);
+  }
+
+  setupWaitlist() {
+    const widget = document.getElementById('wlWidget');
+    if (!widget || widget.dataset.wired) return;
+    widget.dataset.wired = '1';
+    const pill = document.getElementById('wlPill');
+    const card = document.getElementById('wlCard');
+    const closeBtn = document.getElementById('wlClose');
+    const submit = document.getElementById('wlSubmit');
+    const nameI = document.getElementById('wlName');
+    const emailI = document.getElementById('wlEmail');
+    const telegramI = document.getElementById('wlTelegram');
+    const err = document.getElementById('wlError');
+    const form = document.getElementById('wlForm');
+    const success = document.getElementById('wlSuccess');
+    const successMsg = document.getElementById('wlSuccessMsg');
+
+    let scrim = document.getElementById('wlScrim');
+    if (!scrim) {
+      scrim = document.createElement('div');
+      scrim.id = 'wlScrim';
+      scrim.style.cssText = 'position:fixed; inset:0; z-index:1000; background:rgba(9,9,11,.6); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); opacity:0; pointer-events:none; transition:opacity .2s ease;';
+      document.body.appendChild(scrim);
+    }
+    const open = () => {
+      pill.style.display = 'none';
+      card.style.display = 'block';
+      card.style.position = 'fixed';
+      card.style.top = '50%';
+      card.style.left = '50%';
+      card.style.right = 'auto';
+      card.style.bottom = 'auto';
+      card.style.transform = 'translate(-50%,-50%)';
+      card.style.zIndex = '1001';
+      widget.style.zIndex = '1001';
+      scrim.style.opacity = '1';
+      scrim.style.pointerEvents = 'auto';
+      setTimeout(() => nameI && nameI.focus(), 60);
+    };
+    const close = () => {
+      card.style.display = 'none';
+      card.style.position = 'relative';
+      card.style.transform = 'none';
+      card.style.zIndex = '';
+      widget.style.zIndex = '200';
+      scrim.style.opacity = '0';
+      scrim.style.pointerEvents = 'none';
+      pill.style.display = 'inline-flex';
+    };
+    scrim.addEventListener('click', close);
+    pill.addEventListener('click', open);
+    const heroBtn = document.getElementById('wlHero');
+    if (heroBtn) {
+      heroBtn.addEventListener('click', open);
+      heroBtn.addEventListener('mouseover', () => { heroBtn.style.background = '#1f5be0'; heroBtn.style.transform = 'translateY(-2px)'; heroBtn.style.boxShadow = '0 22px 48px rgba(47,107,255,.62), inset 0 1px 0 rgba(255,255,255,.25)'; });
+      heroBtn.addEventListener('mouseout', () => { heroBtn.style.background = '#2F6BFF'; heroBtn.style.transform = 'translateY(0)'; heroBtn.style.boxShadow = '0 14px 34px rgba(47,107,255,.45), inset 0 1px 0 rgba(255,255,255,.25)'; });
+      heroBtn.addEventListener('mousedown', () => heroBtn.style.transform = 'translateY(0) scale(.97)');
+      heroBtn.addEventListener('mouseup', () => heroBtn.style.transform = 'translateY(-2px)');
+    }
+    closeBtn.addEventListener('click', close);
+    closeBtn.addEventListener('mouseover', () => closeBtn.style.color = '#fbfbfb');
+    closeBtn.addEventListener('mouseout', () => closeBtn.style.color = '#7a7a82');
+    // hover lift + glow handled in CSS (#wlPill:hover) so the pulse animation isn't overridden
+    submit.addEventListener('mouseover', () => submit.style.background = '#1f5be0');
+    submit.addEventListener('mouseout', () => submit.style.background = '#2F6BFF');
+    [nameI, emailI, telegramI].forEach(inp => {
+      inp.addEventListener('focus', () => inp.style.borderColor = '#2F6BFF');
+      inp.addEventListener('blur', () => inp.style.borderColor = 'rgba(255,255,255,.14)');
+    });
+
+        const doSubmit = async () => {
+      const name = nameI.value.trim();
+      const email = emailI.value.trim();
+      const telegramRaw = telegramI.value.trim();
+      const telegram = telegramRaw ? telegramRaw.replace(/^@+/, '') : '';
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!name) { err.textContent = 'Please enter your name.'; nameI.focus(); return; }
+      if (!emailOk) { err.textContent = 'Please enter a valid email.'; emailI.focus(); return; }
+      const endpoint = (window.__FORMSPREE_WAITLIST_ENDPOINT || '').trim();
+      if (!endpoint) {
+        err.textContent = 'Waitlist is not configured yet.';
+        return;
+      }
+      err.textContent = '';
+      const prevLabel = submit.textContent;
+      submit.disabled = true;
+      submit.textContent = 'Sending…';
+      try {
+        const payload = { name, email, telegram, _subject: '[Tokenable waitlist] ' + name };
+        const sheetsUrl = (window.__WAITLIST_SHEETS_URL || '').trim();
+        const sheetsSecret = (window.__WAITLIST_SHEETS_SECRET || '').trim();
+        const saveToSheets = sheetsUrl
+          ? fetch(sheetsUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({ secret: sheetsSecret, name, email, telegram }),
+            }).catch((err) => console.warn('[waitlist] Google Sheets sync failed', err))
+          : Promise.resolve();
+        const [res] = await Promise.all([
+          fetch(endpoint, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify(payload),
+          }),
+          saveToSheets,
+        ]);
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          const msg = (data && (data.error || (data.errors && Object.values(data.errors)[0]))) || 'Could not submit. Try again.';
+          err.textContent = typeof msg === 'string' ? msg : 'Could not submit. Try again.';
+          return;
+        }
+        successMsg.textContent = 'Thanks, ' + name.split(' ')[0] + '. We\u2019ll be in touch soon.';
+        form.style.display = 'none';
+        success.style.display = 'block';
+        setTimeout(close, 2600);
+        setTimeout(() => { form.style.display = 'block'; success.style.display = 'none'; nameI.value = ''; emailI.value = ''; telegramI.value = ''; }, 2800);
+      } catch (e) {
+        err.textContent = 'Network error. Please try again.';
+      } finally {
+        submit.disabled = false;
+        submit.textContent = prevLabel;
+      }
+    };
+    submit.addEventListener('click', doSubmit);
+    telegramI.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSubmit(); });
+    emailI.addEventListener('keydown', (e) => { if (e.key === 'Enter') telegramI.focus(); });
+    nameI.addEventListener('keydown', (e) => { if (e.key === 'Enter') emailI.focus(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && card.style.display !== 'none') close(); });
+  }
+
+  setupFaq() {
+    const list = document.getElementById('faqList');
+    if (!list || list.dataset.wired) return;
+    list.dataset.wired = '1';
+    list.querySelectorAll('.tk-faq').forEach(item => {
+      const btn = item.querySelector('.tk-faq-q');
+      const ans = item.querySelector('.tk-faq-a');
+      const ic = item.querySelector('.tk-faq-ic');
+      btn.addEventListener('click', () => {
+        const open = ans.style.maxHeight && ans.style.maxHeight !== '0px';
+        list.querySelectorAll('.tk-faq').forEach(o => {
+          o.querySelector('.tk-faq-a').style.maxHeight = '0px';
+          o.querySelector('.tk-faq-ic').style.transform = 'rotate(0deg)';
+          o.querySelector('.tk-faq-ic').textContent = '+';
+        });
+        if (!open) {
+          ans.style.maxHeight = ans.scrollHeight + 'px';
+          ic.style.transform = 'rotate(135deg)';
+        }
+      });
+    });
+  }
+
+  componentWillUnmount() {
+    if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    if (this._raf) cancelAnimationFrame(this._raf);
+    if (this._poll) clearInterval(this._poll);
+    if (this._cardsPointer) {
+      const p = this._cardsPointer;
+      window.removeEventListener('mousemove', p.move);
+      window.removeEventListener('mouseup', p.up);
+      window.removeEventListener('touchend', p.up);
+    }
+  }
+
+  howIcon(kind) {
+    const p = {
+      doc: '<path d="M14 3v4a1 1 0 0 0 1 1h4"/><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M9 14l1.8 1.8L14.5 12"/>',
+      shield: '<path d="M12 3l8 3v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6z"/><path d="M9 12l2 2 4-4"/>',
+      vault: '<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="12" cy="12" r="4"/><path d="M12 8.4v-1M12 16.6v-1M7.4 12h-1M17.6 12h-1"/>',
+      grid: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/>',
+      search: '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/>',
+      pie: '<circle cx="12" cy="12" r="9"/><path d="M12 3a9 9 0 0 1 9 9h-9z" fill="#2F6BFF" stroke="none"/><path d="M12 3v9h9"/>',
+      person: '<circle cx="9" cy="8" r="4"/><path d="M3 20v-1a6 6 0 0 1 6-6h1"/><path d="M15 12l2 2 4-4"/>',
+      idcard: '<rect x="4" y="3" width="16" height="18" rx="3"/><circle cx="12" cy="10" r="3"/><path d="M7 18a5 5 0 0 1 10 0"/>'
+    }[kind] || '';
+    return p;
+  }
+
+  howData() {
+    return {
+      sell: [
+        { tab: 'SIGN & SHIP', title: 'Sign &amp; ship', desc: 'Sign the listing agreement and send your card to our facility via fully insured shipping.', icon: 'doc' },
+        { tab: 'AUTHENTICATE', title: 'Authenticate', desc: 'Experts verify authenticity and condition with leading grading partners.', icon: 'shield' },
+        { tab: 'VAULT & ID', title: 'Vault &amp; ID', desc: 'The card is secured in our climate-controlled vault and issued a unique Vault ID.', icon: 'vault' },
+        { tab: 'LIST', title: 'List', desc: 'The card goes live on Tokenable for whole or fractional ownership.', icon: 'grid' }
+      ],
+      buy: [
+        { tab: 'BROWSE', title: 'Browse', desc: 'Explore authenticated, vaulted assets on the Tokenable marketplace.', icon: 'search' },
+        { tab: 'CHOOSE', title: 'Choose', desc: 'Select whole ownership, or buy a fractional share starting at $100.', icon: 'pie' },
+        { tab: 'INVEST', title: 'Invest', desc: 'Complete KYC and purchase your share under our Reg A+ (Tier 2) offering.', icon: 'person' },
+        { tab: 'OWN', title: 'Own', desc: 'Receive your ownership record plus the NFC Smart Slab linked to your wallet.', icon: 'idcard' }
+      ]
+    }[this.mode];
+  }
+
+  graphic(icon) {
+    const dots = [[14,18,'#f2efe8',3.4],[78,24,'#cdb89a',3.9],[20,70,'#2F6BFF',4.2],[82,72,'#2F6BFF',3.6],[50,12,'#cdc6b8',4.0],[48,88,'#e9e4d8',3.7]]
+      .map((d,k)=>'<div style="position:absolute; left:'+d[0]+'%; top:'+d[1]+'%; width:14px; height:14px; border-radius:50%; background:'+d[2]+'; opacity:.9; animation:tkDot '+d[3]+'s ease-in-out '+(k*0.3).toFixed(1)+'s infinite;"></div>').join('');
+    return '<div style="position:relative; width:320px; height:320px; display:flex; align-items:center; justify-content:center;">'
+      + '<div style="position:absolute; width:290px; height:290px; border:1px solid rgba(47,107,255,.14); border-radius:50%;"></div>'
+      + '<div style="position:absolute; width:200px; height:200px; border:1px solid rgba(47,107,255,.10); border-radius:50%;"></div>'
+      + '<svg width="146" height="146" viewBox="0 0 24 24" fill="none" stroke="#2F6BFF" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round">'+this.howIcon(icon)+'</svg>'
+      + dots + '</div>';
+  }
+
+  buildPanels() {
+    const steps = this.howData();
+    const panels = document.getElementById('howPanels');
+    const tabsWrap = document.getElementById('howTabs');
+    if (!panels || !tabsWrap) return;
+    panels.innerHTML = steps.map((st, idx) =>
+      '<div class="how-panel" data-i="' + idx + '" style="position:absolute; inset:0; border-radius:26px; background:linear-gradient(180deg,#141416,#0c0c0d); border:1px solid rgba(47,107,255,.18); overflow:hidden; opacity:' + (idx === 0 ? 1 : 0) + '; transition:opacity .5s ease, transform .5s ease;">'
+      + '<div style="position:absolute; left:48px; top:56px; bottom:40px; width:42%; display:flex; flex-direction:column; justify-content:center;">'
+      + '<div style="font-family:\'JetBrains Mono\',monospace; font-size:12px; letter-spacing:.12em; color:#2F6BFF;">STEP ' + ('0' + (idx + 1)).slice(-2) + '</div>'
+      + '<h3 style="margin:14px 0 0; font-family:\'Newsreader\',serif; font-weight:400; font-size:clamp(28px,3vw,40px); letter-spacing:-.01em; color:#fbfbfb;">' + st.title + '</h3>'
+      + '<p style="margin:18px 0 0; font-size:15px; line-height:1.55; color:#9a9aa0; max-width:360px;">' + st.desc + '</p>'
+      + ((this.mode === 'sell' && idx === steps.length - 1)
+          ? '<button class="how-cross" style="margin-top:26px; align-self:flex-start; display:inline-flex; align-items:center; gap:9px; background:none; border:1px solid rgba(47,107,255,.5); cursor:pointer; font-family:\'JetBrains Mono\',monospace; font-weight:700; font-size:12px; letter-spacing:.05em; color:#2F6BFF; padding:11px 17px; border-radius:100px; transition:background .2s ease, color .2s ease;">Interested in buying a share? <span style="font-size:14px;">&#8594;</span></button>'
+          : '')
+      + '</div>'
+      + '<div style="position:absolute; right:0; top:0; bottom:0; left:46%; background:#0a0a0b; border-left:1px solid rgba(255,255,255,.05); display:flex; align-items:center; justify-content:center;">' + this.graphic(st.icon) + '</div>'
+      + '</div>'
+    ).join('');
+    tabsWrap.innerHTML = '';
+    steps.forEach((st, i) => {
+      const t = document.createElement('div');
+      t.dataset.i = i;
+      t.style.cssText = 'display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:8px;transition:all .25s ease;';
+      t.innerHTML = '<span style="opacity:.85">' + ('0' + (i + 1)).slice(-2) + '</span><span class="tk-tab-label" style="max-width:0;overflow:hidden;white-space:nowrap;transition:max-width .34s ease;">' + st.tab + '</span>';
+      tabsWrap.appendChild(t);
+    });
+  }
+
+  setMode(m, scrollToStart) {
+    if (m === this.mode) return;
+    this.mode = m;
+    document.querySelectorAll('.how-mode-btn').forEach(o => {
+      const on = o.dataset.mode === m;
+      o.style.background = on ? '#2F6BFF' : 'transparent';
+      o.style.color = on ? '#fff' : '#9a9aa0';
+    });
+    this.buildPanels();
+    this._tabState = -1;
+    if (scrollToStart) {
+      const sc = document.getElementById('howScroll');
+      if (sc) {
+        const top = sc.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo(0, top + 4);
+      }
+    }
+    if (this._howUpdate) this._howUpdate();
+  }
+
+  initHow() {
+    this.buildPanels();
+    this.renderTabs(0);
+    document.querySelectorAll('.how-mode-btn').forEach(b => {
+      b.addEventListener('click', () => this.setMode(b.dataset.mode, true));
+    });
+    const panels = document.getElementById('howPanels');
+    if (panels && !panels.dataset.crossWired) {
+      panels.dataset.crossWired = '1';
+      panels.addEventListener('click', (e) => {
+        const cta = e.target.closest('.how-cross');
+        if (cta) this.setMode('buy', true);
+      });
+      panels.addEventListener('mouseover', (e) => {
+        const cta = e.target.closest('.how-cross');
+        if (cta) { cta.style.background = '#2F6BFF'; cta.style.color = '#fff'; }
+      });
+      panels.addEventListener('mouseout', (e) => {
+        const cta = e.target.closest('.how-cross');
+        if (cta) { cta.style.background = 'none'; cta.style.color = '#2F6BFF'; }
+      });
+    }
+  }
+
+  renderTabs(active) {
+    const wrap = document.getElementById('howTabs');
+    if (!wrap) return;
+    [...wrap.children].forEach((t, i) => {
+      const on = i === active;
+      t.style.background = on ? '#2F6BFF' : 'rgba(47,107,255,.16)';
+      t.style.color = on ? '#ffffff' : '#2F6BFF';
+      const lab = t.querySelector('.tk-tab-label');
+      if (lab) { lab.style.maxWidth = on ? '120px' : '0'; lab.style.marginLeft = on ? '2px' : '0'; }
+    });
+  }
+
+  bindScroll() {
+    const update = () => {
+      this._raf = null;
+      const nav = document.getElementById('topNav');
+      if (nav) {
+        if (window.scrollY > 40) {
+          const lt = this._theme === 'light';
+          nav.style.background = lt ? 'rgba(251,251,253,0.85)' : 'rgba(10,10,11,0.9)';
+          nav.style.borderBottomColor = lt ? 'rgba(9,9,11,0.08)' : 'rgba(255,255,255,0.08)';
+          nav.style.backdropFilter = 'blur(12px)';
+          nav.style.webkitBackdropFilter = 'blur(12px)';
+        } else {
+          nav.style.background = 'transparent';
+          nav.style.borderBottomColor = 'transparent';
+          nav.style.backdropFilter = 'none';
+          nav.style.webkitBackdropFilter = 'none';
+        }
+      }
+      if (this._introDone) {
+        const hl1 = document.getElementById('heroL1');
+        const hl2 = document.getElementById('heroL2');
+        if (hl1 && hl2) {
+          const sy = window.scrollY;
+          hl1.style.transform = 'translateX(' + (sy * 0.07).toFixed(1) + 'px)';
+          hl2.style.transform = 'translateX(' + (-sy * 0.07).toFixed(1) + 'px)';
+        }
+      }
+      const sc = document.getElementById('howScroll');
+      if (!sc) return;
+      const rect = sc.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const total = sc.offsetHeight - vh;
+      let p = (-rect.top) / total;
+      p = Math.max(0, Math.min(0.9999, p));
+      const pf = document.getElementById('howProgFill');
+      if (pf) pf.style.width = (p * 100).toFixed(2) + '%';
+      const N = document.querySelectorAll('.how-panel').length || 1;
+      const idx = Math.min(N - 1, Math.floor(p * N));
+      if (idx !== this._tabState) {
+        this._tabState = idx;
+        this.renderTabs(idx);
+        document.querySelectorAll('.how-panel').forEach(panel => {
+          const pi = +panel.dataset.i;
+          const on = pi === idx;
+          panel.style.opacity = on ? '1' : '0';
+          panel.style.transform = on ? 'translateY(0) scale(1)' : 'translateY(18px) scale(.985)';
+          panel.style.pointerEvents = on ? 'auto' : 'none';
+          panel.style.zIndex = on ? '3' : '1';
+        });
+      }
+    };
+    this._howUpdate = update;
+    this._onScroll = () => { if (!this._raf) this._raf = requestAnimationFrame(update); };
+    window.addEventListener('scroll', this._onScroll, { passive: true });
+    update();
+  }
+
+  stampVaultWordmark() {
+    // nothing required — vault uses a text label instead of mask. placeholder.
+  }
+
+  waitThree() {
+    let tries = 0;
+    this._poll = setInterval(() => {
+      tries++;
+      const ready = typeof window.THREE !== 'undefined';
+      if (ready) {
+        if (this.initCards) this.initCards();
+        if (this.initKeychain) this.initKeychain();
+      }
+      if ((ready && this._threeDone) || tries > 80) clearInterval(this._poll);
+    }, 120);
+  }
+
+  makeEnv(renderer) {
+    const T = window.THREE;
+    const c = document.createElement('canvas'); c.width = 512; c.height = 256;
+    const g = c.getContext('2d');
+    const grad = g.createLinearGradient(0, 0, 0, 256);
+    grad.addColorStop(0, '#3a3a42'); grad.addColorStop(0.45, '#0e0e10');
+    grad.addColorStop(0.5, '#1a1a1e'); grad.addColorStop(1, '#050506');
+    g.fillStyle = grad; g.fillRect(0, 0, 512, 256);
+    g.fillStyle = 'rgba(47,107,255,0.5)'; g.fillRect(0, 96, 512, 26);
+    g.fillStyle = 'rgba(255,255,255,0.9)'; g.fillRect(120, 30, 90, 12); g.fillRect(330, 50, 60, 8);
+    const tex = new T.CanvasTexture(c);
+    tex.mapping = T.EquirectangularReflectionMapping;
+    const pmrem = new T.PMREMGenerator(renderer);
+    const env = pmrem.fromEquirectangular(tex).texture;
+    tex.dispose(); pmrem.dispose();
+    return env;
+  }
+
+  makeCardTexture(i) {
+    const T = window.THREE;
+    const data = [
+      { t: '1952 MANTLE', s: '#3a6ea5', n: 'PSA 9' },
+      { t: 'CHARIZARD', s: '#e0631f', n: 'PSA 10' },
+      { t: 'PATEK 5711', s: '#1f6b57', n: 'CSA 9.5' },
+      { t: 'JORDAN 1 — 85', s: '#b5341f', n: 'DS 10' },
+      { t: 'DAYTONA', s: '#444', n: 'CSA 10' },
+    ][i % 5];
+    const c = document.createElement('canvas'); c.width = 360; c.height = 540;
+    const g = c.getContext('2d');
+    g.fillStyle = '#0e0e10'; g.fillRect(0, 0, 360, 540);
+    g.fillStyle = '#f3f1ea'; g.fillRect(14, 14, 332, 512);
+    g.fillStyle = '#0a0a0b'; g.fillRect(22, 22, 316, 60);
+    g.fillStyle = '#2F6BFF'; g.font = '700 26px monospace'; g.fillText('TOKENABLE', 34, 60);
+    const ig = g.createLinearGradient(22, 90, 338, 430);
+    ig.addColorStop(0, data.s); ig.addColorStop(1, '#101012');
+    g.fillStyle = ig; g.fillRect(22, 90, 316, 348);
+    g.strokeStyle = 'rgba(255,255,255,.18)'; g.lineWidth = 1;
+    for (let k = 0; k < 6; k++) { g.beginPath(); g.arc(180, 264, 30 + k * 22, 0, Math.PI * 2); g.stroke(); }
+    g.fillStyle = '#0a0a0b'; g.font = '700 30px serif'; g.textAlign = 'center';
+    g.fillText(data.t, 180, 478); g.textAlign = 'left';
+    g.fillStyle = '#2F6BFF'; g.fillRect(22, 494, 70, 24);
+    g.fillStyle = '#ffffff'; g.font = '700 14px monospace'; g.fillText(data.n, 30, 511);
+    for (let x = 110; x < 338; x += 5) { g.fillStyle = Math.random() > 0.5 ? '#0a0a0b' : '#f3f1ea'; g.fillRect(x, 496, 3, 20); }
+    const tex = new T.CanvasTexture(c);
+    tex.anisotropy = 4; tex.encoding = T.sRGBEncoding;
+    return tex;
+  }
+
+  makeCardBack() {
+    const T = window.THREE;
+    const W = 620, H = 1040;
+    const c = document.createElement('canvas'); c.width = W; c.height = H;
+    const g = c.getContext('2d');
+    // matte dark case back
+    const grad = g.createLinearGradient(0, 0, W, H);
+    grad.addColorStop(0, '#18181d'); grad.addColorStop(0.5, '#101015'); grad.addColorStop(1, '#0a0a0d');
+    g.fillStyle = grad; g.fillRect(0, 0, W, H);
+    // faint diagonal sheen
+    g.save();
+    g.strokeStyle = 'rgba(255,255,255,0.022)'; g.lineWidth = 54;
+    for (let x = -H; x < W + H; x += 130) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x + H, H); g.stroke(); }
+    g.restore();
+    // hairline border
+    g.strokeStyle = 'rgba(255,255,255,0.08)'; g.lineWidth = 2;
+    this._rr(g, 28, 28, W - 56, H - 56, 30); g.stroke();
+    const tex = new T.CanvasTexture(c);
+    tex.encoding = T.sRGBEncoding; tex.anisotropy = 8;
+    // stamp the real wordmark (recoloured for a dark surface) once it loads
+    fetch('/landing/logo.svg').then(r => r.text()).then(txt => {
+      const white = txt.replace(/fill="black"/g, 'fill="#eef1f5"').replace(/fill="#000000"/gi, 'fill="#eef1f5"');
+      const url = URL.createObjectURL(new Blob([white], { type: 'image/svg+xml' }));
+      const img = new Image();
+      img.onload = () => {
+        const tw = W * 0.62, th = tw * (img.height / img.width);
+        g.drawImage(img, (W - tw) / 2, H / 2 - th / 2 - 26, tw, th);
+        g.textAlign = 'center'; g.textBaseline = 'middle';
+        g.fillStyle = '#2F6BFF'; g.font = '600 21px "JetBrains Mono", monospace';
+        g.fillText('VAULTED \u2022 ON-CHAIN', W / 2, H / 2 + 26);
+        g.fillStyle = '#6c6c74'; g.font = '500 17px "JetBrains Mono", monospace';
+        g.fillText('GRADED ASSET \u2014 CERT 1/1', W / 2, H - 66);
+        tex.needsUpdate = true;
+        URL.revokeObjectURL(url);
+      };
+      img.src = url;
+    }).catch(function () {});
+    return tex;
+  }
+
+  slabShape(w, h, r) {
+    const T = window.THREE;
+    const s = new T.Shape();
+    const x = -w / 2, y = -h / 2;
+    s.moveTo(x + r, y);
+    s.lineTo(x + w - r, y);
+    s.quadraticCurveTo(x + w, y, x + w, y + r);
+    s.lineTo(x + w, y + h - r);
+    s.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    s.lineTo(x + r, y + h);
+    s.quadraticCurveTo(x, y + h, x, y + h - r);
+    s.lineTo(x, y + r);
+    s.quadraticCurveTo(x, y, x + r, y);
+    return s;
+  }
+
+  _rr(g, x, y, w, h, r) {
+    g.beginPath();
+    g.moveTo(x + r, y);
+    g.arcTo(x + w, y, x + w, y + h, r);
+    g.arcTo(x + w, y + h, x, y + h, r);
+    g.arcTo(x, y + h, x, y, r);
+    g.arcTo(x, y, x + w, y, r);
+    g.closePath();
+  }
+
+  initCards() {
+    if (this._cardsInit) return;
+    const host = document.getElementById('cardsCanvas');
+    if (!host || !host.clientWidth) return;
+    this._cardsInit = true;
+    const T = window.THREE;
+    const W = host.clientWidth, H = host.clientHeight;
+    const renderer = new T.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(W, H); renderer.outputEncoding = T.sRGBEncoding;
+    host.appendChild(renderer.domElement);
+    const fb = document.getElementById('cardsFallback'); if (fb) fb.style.display = 'none';
+    const scene = new T.Scene();
+    const env = this.makeEnv(renderer); scene.environment = env;
+    const cam = new T.PerspectiveCamera(42, W / H, 0.1, 100); cam.position.set(0, 0, this.camZForAspect(W / H));
+    scene.add(new T.AmbientLight(0xffffff, 0.4));
+    const camAmb = new T.AmbientLight(0xffffff, 0); scene.add(camAmb);
+    const d1 = new T.DirectionalLight(0xffffff, 1.1); d1.position.set(3, 5, 6); scene.add(d1);
+    const p1 = new T.PointLight(0x2F6BFF, 0.8, 40); p1.position.set(-5, 2, 4); scene.add(p1);
+    const dRim = new T.DirectionalLight(0xffffff, 0); dRim.position.set(-2, 1, 7); scene.add(dRim);
+    this._cardLights = { d1, camAmb, dRim };
+    const group = new T.Group(); scene.add(group);
+    const SRCS = ['/landing/newcards/c01.jpg','/landing/newcards/c02.jpg','/landing/newcards/c04.jpg','/landing/newcards/c06.jpg','/landing/newcards/c05.jpg','/landing/newcards/c08.jpg','/landing/newcards/c10.jpg','/landing/newcards/c03.jpg','/landing/newcards/c07.jpg','/landing/newcards/c09.jpg'];
+    const N = 10, R = 4.1;
+    const CW = 1.5, CH = 2.5, CD = 0.028, FT = 0.03;
+    const cardGeo = new T.BoxGeometry(CW, CH, CD);
+    // razor-thin slab case with a slim edge lip (no thick front frame)
+    const RIMD = 0.03;
+    const frame = this.slabShape(CW + 2 * FT, CH + 2 * FT, 0.085);
+    frame.holes.push(this.slabShape(CW, CH, 0.07));
+    const rimGeo = new T.ExtrudeGeometry(frame, { depth: RIMD, bevelEnabled: true, bevelThickness: 0.005, bevelSize: 0.007, bevelSegments: 1, curveSegments: 10 });
+    rimGeo.translate(0, 0, -(RIMD + 0.01) / 2);
+    const loader = new T.TextureLoader();
+    const maxAniso = renderer.capabilities.getMaxAnisotropy ? renderer.capabilities.getMaxAnisotropy() : 8;
+    const backTex = this.makeCardBack();
+    const darkSide = new T.MeshStandardMaterial({ color: 0x0d0d10, roughness: 0.5, metalness: 0.2 });
+    this._rimMats = [];
+    this._rimFades = [];
+    this._sideMats = [];
+    // one ring of 5 slabs — radius kept tight so front cards occlude the back (reads as a single rotating group)
+    for (let i = 0; i < N; i++) {
+      const a = (i / N) * Math.PI * 2;
+      const tex = loader.load(SRCS[i]);
+      tex.encoding = T.sRGBEncoding;
+      tex.anisotropy = maxAniso;
+      const face = new T.MeshPhysicalMaterial({ map: tex, metalness: 0.0, roughness: 0.34, clearcoat: 1.0, clearcoatRoughness: 0.05, envMapIntensity: 0.85, transparent: true });
+      const back = new T.MeshPhysicalMaterial({ map: backTex, color: 0xffffff, metalness: 0.1, roughness: 0.42, clearcoat: 0.7, clearcoatRoughness: 0.18, envMapIntensity: 0.85, transparent: true });
+      const side = new T.MeshStandardMaterial({ color: 0x0d0d10, roughness: 0.5, metalness: 0.2, transparent: true });
+      const cardMesh = new T.Mesh(cardGeo, [side, side, side, side, face, back]);
+      const rimMat = new T.MeshPhysicalMaterial({
+        color: 0xe6e9ee, metalness: 0.0, roughness: 0.09, clearcoat: 1.0, clearcoatRoughness: 0.03,
+        transparent: true, opacity: 0.4, envMapIntensity: 1.6, transmission: 0.35, ior: 1.46, side: T.DoubleSide
+      });
+      const rim = new T.Mesh(rimGeo, rimMat);
+      const card = new T.Group();
+      card.add(cardMesh); card.add(rim);
+      card.position.set(Math.sin(a) * R, 0, Math.cos(a) * R);
+      card.rotation.y = a;
+      card.userData.baseAngle = a;
+      card.userData.fade = [[face, 1], [back, 1], [side, 1], [rimMat, 0.4]];
+      this._rimMats.push(rimMat);
+      this._rimFades.push(card.userData.fade[3]);
+      this._sideMats.push(side);
+      group.add(card);
+    }
+    this._cards = { renderer, scene, cam, group, host };
+    if (this._theme) this.applyCardTheme(this._theme === 'light');
+    // --- mouse / touch drag to spin (with momentum) ---
+    const drag = { active: false, lastX: 0, vel: 0, angle: 0 };
+    this._cardsDrag = drag;
+    const AUTO = 0.16; // rad/sec idle spin
+    const px = (e) => (e.touches ? e.touches[0].clientX : e.clientX);
+    const down = (e) => { drag.active = true; drag.lastX = px(e); drag.vel = 0; host.style.cursor = 'grabbing'; };
+    const move = (e) => {
+      if (!drag.active) return;
+      const x = px(e); const dx = x - drag.lastX; drag.lastX = x;
+      const d = dx * 0.006;
+      drag.angle += d; drag.vel = d;
+      if (e.cancelable) e.preventDefault();
+    };
+    const up = () => { drag.active = false; host.style.cursor = 'grab'; };
+    host.style.cursor = 'grab'; host.style.touchAction = 'pan-y';
+    host.addEventListener('mousedown', down);
+    window.addEventListener('mousemove', move);
+    window.addEventListener('mouseup', up);
+    host.addEventListener('touchstart', down, { passive: true });
+    host.addEventListener('touchmove', move, { passive: false });
+    window.addEventListener('touchend', up);
+    this._cardsPointer = { down, move, up, host };
+    const clock = new T.Clock();
+    const loop = () => {
+      if (!this._cardsInit) return;
+      this._cards.raf = requestAnimationFrame(loop);
+      const dt = Math.min(clock.getDelta(), 0.05);
+      if (drag.active) {
+        // angle driven directly by pointer
+      } else {
+        drag.angle += drag.vel;           // momentum carry
+        drag.vel *= 0.94;                 // friction
+        if (Math.abs(drag.vel) < 0.0008) drag.vel = 0;
+        drag.angle += AUTO * dt;          // idle drift
+      }
+      group.rotation.y = drag.angle;
+      group.children.forEach((card) => {
+        const c = Math.cos(card.userData.baseAngle + group.rotation.y);
+        let f = (c + 0.15) / 0.6; f = f < 0 ? 0 : f > 1 ? 1 : f;
+        card.visible = f > 0.01;
+        const fa = card.userData.fade;
+        for (let k = 0; k < fa.length; k++) fa[k][0].opacity = fa[k][1] * f;
+      });
+      renderer.render(scene, cam);
+    };
+    loop();
+    this._threeDone = true;
+    this._onResize = () => this.resize();
+    window.addEventListener('resize', this._onResize, { passive: true });
+  }
+
+  initKeychain() {
+    if (this._keyInit) return;
+    const host = document.getElementById('keyCanvas');
+    if (!host || !host.clientWidth) return;
+    this._keyInit = true;
+    const T = window.THREE;
+    const W = host.clientWidth, H = host.clientHeight;
+    const renderer = new T.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(W, H); renderer.outputEncoding = T.sRGBEncoding;
+    host.appendChild(renderer.domElement);
+    const fb = document.getElementById('keyFallback'); if (fb) fb.style.display = 'none';
+    const scene = new T.Scene();
+    const env = this.makeEnv(renderer); scene.environment = env;
+    const cam = new T.PerspectiveCamera(40, W / H, 0.1, 100); cam.position.set(0, 0, 6.4);
+    scene.add(new T.AmbientLight(0xffffff, 0.5));
+    const d1 = new T.DirectionalLight(0xffffff, 1.4); d1.position.set(2, 4, 5); scene.add(d1);
+    const p1 = new T.PointLight(0x2F6BFF, 1.0, 40); p1.position.set(-4, -1, 3); scene.add(p1);
+    const p2 = new T.PointLight(0x88bbff, 0.6, 40); p2.position.set(4, 2, 2); scene.add(p2);
+    const group = new T.Group(); scene.add(group);
+    const chrome = new T.MeshStandardMaterial({ color: 0xdadde2, metalness: 1, roughness: 0.18, envMapIntensity: 1.3 });
+    // ring
+    const ring = new T.Mesh(new T.TorusGeometry(0.52, 0.1, 20, 48), chrome);
+    ring.position.y = 2.05; group.add(ring);
+    // chain links
+    for (let i = 0; i < 3; i++) {
+      const lk = new T.Mesh(new T.TorusGeometry(0.16, 0.05, 14, 30), chrome);
+      lk.position.y = 1.62 - i * 0.26; lk.rotation.x = i % 2 ? 0 : Math.PI / 2; group.add(lk);
+    }
+    // tag (rounded extruded)
+    const sh = new T.Shape(); const w = 1.5, h = 2.2, r = 0.34;
+    sh.absarc(-w / 2 + r, -h / 2 + r, r, Math.PI, Math.PI * 1.5);
+    sh.absarc(w / 2 - r, -h / 2 + r, r, Math.PI * 1.5, 0);
+    sh.absarc(w / 2 - r, h / 2 - r, r, 0, Math.PI * 0.5);
+    sh.absarc(-w / 2 + r, h / 2 - r, r, Math.PI * 0.5, Math.PI);
+    const tagGeo = new T.ExtrudeGeometry(sh, { depth: 0.16, bevelEnabled: true, bevelThickness: 0.04, bevelSize: 0.04, bevelSegments: 3 });
+    tagGeo.center();
+    // tag face texture
+    const tc = document.createElement('canvas'); tc.width = 300; tc.height = 440; const tg = tc.getContext('2d');
+    tg.fillStyle = '#2F6BFF'; tg.fillRect(0, 0, 300, 440);
+    tg.fillStyle = '#ffffff'; tg.font = '900 italic 64px serif'; tg.textAlign = 'center'; tg.fillText('TKN', 150, 150);
+    tg.font = '700 20px monospace'; tg.fillText('MEMBER', 150, 200);
+    tg.strokeStyle = '#ffffff'; tg.lineWidth = 4; tg.strokeRect(20, 20, 260, 400);
+    for (let x = 40; x < 260; x += 6) { tg.fillStyle = Math.random() > 0.5 ? '#ffffff' : '#0d2a6b'; tg.fillRect(x, 360, 4, 40); }
+    const tagTex = new T.CanvasTexture(tc); tagTex.encoding = T.sRGBEncoding;
+    const tagFace = new T.MeshStandardMaterial({ map: tagTex, metalness: 0.3, roughness: 0.45 });
+    const tagEdge = new T.MeshStandardMaterial({ color: 0x1f4fcf, metalness: 0.6, roughness: 0.35 });
+    const tag = new T.Mesh(tagGeo, [tagEdge, tagFace]);
+    tag.position.y = 0.0; group.add(tag);
+    // a little chrome charm
+    const charm = new T.Mesh(new T.IcosahedronGeometry(0.34, 0), new T.MeshStandardMaterial({ color: 0x2F6BFF, metalness: 0.9, roughness: 0.2, envMapIntensity: 1.2 }));
+    charm.position.set(-0.95, 0.2, 0.2); group.add(charm);
+    group.position.y = -0.2; group.scale.set(1.05, 1.05, 1.05);
+    this._key = { renderer, scene, cam, group, host };
+    const clock = new T.Clock();
+    const loop = () => {
+      if (!this._keyInit) return;
+      this._key.raf = requestAnimationFrame(loop);
+      const t = clock.getElapsedTime();
+      group.rotation.y = t * 0.7;
+      group.rotation.x = Math.sin(t * 0.9) * 0.12;
+      group.rotation.z = Math.sin(t * 0.6) * 0.06;
+      renderer.render(scene, cam);
+    };
+    loop();
+    this._threeDone = true;
+    this._onResize = () => this.resize();
+    window.addEventListener('resize', this._onResize, { passive: true });
+  }
+
+  setupNav() {
+    const nav = document.querySelector('nav');
+    if (!nav || nav.dataset.navWired) return;
+    nav.dataset.navWired = '1';
+    const items = [...nav.querySelectorAll('.tk-navitem')];
+    items.forEach(it => {
+      const trig = it.querySelector('.tk-navtrigger');
+      if (!trig) return;
+      trig.addEventListener('click', (e) => {
+        e.preventDefault();
+        const wasOpen = it.classList.contains('open');
+        items.forEach(o => o.classList.remove('open'));
+        if (!wasOpen) it.classList.add('open');
+      });
+    });
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.tk-navitem')) items.forEach(o => o.classList.remove('open'));
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') { items.forEach(o => o.classList.remove('open')); const m = document.getElementById('mobileMenu'); if (m) m.classList.remove('open'); }
+    });
+    const burger = document.getElementById('navBurger');
+    const mm = document.getElementById('mobileMenu');
+    if (burger && mm) {
+      burger.addEventListener('click', (e) => { e.stopPropagation(); mm.classList.toggle('open'); });
+      mm.querySelectorAll('a').forEach(a => a.addEventListener('click', () => mm.classList.remove('open')));
+      document.addEventListener('click', (e) => { if (!e.target.closest('#mobileMenu') && !e.target.closest('#navBurger')) mm.classList.remove('open'); });
+    }
+  }
+
+  setupTicket() {
+    const wrap = document.getElementById('ticketWrap');
+    const card = document.getElementById('ticket3d');
+    if (!wrap || !card || wrap._wired) return;
+    wrap._wired = true;
+    const def = () => { card.style.transform = 'rotateY(-22deg) rotateX(4deg) rotateZ(2deg)'; };
+    def();
+    wrap.addEventListener('mousemove', (e) => {
+      const r = wrap.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      card.style.transition = 'transform .07s linear';
+      card.style.transform = 'rotateY(' + (px * 46).toFixed(1) + 'deg) rotateX(' + (-py * 28).toFixed(1) + 'deg) rotateZ(' + (px * 4).toFixed(1) + 'deg)';
+    });
+    wrap.addEventListener('mouseenter', () => { card.style.transition = 'transform .12s ease'; });
+    wrap.addEventListener('mouseleave', () => { card.style.transition = 'transform .5s cubic-bezier(.2,.7,.2,1)'; def(); });
+  }
+
+  camZForAspect(a) {
+    // narrower (portrait / mobile) viewports need the camera pulled back so the ring fits the width
+    if (a >= 1.4) return 9.2;
+    if (a >= 1.05) return 10.0;
+    if (a >= 0.8) return 11.4;
+    return 13.6;
+  }
+
+  resize() {
+    [this._cards, this._key].forEach(o => {
+      if (!o) return;
+      const W = o.host.clientWidth, H = o.host.clientHeight;
+      if (!W || !H) return;
+      o.cam.aspect = W / H;
+      if (o === this._cards) o.cam.position.z = this.camZForAspect(W / H);
+      o.cam.updateProjectionMatrix(); o.renderer.setSize(W, H);
+    });
+  }
+
+  renderVals() { return {}; }
+}
+</script>
