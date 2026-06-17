@@ -311,6 +311,11 @@ class Component extends DCLogic {
       scrim.style.cssText = 'position:fixed; inset:0; z-index:1000; background:rgba(9,9,11,.6); backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px); opacity:0; pointer-events:none; transition:opacity .2s ease;';
       document.body.appendChild(scrim);
     }
+    const scrollTopNow = () => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
     const isMobileView = () => window.matchMedia('(max-width: 768px)').matches;
     const open = () => {
       pill.style.display = 'none';
@@ -367,19 +372,12 @@ class Component extends DCLogic {
       card.style.maxHeight = 'calc(100dvh - 32px)';
       card.style.overflowY = 'auto';
       widget.style.top = 'auto';
-      widget.style.right = '26px';
-      widget.style.bottom = '26px';
+      widget.style.left = 'auto';
+      widget.style.right = 'auto';
+      widget.style.bottom = 'auto';
       widget.style.zIndex = '1001';
       scrim.style.opacity = '1';
       scrim.style.pointerEvents = 'auto';
-      const scrollTopNow = () => {
-        window.scrollTo(0, 0);
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
-      };
-      scrollTopNow();
-      requestAnimationFrame(scrollTopNow);
-      setTimeout(scrollTopNow, 120);
     };
     const close = () => {
       card.style.display = 'none';
@@ -395,6 +393,7 @@ class Component extends DCLogic {
         widget.style.bottom = 'auto';
       } else {
         widget.style.top = 'auto';
+        widget.style.left = 'auto';
         widget.style.right = '26px';
         widget.style.bottom = '26px';
       }
@@ -489,10 +488,18 @@ class Component extends DCLogic {
           return;
         }
         successMsg.textContent = 'Thanks, ' + name.split(' ')[0] + '. We\u2019ll be in touch soon.';
-        if (isMobileView()) centerSuccessOnMobile();
+        const shouldScrollTopOnClose = isMobileView();
+        if (shouldScrollTopOnClose) centerSuccessOnMobile();
         form.style.display = 'none';
         success.style.display = 'block';
-        setTimeout(close, 2600);
+        setTimeout(() => {
+          close();
+          if (shouldScrollTopOnClose) {
+            scrollTopNow();
+            requestAnimationFrame(scrollTopNow);
+            setTimeout(scrollTopNow, 120);
+          }
+        }, 2600);
         setTimeout(() => { form.style.display = 'block'; success.style.display = 'none'; nameI.value = ''; emailI.value = ''; if (tgI) tgI.value = ''; }, 2800);
       } catch (e) {
         err.textContent = 'Network error. Please try again.';
