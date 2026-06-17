@@ -93,7 +93,7 @@
     </nav>
 
   <!-- ================= 3D ROTATING CARDS ================= -->
-  <section id="vault" data-screen-label="Hero" style="position:relative; background:#08060f; color:#fff; padding:clamp(78px,10vh,98px) clamp(18px,5vw,34px) clamp(24px,4vh,44px); overflow:hidden; min-height:100vh; display:flex; flex-direction:column; justify-content:center; gap:clamp(4px,1vh,14px); box-sizing:border-box;">
+  <section id="vault" data-screen-label="Hero" style="position:relative; background:#08060f; color:#fff; padding:clamp(78px,10vh,98px) clamp(18px,5vw,34px) clamp(24px,4vh,44px); overflow:visible; min-height:0; display:flex; flex-direction:column; justify-content:flex-start; gap:clamp(4px,1vh,14px); box-sizing:border-box;">
     <!-- ===== SHOWROOM: realistic collector's vault ===== -->
     <div id="bgShowroom" aria-hidden="true" style="position:absolute; inset:0; z-index:0; pointer-events:none; perspective:1200px; perspective-origin:50% 40%; overflow:hidden;">
       <!-- realistic collector's-vault photo (CEO-provided), graded darker & less neon -->
@@ -813,19 +813,51 @@ class Component extends DCLogic {
     this._cards = { renderer, scene, cam, group, host };
     if (this._theme) this.applyCardTheme(this._theme === 'light');
     // --- mouse / touch drag to spin (with momentum) ---
-    const drag = { active: false, lastX: 0, vel: 0, angle: 0 };
+    const drag = { active: false, lastX: 0, lastY: 0, startX: 0, startY: 0, axisLock: null, touching: false, vel: 0, angle: 0 };
     this._cardsDrag = drag;
     const AUTO = 0.16; // rad/sec idle spin
     const px = (e) => (e.touches ? e.touches[0].clientX : e.clientX);
-    const down = (e) => { drag.active = true; drag.lastX = px(e); drag.vel = 0; host.style.cursor = 'grabbing'; };
+    const py = (e) => (e.touches ? e.touches[0].clientY : e.clientY);
+    const down = (e) => {
+      drag.vel = 0;
+      if (e.touches) {
+        drag.touching = true;
+        drag.active = false;
+        drag.startX = drag.lastX = px(e);
+        drag.startY = drag.lastY = py(e);
+        drag.axisLock = null;
+      } else {
+        drag.active = true;
+        drag.lastX = px(e);
+        host.style.cursor = 'grabbing';
+      }
+    };
     const move = (e) => {
+      if (e.touches) {
+        if (!drag.touching) return;
+        const x = px(e), y = py(e);
+        const dx = x - drag.lastX, dy = y - drag.lastY;
+        drag.lastX = x; drag.lastY = y;
+        if (!drag.axisLock) {
+          const totalDx = x - drag.startX;
+          const totalDy = y - drag.startY;
+          if (Math.abs(totalDx) + Math.abs(totalDy) < 8) return;
+          drag.axisLock = Math.abs(totalDx) > Math.abs(totalDy) ? 'x' : 'y';
+        }
+        if (drag.axisLock !== 'x') return;
+        drag.active = true;
+        const d = dx * 0.006;
+        drag.angle += d; drag.vel = d;
+        if (e.cancelable) e.preventDefault();
+        return;
+      }
       if (!drag.active) return;
       const x = px(e); const dx = x - drag.lastX; drag.lastX = x;
       const d = dx * 0.006;
       drag.angle += d; drag.vel = d;
       if (e.cancelable) e.preventDefault();
     };
-    const up = () => { drag.active = false; host.style.cursor = 'grab'; };
+    const up = () => { drag.touching = false; drag.active = false; drag.axisLock = null; host.style.cursor = 'grab'; };
     host.style.cursor = 'grab'; host.style.touchAction = 'pan-y';
     host.addEventListener('mousedown', down);
     window.addEventListener('mousemove', move);
