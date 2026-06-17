@@ -100,6 +100,11 @@
       height: clamp(260px, min(48dvh, calc(100dvh - 290px)), 430px) !important;
       margin-top: -8px !important;
     }
+    #wlName,
+    #wlEmail,
+    #wlTelegram {
+      font-size: 16px !important; /* prevent iOS auto-zoom on focus */
+    }
   }
   #wlName:-webkit-autofill,
   #wlName:-webkit-autofill:hover,
@@ -322,6 +327,15 @@ class Component extends DCLogic {
       const scrollingEl = document.scrollingElement;
       if (scrollingEl) scrollingEl.scrollTop = 0;
     };
+    const closeKeyboardAndBlur = () => {
+      try {
+        if (nameI && nameI.blur) nameI.blur();
+        if (emailI && emailI.blur) emailI.blur();
+        if (tgI && tgI.blur) tgI.blur();
+        const ae = document.activeElement;
+        if (ae && ae.blur) ae.blur();
+      } catch (e) {}
+    };
     const isMobileView = () => window.matchMedia('(max-width: 768px)').matches;
     const open = () => {
       pill.style.display = 'none';
@@ -499,6 +513,7 @@ class Component extends DCLogic {
         form.style.display = 'none';
         success.style.display = 'block';
         setTimeout(() => {
+          closeKeyboardAndBlur();
           close();
           if (shouldScrollTopOnClose) {
             scrollTopNow();
