@@ -282,12 +282,39 @@ class Component extends DCLogic {
       scrim.style.pointerEvents = 'auto';
       setTimeout(() => nameI && nameI.focus(), 60);
     };
+    const pinToTop = () => {
+      widget.dataset.pinnedTop = '1';
+      pill.style.display = 'none';
+      card.style.display = 'block';
+      card.style.position = 'fixed';
+      card.style.top = '92px';
+      card.style.right = '26px';
+      card.style.left = 'auto';
+      card.style.bottom = 'auto';
+      card.style.transform = 'none';
+      card.style.zIndex = '1001';
+      widget.style.top = '92px';
+      widget.style.right = '26px';
+      widget.style.bottom = 'auto';
+      widget.style.zIndex = '1001';
+      scrim.style.opacity = '0';
+      scrim.style.pointerEvents = 'none';
+    };
     const close = () => {
       card.style.display = 'none';
       card.style.position = 'relative';
       card.style.transform = 'none';
       card.style.zIndex = '';
       widget.style.zIndex = '200';
+      if (widget.dataset.pinnedTop === '1') {
+        widget.style.top = '92px';
+        widget.style.right = '26px';
+        widget.style.bottom = 'auto';
+      } else {
+        widget.style.top = 'auto';
+        widget.style.right = '26px';
+        widget.style.bottom = '26px';
+      }
       scrim.style.opacity = '0';
       scrim.style.pointerEvents = 'none';
       pill.style.display = 'inline-flex';
@@ -379,6 +406,7 @@ class Component extends DCLogic {
           return;
         }
         successMsg.textContent = 'Thanks, ' + name.split(' ')[0] + '. We\u2019ll be in touch soon.';
+        pinToTop();
         form.style.display = 'none';
         success.style.display = 'block';
         setTimeout(close, 2600);
