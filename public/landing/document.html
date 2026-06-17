@@ -127,7 +127,7 @@
 </style>
 </helmet>
 
-<div style="background:#0a0a0b; color:#fff; overflow-x:clip;">
+<div id="top" style="background:#0a0a0b; color:#fff; overflow-x:clip;">
 
   <!-- ================= NAV ================= -->
   <nav id="topNav" style="position:fixed; top:0; left:0; right:0; z-index:100; display:flex; align-items:center; justify-content:space-between; padding:22px 34px; transition:background .25s ease, border-color .25s ease; border-bottom:1px solid transparent;">
@@ -312,9 +312,15 @@ class Component extends DCLogic {
       document.body.appendChild(scrim);
     }
     const scrollTopNow = () => {
+      const topAnchor = document.getElementById('top');
+      if (topAnchor && topAnchor.scrollIntoView) {
+        topAnchor.scrollIntoView({ block: 'start', behavior: 'auto' });
+      }
       window.scrollTo(0, 0);
       document.documentElement.scrollTop = 0;
       document.body.scrollTop = 0;
+      const scrollingEl = document.scrollingElement;
+      if (scrollingEl) scrollingEl.scrollTop = 0;
     };
     const isMobileView = () => window.matchMedia('(max-width: 768px)').matches;
     const open = () => {
@@ -498,6 +504,8 @@ class Component extends DCLogic {
             scrollTopNow();
             requestAnimationFrame(scrollTopNow);
             setTimeout(scrollTopNow, 120);
+            setTimeout(scrollTopNow, 320);
+            setTimeout(scrollTopNow, 650);
           }
         }, 2600);
         setTimeout(() => { form.style.display = 'block'; success.style.display = 'none'; nameI.value = ''; emailI.value = ''; if (tgI) tgI.value = ''; }, 2800);
