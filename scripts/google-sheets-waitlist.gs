@@ -8,12 +8,16 @@
  *    - Execute as: Me
  *    - Who has access: Anyone
  * 4. Copy the Web app URL into .env / Netlify:
- *    NEXT_PUBLIC_WAITLIST_SHEETS_URL=https://script.google.com/macros/s/.../exec
- * 5. SHEETS_SECRET must match NEXT_PUBLIC_WAITLIST_SHEETS_SECRET
+ *    WAITLIST_SHEETS_URL=https://script.google.com/macros/s/.../exec
+ * 5. SHEETS_SECRET must match WAITLIST_SHEETS_SECRET
  */
 
 const SPREADSHEET_ID = "1nAzbuEc47-oxATc29D4Q9Z-gpJNjSP_h-OY7X0yPykg";
 const SHEETS_SECRET = "Cv2GkIIZtvorvY1ZZcsXmLGmKiMFsZosd70RDaGe";
+
+function doGet() {
+  return jsonResponse({ ok: true, message: "Tokenable waitlist endpoint ready" });
+}
 
 function doPost(e) {
   try {

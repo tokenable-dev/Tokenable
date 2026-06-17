@@ -2,10 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { LandingShell } from "@/components/landing/LandingShell";
 import "./landing.css";
 
+const siteUrl = "https://tokenable.io";
+const ogImage = "/og.jpg";
+
 export const metadata: Metadata = {
   title: "Tokenable",
   description:
-    "Authenticated, vaulted collectibles you can own in whole or in part. Tokenize and trade art, sports, and memorabilia on a compliant marketplace.",
+    "Own a piece of the world's greatest collectibles. Authenticated, vaulted assets you can own in whole or in part.",
   keywords: [
     "tokenized collectibles",
     "fractional ownership",
@@ -16,14 +19,25 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Tokenable",
     description:
-      "Authenticated, vaulted collectibles. Join the waitlist for early access.",
+      "Own a piece of the world's greatest collectibles. Join the waitlist for early access.",
     type: "website",
+    url: siteUrl,
     siteName: "Tokenable",
+    locale: "en_US",
+    images: [
+      {
+        url: ogImage,
+        width: 1200,
+        height: 630,
+        alt: "Tokenable — vaulted collectibles",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Tokenable",
     description: "Own a piece of the world's greatest collectibles.",
+    images: [ogImage],
   },
 };
 

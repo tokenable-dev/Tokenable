@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# planner deliverables (merge into public/landing, then delete)
+/Tokenable/
+/Tokenable 4/
+/Join waitlist 모달 개선/

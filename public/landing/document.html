@@ -57,6 +57,27 @@
     50%  { opacity:1; filter:blur(2px); }
     100% { opacity:1; transform:translateY(0); filter:blur(0); letter-spacing:-.025em; }
   }
+  #wlName:-webkit-autofill,
+  #wlName:-webkit-autofill:hover,
+  #wlName:-webkit-autofill:focus,
+  #wlEmail:-webkit-autofill,
+  #wlEmail:-webkit-autofill:hover,
+  #wlEmail:-webkit-autofill:focus,
+  #wlTelegram:-webkit-autofill,
+  #wlTelegram:-webkit-autofill:hover,
+  #wlTelegram:-webkit-autofill:focus {
+    -webkit-text-fill-color: #fbfbfb;
+    caret-color: #fbfbfb;
+    -webkit-box-shadow: 0 0 0 1000px #0c0c0d inset;
+    box-shadow: 0 0 0 1000px #0c0c0d inset;
+    transition: background-color 9999s ease-out 0s;
+  }
+  #wlName:autofill,
+  #wlEmail:autofill,
+  #wlTelegram:autofill {
+    color: #fbfbfb;
+    background: #0c0c0d;
+  }
   #heroTitle { animation: heroReveal 2.2s cubic-bezier(.16,.84,.3,1) .25s both; }
   @media (prefers-reduced-motion: reduce) { #heroTitle { animation: none; } }
 </style>
@@ -109,14 +130,18 @@
     </button>
     <!-- expanded card -->
     <div id="wlCard" style="display:none; width:344px; background:#141416; border:1px solid rgba(255,255,255,.1); border-radius:20px; padding:26px 26px 22px; box-shadow:0 30px 70px rgba(0,0,0,.6); position:relative;">
-      <button id="wlClose" aria-label="Close" style="position:absolute; top:16px; right:16px; background:none; border:none; cursor:pointer; color:#7a7a82; font-family:'JetBrains Mono',monospace; font-size:18px; line-height:1; transition:color .15s ease;">✕</button>
+      <button id="wlClose" aria-label="Close" style="position:absolute; top:16px; right:22px; background:none; border:none; cursor:pointer; color:#7a7a82; font-family:'JetBrains Mono',monospace; font-size:18px; line-height:1; transition:color .15s ease;">✕</button>
       <div id="wlForm">
         <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; color:#2F6BFF;">WAITLIST</div>
-        <h3 style="margin:12px 0 0; font-family:'Newsreader',serif; font-weight:400; font-size:28px; letter-spacing:-.01em; color:#fbfbfb;">Be first in line.</h3>
-        <p style="margin:8px 0 20px; font-size:13.5px; line-height:1.5; color:#9a9aa0;">Get early access to authenticated, vaulted collectibles.</p>
-        <input id="wlName" type="text" placeholder="Full name" autocomplete="name" style="width:100%; box-sizing:border-box; background:#0c0c0d; border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:13px 14px; color:#fbfbfb; font-family:'Inter',sans-serif; font-size:14px; outline:none; margin-bottom:10px; transition:border-color .15s ease;">
-        <input id="wlEmail" type="email" placeholder="Email address" autocomplete="email" style="width:100%; box-sizing:border-box; background:#0c0c0d; border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:13px 14px; color:#fbfbfb; font-family:'Inter',sans-serif; font-size:14px; outline:none; margin-bottom:10px; transition:border-color .15s ease;">
-        <input id="wlTelegram" type="text" placeholder="Telegram ID (optional)" autocomplete="off" inputmode="text" style="width:100%; box-sizing:border-box; background:#0c0c0d; border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:13px 14px; color:#fbfbfb; font-family:'Inter',sans-serif; font-size:14px; outline:none; margin-bottom:6px; transition:border-color .15s ease;">
+        <h3 style="margin:8px 0 0; font-family:'Newsreader',serif; font-weight:400; font-size:28px; line-height:1.1; letter-spacing:-.01em; color:#fbfbfb;">Be first in line.</h3>
+        <p style="margin:5px 0 18px; font-size:13.5px; line-height:1.4; color:#9a9aa0;">Get early access to authenticated, vaulted collectibles.</p>
+        <input id="wlName" type="text" placeholder="Full name" autocomplete="name" style="width:100%; height:44px; box-sizing:border-box; background:#0c0c0d; border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:0 14px; color:#fbfbfb; font-family:'Inter',sans-serif; font-size:14px; line-height:1.2; outline:none; margin-bottom:10px; transition:border-color .15s ease;">
+        <input id="wlEmail" type="email" placeholder="Email address" autocomplete="email" style="width:100%; height:44px; box-sizing:border-box; background:#0c0c0d; border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:0 14px; color:#fbfbfb; font-family:'Inter',sans-serif; font-size:14px; line-height:1.2; outline:none; margin-bottom:10px; transition:border-color .15s ease;">
+        <div style="position:relative; margin-bottom:6px;">
+          <span style="position:absolute; left:14px; top:50%; transform:translateY(-50%); font-family:'JetBrains Mono',monospace; font-size:14px; color:#5c5c63; pointer-events:none;">@</span>
+          <input id="wlTelegram" type="text" placeholder="Telegram username" autocomplete="off" style="width:100%; height:44px; box-sizing:border-box; background:#0c0c0d; border:1px solid rgba(255,255,255,.14); border-radius:10px; padding:0 72px 0 30px; color:#fbfbfb; font-family:'Inter',sans-serif; font-size:14px; line-height:1.2; outline:none; transition:border-color .15s ease;">
+          <span style="position:absolute; right:13px; top:50%; transform:translateY(-50%); font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.1em; color:#5c5c63; pointer-events:none;">OPTIONAL</span>
+        </div>
         <div id="wlError" style="min-height:16px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.02em; color:#ff6b5e; margin-bottom:8px;"></div>
         <button id="wlSubmit" style="width:100%; display:inline-flex; align-items:center; justify-content:center; gap:9px; background:#2F6BFF; color:#fff; border:none; cursor:pointer; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:14px; letter-spacing:.03em; padding:15px; border-radius:11px; transition:background .15s ease;">Join Waitlist <span style="font-size:15px;">→</span></button>
         <p style="margin:14px 0 0; text-align:center; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.06em; color:#6a6a70;">NO SPAM. EVER.</p>
@@ -229,7 +254,7 @@ class Component extends DCLogic {
     const submit = document.getElementById('wlSubmit');
     const nameI = document.getElementById('wlName');
     const emailI = document.getElementById('wlEmail');
-    const telegramI = document.getElementById('wlTelegram');
+    const tgI = document.getElementById('wlTelegram');
     const err = document.getElementById('wlError');
     const form = document.getElementById('wlForm');
     const success = document.getElementById('wlSuccess');
@@ -283,21 +308,23 @@ class Component extends DCLogic {
     // hover lift + glow handled in CSS (#wlPill:hover) so the pulse animation isn't overridden
     submit.addEventListener('mouseover', () => submit.style.background = '#1f5be0');
     submit.addEventListener('mouseout', () => submit.style.background = '#2F6BFF');
-    [nameI, emailI, telegramI].forEach(inp => {
+    [nameI, emailI, tgI].forEach(inp => {
       inp.addEventListener('focus', () => inp.style.borderColor = '#2F6BFF');
       inp.addEventListener('blur', () => inp.style.borderColor = 'rgba(255,255,255,.14)');
     });
 
-        const doSubmit = async () => {
+    const doSubmit = async () => {
       const name = nameI.value.trim();
       const email = emailI.value.trim();
-      const telegramRaw = telegramI.value.trim();
-      const telegram = telegramRaw ? telegramRaw.replace(/^@+/, '') : '';
+      const telegram = tgI ? tgI.value.trim().replace(/^@+/, '') : '';
       const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
       if (!name) { err.textContent = 'Please enter your name.'; nameI.focus(); return; }
       if (!emailOk) { err.textContent = 'Please enter a valid email.'; emailI.focus(); return; }
       const endpoint = (window.__FORMSPREE_WAITLIST_ENDPOINT || '').trim();
-      if (!endpoint) {
+      const sheetsApi = '/api/waitlist';
+      const hasFormspree = !!endpoint;
+      const hasSheets = true;
+      if (!hasFormspree && !hasSheets) {
         err.textContent = 'Waitlist is not configured yet.';
         return;
       }
@@ -307,35 +334,55 @@ class Component extends DCLogic {
       submit.textContent = 'Sending…';
       try {
         const payload = { name, email, telegram, _subject: '[Tokenable waitlist] ' + name };
-        const sheetsUrl = (window.__WAITLIST_SHEETS_URL || '').trim();
-        const sheetsSecret = (window.__WAITLIST_SHEETS_SECRET || '').trim();
-        const saveToSheets = sheetsUrl
-          ? fetch(sheetsUrl, {
+        let sheetsOk = false;
+        let formspreeOk = false;
+
+        if (hasSheets) {
+          try {
+            const res = await fetch(sheetsApi, {
               method: 'POST',
-              mode: 'no-cors',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({ secret: sheetsSecret, name, email, telegram }),
-            }).catch((err) => console.warn('[waitlist] Google Sheets sync failed', err))
-          : Promise.resolve();
-        const [res] = await Promise.all([
-          fetch(endpoint, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-            body: JSON.stringify(payload),
-          }),
-          saveToSheets,
-        ]);
-        const data = await res.json().catch(() => ({}));
-        if (!res.ok) {
-          const msg = (data && (data.error || (data.errors && Object.values(data.errors)[0]))) || 'Could not submit. Try again.';
-          err.textContent = typeof msg === 'string' ? msg : 'Could not submit. Try again.';
+              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+              body: JSON.stringify({ name, email, telegram }),
+            });
+            const data = await res.json().catch(() => ({}));
+            sheetsOk = res.ok && data.ok !== false;
+            if (!sheetsOk) {
+              console.warn('[waitlist] Google Sheets sync failed', data.error || res.status);
+            }
+          } catch (err) {
+            console.warn('[waitlist] Google Sheets sync failed', err);
+          }
+        }
+
+        if (hasFormspree) {
+          try {
+            const res = await fetch(endpoint, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+              body: JSON.stringify(payload),
+            });
+            formspreeOk = res.ok;
+            if (!res.ok) {
+              const data = await res.json().catch(() => ({}));
+              const msg = (data && (data.error || (data.errors && Object.values(data.errors)[0]))) || 'Formspree rejected submission.';
+              console.warn('[waitlist] Formspree rejected submission', msg);
+            }
+          } catch (err) {
+            console.warn('[waitlist] Formspree request failed', err);
+          }
+        }
+
+        if (!sheetsOk && !formspreeOk) {
+          err.textContent = sheetsOk === false && hasFormspree
+            ? 'Could not save your signup. Please try again.'
+            : 'Network error. Please try again.';
           return;
         }
         successMsg.textContent = 'Thanks, ' + name.split(' ')[0] + '. We\u2019ll be in touch soon.';
         form.style.display = 'none';
         success.style.display = 'block';
         setTimeout(close, 2600);
-        setTimeout(() => { form.style.display = 'block'; success.style.display = 'none'; nameI.value = ''; emailI.value = ''; telegramI.value = ''; }, 2800);
+        setTimeout(() => { form.style.display = 'block'; success.style.display = 'none'; nameI.value = ''; emailI.value = ''; if (tgI) tgI.value = ''; }, 2800);
       } catch (e) {
         err.textContent = 'Network error. Please try again.';
       } finally {
@@ -344,8 +391,8 @@ class Component extends DCLogic {
       }
     };
     submit.addEventListener('click', doSubmit);
-    telegramI.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSubmit(); });
-    emailI.addEventListener('keydown', (e) => { if (e.key === 'Enter') telegramI.focus(); });
+    emailI.addEventListener('keydown', (e) => { if (e.key === 'Enter') { if (tgI) tgI.focus(); else doSubmit(); } });
+    if (tgI) tgI.addEventListener('keydown', (e) => { if (e.key === 'Enter') doSubmit(); });
     nameI.addEventListener('keydown', (e) => { if (e.key === 'Enter') emailI.focus(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && card.style.display !== 'none') close(); });
   }
