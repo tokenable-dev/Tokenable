@@ -8,7 +8,7 @@ const ogImage = "/og.jpg";
 export const metadata: Metadata = {
   title: "Tokenable",
   description:
-    "Own a piece of the world's greatest collectibles. Authenticated, vaulted assets you can own in whole or in part.",
+    "Own a piece of the world's greatest to rarest. Authenticated, vaulted assets you can own in whole or in part.",
   keywords: [
     "tokenized collectibles",
     "fractional ownership",
@@ -19,7 +19,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Tokenable",
     description:
-      "Own a piece of the world's greatest collectibles. Join the waitlist for early access.",
+      "Own a piece of the world's greatest to rarest. Join the waitlist for early access.",
     type: "website",
     url: siteUrl,
     siteName: "Tokenable",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Tokenable",
-    description: "Own a piece of the world's greatest collectibles.",
+    description: "Own a piece of the world's greatest to rarest",
     images: [ogImage],
   },
 };
@@ -52,7 +52,7 @@ export default function HomePage() {
   return (
     <>
       <h1 className="landing-seo-title">
-        Own a piece of the world&apos;s greatest collectibles
+        Own a piece of the world&apos;s greatest to rarest.
       </h1>
       <p className="landing-seo-title">
         Tokenized, authenticated, and vaulted collectibles for collectors and investors.
