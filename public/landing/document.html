@@ -142,124 +142,173 @@
   #logoMarqueeTrack { animation: logoScroll 26s linear infinite; }
   #heroCover #topNav { background: transparent !important; border-bottom-color: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 
-  /*
-   * One variable drives everything: the card width. The contributor row and the
-   * partner logo strip are both `--vt-cols` cards wide, so they always line up.
-   * fitTeamLayer() in JS lowers --vt-card until the whole block fits the viewport,
-   * which is what keeps the logo strip on screen on short laptops.
-   */
+  /* Shared team shell: scrollable fixed layer; Lenis must not steal wheel here */
   #teamLayer {
-    --vt-cols: 4;
     --vt-gap: 14px;
-    --vt-card-max: 180px;
-    --vt-card: var(--vt-card-max);
-    --vt-row-w: calc(var(--vt-card) * var(--vt-cols) + var(--vt-gap) * (var(--vt-cols) - 1));
+    --vt-row-w: min(1480px, calc(100vw - 40px));
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: center !important;
-    overflow: hidden !important;
-    padding: 20px !important;
+    justify-content: flex-start !important;
+    padding: 28px 16px 24px !important;
     box-sizing: border-box !important;
+    -webkit-overflow-scrolling: touch;
   }
+  #teamLayer::-webkit-scrollbar { width: 0; height: 0; }
   #teamLayer > img.vt-wall,
-  #teamLayer > div.vt-fx { position: absolute !important; pointer-events: none !important; }
+  #teamLayer > div.vt-fx { position: fixed !important; inset: 0 !important; pointer-events: none; }
   #teamHeader {
-    position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
-    margin: 0 auto 16px !important; padding: 0 !important;
-    flex: 0 0 auto !important; width: 100% !important; max-width: var(--vt-row-w) !important;
+    position: relative !important; top: auto !important; left: auto !important; right: auto !important;
+    margin: 0 auto 14px !important; flex: 0 0 auto !important; width: 100%; max-width: var(--vt-row-w);
   }
   #framesRow {
-    position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+    position: relative !important; top: auto !important; bottom: auto !important; left: auto !important; right: auto !important;
     transform: none !important; margin: 0 auto !important; padding: 0 !important;
+    flex: 0 0 auto !important; z-index: 2 !important;
     display: flex !important; flex-wrap: wrap !important;
-    justify-content: center !important; align-content: center !important;
+    justify-content: center !important; align-content: flex-start !important;
     gap: var(--vt-gap) !important;
     width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
     height: auto !important; overflow: visible !important;
-    flex: 0 0 auto !important; z-index: 2 !important;
   }
   #framesRow > .tk-team {
-    width: var(--vt-card) !important;
-    max-width: var(--vt-card) !important;
-    flex: 0 0 var(--vt-card) !important;
-    min-width: 0 !important; height: auto !important; overflow: hidden !important;
+    min-width: 0 !important; height: auto !important; flex: 0 0 auto !important; overflow: hidden !important;
   }
   #framesRow > .tk-team * { min-width: 0 !important; max-width: 100% !important; box-sizing: border-box !important; }
-  /* Clamped so every card in a row keeps the same height */
-  #framesRow > .tk-team .tk-team-bio {
-    display: -webkit-box !important;
-    -webkit-line-clamp: 3 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-  }
+
+  /* Logo strip stays in flow + sticky so it never disappears under the fold */
+  #teamLayer { scroll-padding-bottom: 56px; }
   #logoStrip {
-    position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
-    transform: none !important; margin: 18px auto 0 !important; padding: 0 !important;
-    display: flex !important; flex-wrap: nowrap !important;
+    position: sticky !important; bottom: 0 !important; left: auto !important; right: auto !important; top: auto !important;
+    z-index: 6 !important; display: flex !important; flex-wrap: nowrap !important;
     justify-content: space-between !important; align-items: center !important;
-    gap: 8px !important;
+    gap: 8px !important; margin: auto auto 0 !important; padding: 14px 0 8px !important;
     width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
-    flex: 0 0 auto !important; z-index: 3 !important; box-sizing: border-box !important;
-    background: none !important;
+    flex: 0 0 auto !important; box-sizing: border-box !important;
+    background: linear-gradient(180deg, rgba(10,11,16,0) 0%, rgba(10,11,16,.88) 28%, rgba(10,11,16,.98) 100%) !important;
   }
   #logoStrip > span {
-    width: auto !important; min-width: 0 !important; max-width: none !important; height: 26px !important;
+    width: auto !important; min-width: 0 !important; max-width: none !important; height: 28px !important;
     flex: 1 1 0 !important; padding: 0 !important;
   }
   #logoStrip img { width: auto !important; min-width: 0 !important; max-width: 100% !important; max-height: 100% !important; }
   #logoMarquee { display: none !important; }
 
-  /* 15" laptops and larger: all seven contributors on one row */
-  @media (min-width: 1600px) {
-    #teamLayer { --vt-cols: 7; --vt-gap: 14px; --vt-card-max: 192px; }
+  /* Desktop large: all 7 on one row */
+  @media (min-width: 1200px) {
+    #teamLayer { --vt-row-w: min(1480px, calc(100vw - 48px)); --vt-gap: 12px; padding: 32px 20px 20px !important; }
+    #framesRow { flex-wrap: nowrap !important; }
+    #framesRow > .tk-team {
+      flex: 1 1 0 !important;
+      width: auto !important;
+      max-width: 200px !important;
+      min-width: 0 !important;
+    }
+    #framesRow > .tk-team span[style*="Newsreader"] { font-size: clamp(14px, 1.15vw, 17px) !important; }
+    #framesRow > .tk-team .tk-team-bio { font-size: 11px !important; line-height: 1.4 !important; }
   }
 
-  /*
-   * Phones: drop the pinned vault dive entirely. Hero and team become two normal
-   * stacked sections, so nothing is clipped and the page scrolls natively.
-   */
-  @media (max-width: 680px) {
-    #vt-root { height: auto !important; }
-    #heroCover {
-      position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
-      height: 100svh !important; z-index: 1 !important;
-      opacity: 1 !important; visibility: visible !important; transform: none !important;
+  /* Tablet / mid desktop: exactly 4 on top, 3 centered below */
+  @media (min-width: 681px) and (max-width: 1199px) {
+    #teamLayer { --vt-row-w: min(920px, calc(100vw - 40px)); --vt-gap: 10px; padding: 18px 16px 12px !important; }
+    #teamHeader { margin: 0 auto 8px !important; }
+    #teamHeader h2 { font-size: clamp(26px, 3.1vw, 38px) !important; margin: 6px 0 4px !important; }
+    #framesRow {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      gap: 10px !important;
     }
-    #teamLayer {
-      position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
-      height: auto !important; min-height: 100svh !important;
-      transform: none !important; z-index: 1 !important;
-      --vt-cols: 2; --vt-gap: 10px;
-      padding: 30px 14px 26px !important;
-      justify-content: flex-start !important;
+    #framesRow > .tk-team {
+      box-sizing: border-box !important;
+      width: calc((100% - 30px) / 4) !important;
+      max-width: calc((100% - 30px) / 4) !important;
+      flex: 0 0 calc((100% - 30px) / 4) !important;
+    }
+    /* Compact cards so 4+3 + sticky logos fit ~900px without covering bios */
+    #framesRow > .tk-team [style*="aspect-ratio:1/1"] {
+      aspect-ratio: 1 / 0.78 !important;
+      max-height: 168px !important;
+    }
+    #framesRow > .tk-team [style*="padding:12px"] {
+      padding: 8px 8px 9px !important;
+      gap: 4px !important;
+    }
+    #framesRow > .tk-team span[style*="Newsreader"] { font-size: 15px !important; }
+    #framesRow > .tk-team [style*="letter-spacing:.12em"] { font-size: 10px !important; }
+    #framesRow > .tk-team .tk-team-bio {
+      font-size: 10.5px !important;
+      line-height: 1.35 !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 3 !important;
+      -webkit-box-orient: vertical !important;
       overflow: hidden !important;
     }
-    #teamHeader { width: 100% !important; max-width: 420px !important; margin: 0 auto 14px !important; }
-    #teamHeader h2 { font-size: clamp(24px, 7.2vw, 34px) !important; margin: 8px 0 4px !important; }
+    #framesRow > .tk-team [style*="padding:4px 9px"] {
+      padding: 3px 6px !important;
+      font-size: 9.5px !important;
+    }
+    #logoStrip { padding: 10px 0 6px !important; }
+    #logoStrip > span { height: 24px !important; }
+  }
+
+  /* Phones: clean 2-col cards + bottom logo marquee */
+  @media (max-width: 680px) {
+    #teamLayer {
+      --vt-row-w: calc(100vw - 28px);
+      --vt-gap: 10px;
+      padding: 22px 14px 72px !important;
+      justify-content: flex-start !important;
+    }
+    #teamHeader { margin: 0 auto 12px !important; padding: 0 !important; }
+    #teamHeader h2 { font-size: clamp(24px, 7vw, 34px) !important; margin: 8px 0 4px !important; }
     #framesRow {
       display: grid !important;
-      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
       gap: 10px !important;
-      width: 100% !important; max-width: 420px !important;
+      width: var(--vt-row-w) !important;
+      max-width: var(--vt-row-w) !important;
     }
-    #framesRow > .tk-team { width: 100% !important; max-width: 100% !important; flex: none !important; }
+    #framesRow > .tk-team {
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: none !important;
+    }
     #framesRow > .tk-team > div { border-radius: 14px !important; }
     #framesRow > .tk-team > div > div { border-radius: 13px !important; }
-    #framesRow > .tk-team [style*="padding:12px"] { padding: 9px 9px 10px !important; gap: 5px !important; }
-    #framesRow > .tk-team span[style*="Newsreader"] { font-size: 14px !important; }
+    #framesRow > .tk-team [style*="padding:12px"] {
+      padding: 8px 8px 10px !important;
+      gap: 4px !important;
+    }
+    #framesRow > .tk-team span[style*="Newsreader"] { font-size: 13.5px !important; }
     #framesRow > .tk-team [style*="letter-spacing:.12em"] { font-size: 9px !important; letter-spacing: .1em !important; }
-    #framesRow > .tk-team .tk-team-bio { font-size: 10px !important; line-height: 1.4 !important; }
-    #framesRow > .tk-team [style*="padding:4px 9px"] { padding: 3px 6px !important; font-size: 9px !important; border-radius: 5px !important; }
+    #framesRow > .tk-team .tk-team-bio {
+      font-size: 10px !important;
+      line-height: 1.35 !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 3 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+    }
+    #framesRow > .tk-team [style*="padding:4px 9px"] {
+      padding: 3px 6px !important;
+      font-size: 9px !important;
+      border-radius: 5px !important;
+    }
     #logoStrip { display: none !important; }
     #logoMarquee {
       display: flex !important;
-      position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
-      width: 100% !important; max-width: 420px !important; height: 48px !important;
-      margin: 20px auto 0 !important; flex: 0 0 auto !important; z-index: 3 !important;
-      background: none !important; align-items: center !important; overflow: hidden !important;
+      position: fixed !important;
+      left: 0 !important; right: 0 !important; bottom: 0 !important;
+      top: auto !important;
+      z-index: 8 !important;
+      height: 58px !important;
+      padding-bottom: env(safe-area-inset-bottom, 0px) !important;
+      align-items: center !important;
     }
-    #logoMarquee > div[style*="height:1px"] { display: none !important; }
     #scrollHint { display: none !important; }
   }
   @media (prefers-reduced-motion: reduce) { #logoMarqueeTrack { animation: none !important; } }
