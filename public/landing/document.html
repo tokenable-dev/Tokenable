@@ -772,6 +772,8 @@ class Component extends DCLogic {
           smoothWheel: true,
           wheelMultiplier: 0.92,
           touchMultiplier: 1.05,
+          // Allow #teamLayer[data-lenis-prevent] to scroll its own overflow
+          prevent: (node) => !!(node && node.closest && node.closest('[data-lenis-prevent]')),
         });
         lenis.on('scroll', ST.update);
         g.ticker.add((time) => { lenis.raf(time * 1000); });
