@@ -141,71 +141,145 @@
   @keyframes logoScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   #logoMarqueeTrack { animation: logoScroll 26s linear infinite; }
   #heroCover #topNav { background: transparent !important; border-bottom-color: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
-  #logoMarquee { display: none !important; }
+
+  /* Shared team shell: scrollable fixed layer; Lenis must not steal wheel here */
+  #teamLayer {
+    --vt-gap: 14px;
+    --vt-row-w: min(1480px, calc(100vw - 40px));
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    overscroll-behavior: contain;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    padding: 28px 16px 24px !important;
+    box-sizing: border-box !important;
+    -webkit-overflow-scrolling: touch;
+  }
+  #teamLayer::-webkit-scrollbar { width: 0; height: 0; }
+  #teamLayer > img.vt-wall,
+  #teamLayer > div.vt-fx { position: fixed !important; inset: 0 !important; pointer-events: none; }
+  #teamHeader {
+    position: relative !important; top: auto !important; left: auto !important; right: auto !important;
+    margin: 0 auto 14px !important; flex: 0 0 auto !important; width: 100%; max-width: var(--vt-row-w);
+  }
+  #framesRow {
+    position: relative !important; top: auto !important; bottom: auto !important; left: auto !important; right: auto !important;
+    transform: none !important; margin: 0 auto !important; padding: 0 !important;
+    flex: 0 0 auto !important; z-index: 2 !important;
+    display: flex !important; flex-wrap: wrap !important;
+    justify-content: center !important; align-content: flex-start !important;
+    gap: var(--vt-gap) !important;
+    width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
+    height: auto !important; overflow: visible !important;
+  }
+  #framesRow > .tk-team {
+    min-width: 0 !important; height: auto !important; flex: 0 0 auto !important; overflow: hidden !important;
+  }
+  #framesRow > .tk-team * { min-width: 0 !important; max-width: 100% !important; box-sizing: border-box !important; }
+
+  /* Logo strip stays in flow + sticky so it never disappears under the fold */
   #logoStrip {
-    display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; align-items: center !important;
-    gap: 10px !important; z-index: 3 !important; background: none !important; box-sizing: border-box !important;
+    position: sticky !important; bottom: 0 !important; left: auto !important; right: auto !important; top: auto !important;
+    z-index: 6 !important; display: flex !important; flex-wrap: nowrap !important;
+    justify-content: space-between !important; align-items: center !important;
+    gap: 8px !important; margin: auto auto 0 !important; padding: 14px 0 8px !important;
+    width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
+    flex: 0 0 auto !important; box-sizing: border-box !important;
+    background: linear-gradient(180deg, rgba(10,11,16,0) 0%, rgba(10,11,16,.88) 28%, rgba(10,11,16,.98) 100%) !important;
   }
   #logoStrip > span {
     width: auto !important; min-width: 0 !important; max-width: none !important; height: 28px !important;
     flex: 1 1 0 !important; padding: 0 !important;
   }
   #logoStrip img { width: auto !important; min-width: 0 !important; max-width: 100% !important; max-height: 100% !important; }
-  /* Match Vault Transition HTML: clamp(120px, 13.2vw, 220px) — do NOT stretch to fill 4 cols */
-  #teamLayer { --vt-row-w: min(1120px, calc(100vw - 48px)); }
-  #framesRow > .tk-team {
-    width: clamp(120px, 13.2vw, 220px) !important;
-    max-width: 220px !important;
+  #logoMarquee { display: none !important; }
+
+  /* Desktop large: all 7 on one row */
+  @media (min-width: 1200px) {
+    #teamLayer { --vt-row-w: min(1480px, calc(100vw - 48px)); --vt-gap: 12px; padding: 32px 20px 20px !important; }
+    #framesRow { flex-wrap: nowrap !important; }
+    #framesRow > .tk-team {
+      flex: 1 1 0 !important;
+      width: auto !important;
+      max-width: 200px !important;
+      min-width: 0 !important;
+    }
+    #framesRow > .tk-team span[style*="Newsreader"] { font-size: clamp(14px, 1.15vw, 17px) !important; }
+    #framesRow > .tk-team .tk-team-bio { font-size: 11px !important; line-height: 1.4 !important; }
   }
-  #framesRow > .tk-team .tk-team-name { font-size: 17px !important; }
-  #framesRow > .tk-team .tk-team-bio { font-size: 11.5px !important; line-height: 1.45 !important; }
-  @media (min-width: 681px) {
-    #teamLayer { overflow-y: auto !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; padding: 40px 0 60px !important; }
-    #teamLayer::-webkit-scrollbar { display: none; }
-    #teamLayer > img.vt-wall, #teamLayer > div.vt-fx { position: fixed !important; }
-    #teamHeader { position: relative !important; top: auto !important; left: auto !important; right: auto !important; margin: 0 auto 18px !important; flex: 0 0 auto !important; }
+
+  /* Tablet / mid desktop: exactly 4 on top, 3 centered below */
+  @media (min-width: 681px) and (max-width: 1199px) {
+    #teamLayer { --vt-row-w: min(920px, calc(100vw - 40px)); --vt-gap: 14px; padding: 28px 16px 18px !important; }
     #framesRow {
-      position: relative !important; top: auto !important; bottom: auto !important; left: auto !important; right: auto !important;
-      transform: none !important; display: flex !important; flex-wrap: wrap !important;
-      justify-content: center !important; align-content: flex-start !important;
-      gap: 18px !important; padding: 0 !important; margin: 0 auto !important; flex: 0 0 auto !important;
-      width: fit-content !important; max-width: var(--vt-row-w) !important; height: auto !important; overflow: visible !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      gap: 14px !important;
     }
     #framesRow > .tk-team {
-      width: clamp(120px, 13.2vw, 220px) !important;
-      max-width: 220px !important;
-      min-width: 0 !important; height: auto !important; flex: 0 0 auto !important; overflow: hidden !important;
-    }
-    #framesRow > .tk-team * { min-width: 0 !important; max-width: 100% !important; }
-    #logoStrip {
-      position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
-      margin: 28px auto 0 !important; padding: 0 !important; flex: 0 0 auto !important;
-      width: fit-content !important; max-width: var(--vt-row-w) !important;
-      justify-content: space-between !important; flex-wrap: nowrap !important;
+      box-sizing: border-box !important;
+      width: calc((100% - 42px) / 4) !important;
+      max-width: calc((100% - 42px) / 4) !important;
+      flex: 0 0 calc((100% - 42px) / 4) !important;
     }
   }
-  @media (min-width: 1600px) {
-    #teamLayer { --vt-row-w: min(1280px, calc(100vw - 64px)); }
-  }
-  /* phones: 2-col grid, matching widths */
+
+  /* Phones: clean 2-col cards + bottom logo marquee */
   @media (max-width: 680px) {
-    #teamLayer { --vt-row-w: calc(100vw - 32px); overflow-y: auto !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; padding: 30px 0 48px !important; }
-    #teamLayer::-webkit-scrollbar { display: none; }
-    #teamLayer > img.vt-wall, #teamLayer > div.vt-fx { position: fixed !important; }
-    #teamHeader { position: relative !important; top: auto !important; left: auto !important; right: auto !important; margin: 0 auto 16px !important; flex: 0 0 auto !important; }
+    #teamLayer {
+      --vt-row-w: calc(100vw - 28px);
+      --vt-gap: 10px;
+      padding: 22px 14px 72px !important;
+      justify-content: flex-start !important;
+    }
+    #teamHeader { margin: 0 auto 12px !important; padding: 0 !important; }
+    #teamHeader h2 { font-size: clamp(24px, 7vw, 34px) !important; margin: 8px 0 4px !important; }
     #framesRow {
-      position: relative !important; top: auto !important; bottom: auto !important; left: auto !important; right: auto !important;
-      transform: none !important; display: grid !important; grid-template-columns: 1fr 1fr !important;
-      gap: 12px !important; padding: 0 !important; margin: 0 auto !important; align-content: start !important;
-      width: var(--vt-row-w) !important; max-width: none !important; height: auto !important; overflow: visible !important; flex: 0 0 auto !important;
+      display: grid !important;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+      gap: 10px !important;
+      width: var(--vt-row-w) !important;
+      max-width: var(--vt-row-w) !important;
     }
-    #framesRow > * { width: 100% !important; max-width: none !important; height: auto !important; }
-    #logoStrip {
-      position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
-      margin: 24px auto 0 !important; padding: 0 !important; width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
-      flex: 0 0 auto !important; justify-content: space-between !important; flex-wrap: nowrap !important; gap: 6px !important;
+    #framesRow > .tk-team {
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: none !important;
     }
-    #logoStrip > span { height: 22px !important; }
+    #framesRow > .tk-team > div { border-radius: 14px !important; }
+    #framesRow > .tk-team > div > div { border-radius: 13px !important; }
+    #framesRow > .tk-team [style*="padding:12px"] {
+      padding: 8px 8px 10px !important;
+      gap: 4px !important;
+    }
+    #framesRow > .tk-team span[style*="Newsreader"] { font-size: 13.5px !important; }
+    #framesRow > .tk-team [style*="letter-spacing:.12em"] { font-size: 9px !important; letter-spacing: .1em !important; }
+    #framesRow > .tk-team .tk-team-bio {
+      font-size: 10px !important;
+      line-height: 1.35 !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 3 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+    }
+    #framesRow > .tk-team [style*="padding:4px 9px"] {
+      padding: 3px 6px !important;
+      font-size: 9px !important;
+      border-radius: 5px !important;
+    }
+    #logoStrip { display: none !important; }
+    #logoMarquee {
+      display: flex !important;
+      position: fixed !important;
+      left: 0 !important; right: 0 !important; bottom: 0 !important;
+      top: auto !important;
+      z-index: 8 !important;
+      height: 56px !important;
+      align-items: center !important;
+    }
     #scrollHint { display: none !important; }
   }
   @media (prefers-reduced-motion: reduce) { #logoMarqueeTrack { animation: none !important; } }
@@ -215,7 +289,7 @@
 <div id="vt-root" style="position:relative; width:100%; height:360vh; background:#09090b;">
 
   <!-- ============ BOTTOM LAYER: TEAM (z:0, fixed) ============ -->
-  <section id="teamLayer" style="position:fixed; inset:0; z-index:0; overflow:hidden; background:#0a0b10;">
+  <section id="teamLayer" data-lenis-prevent style="position:fixed; inset:0; z-index:0; overflow:hidden; background:#0a0b10;">
     <img class="vt-wall" src="/landing/vault-wall.png" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 50%; z-index:0; filter:brightness(.62) contrast(1.22) saturate(1.05);">
     <div class="vt-fx" aria-hidden="true" style="position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(6,7,11,.24) 0%, rgba(6,7,11,.4) 46%, rgba(6,7,11,.82) 100%);"></div>
     <div class="vt-fx" aria-hidden="true" style="position:absolute; top:-8%; left:50%; transform:translateX(-50%); width:124%; height:64%; z-index:1; pointer-events:none; background:radial-gradient(ellipse 58% 100% at 50% 0%, rgba(214,204,255,.32) 0%, rgba(150,150,220,.14) 32%, transparent 68%); mix-blend-mode:screen;"></div>
@@ -585,17 +659,29 @@ class Component extends DCLogic {
   }
 
   syncLogoStripWidth() {
+    const layer = document.getElementById('teamLayer');
     const frames = document.getElementById('framesRow');
     const logos = document.getElementById('logoStrip');
     if (!frames || !logos) return;
-    const w = Math.round(frames.getBoundingClientRect().width);
+    // Prefer CSS --vt-row-w so logos match the profile row at every breakpoint
+    let w = 0;
+    if (layer) {
+      const raw = getComputedStyle(layer).getPropertyValue('--vt-row-w').trim();
+      if (raw) {
+        const probe = document.createElement('div');
+        probe.style.cssText = 'position:absolute;visibility:hidden;width:' + raw + ';pointer-events:none;';
+        document.body.appendChild(probe);
+        w = Math.round(probe.getBoundingClientRect().width);
+        probe.remove();
+      }
+    }
+    if (!w) w = Math.round(frames.getBoundingClientRect().width);
     if (!w) return;
     logos.style.setProperty('width', w + 'px', 'important');
     logos.style.setProperty('max-width', w + 'px', 'important');
     logos.style.setProperty('left', 'auto', 'important');
     logos.style.setProperty('right', 'auto', 'important');
     logos.style.setProperty('transform', 'none', 'important');
-    logos.style.setProperty('padding', '0', 'important');
     logos.style.setProperty('justify-content', 'space-between', 'important');
     logos.style.setProperty('flex-wrap', 'nowrap', 'important');
     logos.style.setProperty('box-sizing', 'border-box', 'important');
@@ -638,6 +724,8 @@ class Component extends DCLogic {
             smoothWheel: true,
             wheelMultiplier: 0.92,
             touchMultiplier: 1.05,
+            // Allow #teamLayer[data-lenis-prevent] to scroll its own overflow
+            prevent: (node) => !!(node && node.closest && node.closest('[data-lenis-prevent]')),
           });
           lenis.on('scroll', ST.update);
           g.ticker.add((time) => { lenis.raf(time * 1000); });
