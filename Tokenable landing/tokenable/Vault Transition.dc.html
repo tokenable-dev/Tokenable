@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&amp;family=Inter:wght@300;400;500;600&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="./image-slot.js"></script>
+<style>
+  html, body { margin:0; padding:0; background:#09090b; }
+  * { box-sizing:border-box; }
+  body { font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; }
+  ::selection { background:#2F6BFF; color:#09090b; }
+  @keyframes vtDrift1 { 0%{transform:translate(0,0)} 50%{transform:translate(8vw,4vh)} 100%{transform:translate(0,0)} }
+  @keyframes vtDrift2 { 0%{transform:translate(0,0)} 50%{transform:translate(-7vw,-5vh)} 100%{transform:translate(0,0)} }
+  @keyframes vtGridPan { from{background-position:0 0, 0 0} to{background-position:132px 0, 0 132px} }
+  @keyframes vtSweep { 0%{transform:translateX(-60%);opacity:0} 20%{opacity:.5} 50%{opacity:.5} 80%{opacity:0} 100%{transform:translateX(160%);opacity:0} }
+  @keyframes vtTwinkle { 0%,100%{opacity:.15;transform:scale(1)} 50%{opacity:.7;transform:scale(1.5)} }
+  .vt-glow1 { animation: vtDrift1 18s ease-in-out infinite; }
+  .vt-glow2 { animation: vtDrift2 22s ease-in-out infinite; }
+  .vt-grid { animation: vtGridPan 40s linear infinite; }
+  .vt-sweep { animation: vtSweep 9s ease-in-out infinite; }
+  .vt-spark { animation: vtTwinkle 5s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .vt-glow1,.vt-glow2,.vt-grid,.vt-sweep,.vt-spark { animation: none !important; } }
+  @keyframes vtSheen { 0%{transform:translateX(-150%) skewX(-18deg); opacity:0} 10%{opacity:.5} 42%{opacity:.5} 60%{opacity:0} 100%{transform:translateX(240%) skewX(-18deg); opacity:0} }
+  @keyframes vtRim { 0%,100%{filter:brightness(.95) saturate(1)} 50%{filter:brightness(1.3) saturate(1.1)} }
+  .vt-rim { animation: vtRim 7s ease-in-out infinite; }
+  .vt-sheen { animation: vtSheen 6.5s ease-in-out infinite; }
+  #framesRow > div:nth-child(1) .vt-sheen { animation-delay: 0s; }
+  #framesRow > div:nth-child(2) .vt-sheen { animation-delay: .5s; }
+  #framesRow > div:nth-child(3) .vt-sheen { animation-delay: 1s; }
+  #framesRow > div:nth-child(4) .vt-sheen { animation-delay: 1.5s; }
+  #framesRow > div:nth-child(5) .vt-sheen { animation-delay: 2s; }
+  #framesRow > div:nth-child(6) .vt-sheen { animation-delay: 2.5s; }
+  #framesRow > div:nth-child(7) .vt-sheen { animation-delay: 3s; }
+  #framesRow > div:nth-child(even) .vt-rim { animation-delay: 1.6s; }
+  @media (prefers-reduced-motion: reduce) { .vt-sheen,.vt-rim { animation: none !important; } }
+  a { color:#2F6BFF; text-decoration:none; }
+  a:hover { color:#5b8bff; }
+  #heroCover #topNav { background: transparent !important; border-bottom-color: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
+  /* logos: static single row (no animation), placed below the cards */
+  #logoMarquee { display: none !important; }
+  #logoStrip { display: flex !important; flex-wrap: wrap !important; justify-content: center !important; align-items: center !important; gap: 14px 28px !important; z-index: 3 !important; background: none !important; }
+  #logoStrip span { width: auto !important; min-width: 0 !important; height: 28px !important; }
+  #logoStrip img { width: auto !important; min-width: 0 !important; max-width: 120px !important; max-height: 100% !important; }
+  /* below 1920: wrap into 2 rows (4 + 3), header on top, logos fixed at bottom */
+  @media (max-width: 1919px) and (min-width: 681px) {
+    #teamLayer { overflow-y: auto !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; padding: 40px 0 60px !important; }
+    #teamLayer::-webkit-scrollbar { display: none; }
+    #teamLayer > img[src], #teamLayer > div[aria-hidden] { position: fixed !important; }
+    #teamHeader { position: relative !important; top: auto !important; left: auto !important; right: auto !important; margin: 0 auto 18px !important; flex: 0 0 auto !important; }
+    #framesRow {
+      position: relative !important; top: auto !important; bottom: auto !important; left: auto !important; right: auto !important;
+      transform: none !important; display: flex !important; flex-wrap: wrap !important;
+      justify-content: center !important; align-content: flex-start !important;
+      gap: 16px !important; padding: 0 !important; margin: 0 auto !important; flex: 0 0 auto !important;
+      width: min(900px, calc(100vw - 48px)) !important; max-width: none !important; height: auto !important; overflow: visible !important;
+    }
+    #framesRow > * {
+      width: calc((100% - 48px) / 4) !important; max-width: calc((100% - 48px) / 4) !important;
+      min-width: 0 !important; height: auto !important; flex: 0 0 auto !important; overflow: hidden !important;
+    }
+    #framesRow > * * { min-width: 0 !important; max-width: 100% !important; }
+    #logoStrip { position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important; margin: 28px auto 0 !important; padding: 0 24px !important; flex: 0 0 auto !important; width: min(900px, calc(100vw - 48px)) !important; }
+  }
+  /* phones: dedicated 2-column scroll UX + fixed auto-scrolling logo bar */
+  @keyframes logoScroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  #logoMarqueeTrack { animation: logoScroll 26s linear infinite !important; }
+  @media (max-width: 680px) {
+    #teamLayer { overflow-y: auto !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; padding: 30px 0 48px !important; }
+    #teamLayer::-webkit-scrollbar { display: none; }
+    #teamLayer > img[src], #teamLayer > div[aria-hidden] { position: fixed !important; }
+    #teamHeader { position: relative !important; top: auto !important; left: auto !important; right: auto !important; margin: 0 auto 16px !important; flex: 0 0 auto !important; }
+    #framesRow {
+      position: relative !important; top: auto !important; bottom: auto !important; left: auto !important; right: auto !important;
+      transform: none !important; display: grid !important; grid-template-columns: 1fr 1fr !important;
+      gap: 12px !important; padding: 0 !important; margin: 0 auto !important; align-content: start !important;
+      width: calc(100vw - 32px) !important; max-width: none !important; height: auto !important; overflow: visible !important; flex: 0 0 auto !important;
+    }
+    #framesRow > * { width: 100% !important; max-width: none !important; height: auto !important; }
+    #logoStrip { position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important; margin: 24px auto 0 !important; padding: 0 16px !important; width: calc(100vw - 32px) !important; flex: 0 0 auto !important; }
+  }
+</style>
+</helmet>
+<div id="vt-root" style="position:relative; width:100%; height:200vh; background:#09090b;">
+
+  <!-- ============ BOTTOM LAYER: TEAM (z:0, fixed) ============ -->
+  <section id="teamLayer" style="position:fixed; inset:0; z-index:0; overflow:hidden; background:#0a0b10;">
+    <img src="vault-wall.png" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 50%; z-index:0; filter:brightness(.62) contrast(1.22) saturate(1.05);">
+    <div aria-hidden="true" style="position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(6,7,11,.24) 0%, rgba(6,7,11,.4) 46%, rgba(6,7,11,.82) 100%);"></div>
+    <!-- overhead light spilling from the ceiling fixtures onto the cards -->
+    <div aria-hidden="true" style="position:absolute; top:-8%; left:50%; transform:translateX(-50%); width:124%; height:64%; z-index:1; pointer-events:none; background:radial-gradient(ellipse 58% 100% at 50% 0%, rgba(214,204,255,.32) 0%, rgba(150,150,220,.14) 32%, transparent 68%); mix-blend-mode:screen;"></div>
+    <div aria-hidden="true" style="position:absolute; inset:0; z-index:1; pointer-events:none; background:radial-gradient(96% 62% at 50% 42%, rgba(47,107,255,.1) 0%, transparent 62%);"></div>
+    <div aria-hidden="true" style="position:absolute; inset:0; z-index:1; pointer-events:none; background:radial-gradient(130% 112% at 50% 44%, transparent 40%, rgba(0,0,0,.72) 100%);"></div>
+
+    <div id="teamHeader" style="position:absolute; top:calc(50% - 412px); left:0; right:0; text-align:center; z-index:3; padding:0 20px;">
+      <div style="visibility:hidden; font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.28em; text-transform:uppercase; color:#5b9aff;">The Team</div>
+      <h2 style="margin:12px 0 6px; font-family:'Newsreader',serif; font-weight:400; font-size:clamp(28px,3.2vw,46px); letter-spacing:-.025em; color:#f4f4f5;">The team</h2>
+      <div style="visibility:hidden; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8a90a0;">Crypto · Tech · Finance · Sports Marketing</div>
+    </div>
+
+    <div id="framesRow" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); display:flex; gap:18px; padding:0 28px; z-index:2; max-width:100vw;">
+      <sc-for list="{{ team }}" as="m">
+        <div style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
+          <!-- 3mm glass-metal slab: stacked edge = real thickness -->
+          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:0; background:transparent;255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
+            <div style="position:relative; width:100%; height:100%; border-radius:20px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
+            <!-- static glass gloss -->
+            <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
+            <div aria-hidden="true" style="position:absolute; top:-12%; left:-12%; width:52%; height:124%; transform:rotate(17deg); background:linear-gradient(90deg, transparent, rgba(255,255,255,.07) 50%, transparent); pointer-events:none; z-index:6;"></div>
+            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:transparent; z-index:5;"></div>
+            <!-- photo area: fixed 40%, flex-shrink 0 -->
+            <div style="position:relative; width:100%; aspect-ratio:1/1; flex:0 0 auto; overflow:hidden; background:#07080c;">
+              <sc-if value="{{ m.photo }}">
+                <img src="{{ m.photo }}" alt="{{ m.name }}" style="width:100%; height:100%; object-fit:cover; object-position:50% 50%; display:block;">
+              </sc-if>
+              <div style="position:absolute; inset:0; box-shadow:inset 0 -30px 40px -20px rgba(15,16,23,.95); pointer-events:none;"></div>
+            </div>
+            <!-- nameplate -->
+            <div style="position:relative; flex:1 1 auto; min-height:0; padding:16px 15px; display:flex; flex-direction:column; gap:9px; overflow:hidden;">
+              <div style="display:flex; align-items:baseline; gap:8px;">
+                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:19px; color:#f4f4f5; line-height:1.1;">{{ m.name }}</span>
+              </div>
+              <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">{{ m.title }}</div>
+              <div style="height:1px; background:rgba(255,255,255,.1);"></div>
+              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:12px; line-height:1.5; color:#a1a1aa;">{{ m.bio }}</div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- partner logos -->
+    <div id="logoStrip" style="position:absolute; top:calc(50% + 316px); left:0; right:0; z-index:3; display:flex; flex-wrap:nowrap; justify-content:center; align-items:center; gap:clamp(12px,1.8vw,34px); padding:0 32px;">
+      <sc-for list="{{ partners }}" as="p">
+        <sc-if value="{{ p.chip }}">
+          <span style="display:inline-flex; align-items:center; justify-content:center; height:46px; padding:9px 16px; background:#fff; border-radius:10px;">
+            <img src="{{ p.logo }}" alt="{{ p.name }}" style="max-height:26px; width:auto; max-width:120px; object-fit:contain; display:block;">
+          </span>
+        </sc-if>
+        <sc-if value="{{ p.plain }}">
+          <span style="display:inline-flex; align-items:center; justify-content:center; height:30px; width:clamp(66px,7.4vw,104px); flex:0 0 auto;">
+            <img src="{{ p.logo }}" alt="{{ p.name }}" style="max-height:100%; max-width:100%; width:auto; height:auto; object-fit:contain; display:block; opacity:.95;">
+          </span>
+        </sc-if>
+      </sc-for>
+    </div>
+
+    <!-- mobile marquee logo bar (fixed bottom, auto-scroll) -->
+    <div id="logoMarquee" style="display:none; position:absolute; left:0; right:0; bottom:0; z-index:4; height:64px; overflow:hidden; background:linear-gradient(180deg, rgba(8,9,14,0) 0%, rgba(8,9,14,.72) 40%, rgba(6,7,11,.94) 100%); align-items:center;">
+      <div style="position:absolute; left:0; right:0; top:0; height:1px; background:rgba(255,255,255,.08);"></div>
+      <div id="logoMarqueeTrack" style="display:flex; align-items:center; gap:36px; padding:0 18px; height:100%; will-change:transform; animation:logoScroll 26s linear infinite;">
+        <sc-for list="{{ partnersLoop }}" as="p">
+          <span style="display:inline-flex; align-items:center; justify-content:center; height:26px; width:88px; flex:0 0 auto;">
+            <img src="{{ p.logo }}" alt="{{ p.name }}" style="max-height:100%; max-width:100%; width:auto; height:auto; object-fit:contain; display:block; opacity:.9;">
+          </span>
+        </sc-for>
+      </div>
+    </div>
+  </section><img src="./-2026-09-04-10-53-10-mtmaux3x-1342.png" alt="-2026-09-04-10-53-10" width="2508" height="1352" style="max-width: 100%; height: auto; display: block; object-fit: cover; width: 2508px; aspect-ratio: 2508 / 1352">
+
+  <!-- ============ TOP LAYER: HERO COVER (z:10, fixed, 3D) — the real Tokenable hero ============ -->
+  <section id="heroCover" style="position:fixed; inset:0; z-index:10; overflow:hidden; transform-style:preserve-3d; background:#08060f;">
+    <div style="position:absolute; inset:0; width:100%; height:100%;">
+      <dc-import name="Tokenable Landing" hint-size="100%,100%"></dc-import>
+    </div>
+    <!-- scroll hint -->
+    <div id="scrollHint" style="position:absolute; bottom:26px; left:50%; transform:translateX(-50%); z-index:5; display:flex; flex-direction:column; align-items:center; gap:8px; pointer-events:none;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#8a90a0;">Scroll to see our team</div>
+      <div style="width:22px; height:34px; border-radius:12px; border:1px solid rgba(255,255,255,.28); position:relative;"><div style="position:absolute; top:6px; left:50%; transform:translateX(-50%); width:3px; height:7px; border-radius:2px; background:#2F6BFF;"></div></div>
+    </div>
+  </section>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const team = [
+      { idx:'01', name:'Thomas Park', title:'CEO', photo:'team/thomas.jpg', bio:'REITIUM founder. Compliant crowdfunding / broker-dealer securities platforms.', chips:['Reitium'] },
+      { idx:'02', name:'Luke Shim', title:'CFO', photo:'team/luke.jpg', bio:'M&A and corporate finance. KPMG, Hyundai Securities, and private equity at KERR Asset Management.', chips:['KPMG'] },
+      { idx:'03', name:'Rohit Wad', title:'Advisory CTO', photo:'team/rohit.jpg', bio:'Former Binance CTO. Product and engineering at Microsoft, Facebook, Google.', chips:['Microsoft','Meta'] },
+      { idx:'04', name:'Steve Christie', title:'Compliance', photo:'team/steve.jpg', bio:'Former Binance Deputy CCO. Former Kraken Global Head of Compliance and Board Member at Kraken Bank.', chips:['Binance','Kraken'] },
+      { idx:'05', name:'Rachel Conlan', title:'Marketing Advisor', photo:'team/rachel.jpg', bio:'Former Global CMO at Binance. Head of Brand & Partnerships at OKX; Global Brand Partnerships at CAA.', chips:['Binance','OKX','CAA'] },
+      { idx:'06', name:'Eric Heo', title:'Head of Product', photo:'team/eric.jpg', bio:'Official Software Developer Partner for Shinhan Financial Group. 20+ years in software, product, web, mobile, DeFi and AI.', chips:['Shinhan'] },
+      { idx:'07', name:'Dennis Ng', title:'COO', photo:'team/dennis.jpg', bio:'Real estate and commercial finance at RBC (Royal Bank of Canada), BMO Financial, and CT Green Financial.', chips:['RBC','BMO'] },
+    ];
+    const partners = [
+      { name:'Reitium', logo:'logos/reitium2-t.png', plain:true },
+      { name:'KPMG', logo:'logos/kpmg3-t.png', plain:true },
+      { name:'Microsoft', logo:'logos/microsoft2-k-t.png', plain:true },
+      { name:'Binance', logo:'logos/binance2-k-t.png', plain:true },
+      { name:'Kraken', logo:'logos/kraken2-k-t.png', plain:true },
+      { name:'Meta', logo:'logos/meta3-t.png', plain:true },
+      { name:'BMO', logo:'logos/bmo2-k-t.png', plain:true },
+      { name:'OKX', logo:'logos/okx2-t.png', plain:true },
+      { name:'CAA Sports', logo:'logos/caa3b-t.png', plain:true },
+    ];
+    const partnersLoop = partners.concat(partners);
+    return {
+      team, partners, partnersLoop,
+      onScrollCta: (e) => {
+        e.preventDefault();
+        const doc = document.scrollingElement || document.documentElement;
+        window.scrollTo({ top: doc.scrollHeight, behavior: 'smooth' });
+      }
+    };
+  }
+
+  componentDidMount() {
+    this._tries = 0;
+    this._startMarquee = () => {
+      const t = document.getElementById('logoMarqueeTrack');
+      if (!t) { setTimeout(this._startMarquee, 200); return; }
+      if (t._marq) return;
+      try {
+        t._marq = t.animate(
+          [{ transform: 'translateX(0)' }, { transform: 'translateX(-50%)' }],
+          { duration: 26000, iterations: Infinity, easing: 'linear' }
+        );
+      } catch (e) {}
+    };
+    this._startMarquee();
+    this._boot = () => {
+      const g = window.gsap, ST = window.ScrollTrigger;
+      const bg = document.querySelector('#heroCover #bgShowroom');
+      if (!g || !ST || !bg) { if (this._tries++ < 60) return void setTimeout(this._boot, 120); return; }
+      g.registerPlugin(ST);
+      const title = document.querySelector('#heroCover #heroTitle');
+      const textWrap = title ? title.parentElement : null;
+      const cards = document.querySelector('#heroCover #cardsCanvas');
+      // ONLY the vault background dives into its own opening; text/CTA/cards do not scale
+      g.set(bg, { transformPerspective: 900, transformOrigin: '50% 46%' });
+      g.set('#teamLayer', { scale: 1.14, transformOrigin: '50% 48%' });
+      const tl = g.timeline({
+        scrollTrigger: {
+          trigger: '#vt-root', start: 'top top', end: 'bottom bottom', scrub: 0.9,
+          onUpdate: (self) => {
+            const el = document.getElementById('heroCover');
+            if (!el) return;
+            el.style.pointerEvents = self.progress > 0.55 ? 'none' : 'auto';
+            // once the cover is gone, drop it from rendering so the embedded WebGL loop stops compositing
+            el.style.visibility = self.progress > 0.92 ? 'hidden' : 'visible';
+          }
+        }
+      });
+      // foreground elements fade + lift out, unscaled
+      tl.to('#scrollHint', { opacity: 0, y: 12, ease: 'power1.in', duration: 0.12 }, 0);
+      if (textWrap) tl.to(textWrap, { opacity: 0, y: -30, ease: 'power1.in', duration: 0.3 }, 0);
+      if (cards) tl.to(cards, { opacity: 0, ease: 'power1.in', duration: 0.3 }, 0.05);
+      // the vault image alone rushes toward the camera, diving into the opening
+      tl.to(bg, { scale: 2.9, z: 900, ease: 'power3.in', duration: 0.9 }, 0.1);
+      // dissolve the whole cover only at the very end to reveal the interior
+      tl.to('#heroCover', { opacity: 0, ease: 'power2.in', duration: 0.26 }, 0.74);
+      tl.to('#teamLayer', { scale: 1, ease: 'power2.out', duration: 0.42 }, 0.6);
+      this._st = ST;
+    };
+    this._boot();
+  }
+
+  componentWillUnmount() {
+    if (this._st && this._st.getAll) this._st.getAll().forEach(t => t.kill());
+  }
+}
+</script>
+</body>
+</html>

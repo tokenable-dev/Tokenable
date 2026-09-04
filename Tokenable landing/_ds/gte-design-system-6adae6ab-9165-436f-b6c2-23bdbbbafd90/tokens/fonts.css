@@ -1,0 +1,11 @@
+/* GTE — Webfonts
+ *
+ * Single brand sans across display + body, plus a data mono. All load from
+ * Google Fonts (no uploads required):
+ *   - Display / headlines: Lexend — the brand/logo typeface (geometric humanist
+ *     sans). Used large for headings; lighter weights read elegantly at display.
+ *   - UI / body:           Inter — compact, neutral workhorse for dense UI + body.
+ *   - Data / mono:          JetBrains Mono — clean humanist monospace for figures.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');

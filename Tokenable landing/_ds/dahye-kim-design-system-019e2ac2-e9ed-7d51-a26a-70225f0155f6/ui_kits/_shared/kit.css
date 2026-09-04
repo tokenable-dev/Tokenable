@@ -1,0 +1,226 @@
+/* Shared UI-kit styling — Awesomic-style components.
+   Pill CTAs, 36px rounded cards, mist canvas, achromatic. */
+@import url("../../colors_and_type.css");
+
+html, body { background: var(--surface-canvas); min-height: 100%; }
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ============================ Navigation ============================== */
+.app-nav {
+  position: sticky; top: 0; z-index: 50;
+  display: flex; align-items: center; gap: 32px;
+  padding: 16px 24px;
+  background: rgba(244, 244, 245, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+.app-nav .brand {
+  font-family: var(--font-cosmica);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--color-obsidian);
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.app-nav .brand .it { font-weight: 300; color: var(--color-ash); }
+.app-nav nav { display: flex; gap: 4px; }
+.app-nav nav a {
+  font-family: var(--font-cosmica); font-size: 14px; font-weight: 500;
+  color: var(--color-ink);
+  padding: 8px 14px; border-radius: 10000px;
+  transition: background var(--dur-2) var(--ease-out), color var(--dur-2) var(--ease-out);
+}
+.app-nav nav a:hover { background: var(--color-fog); }
+.app-nav nav a.cur { background: var(--color-obsidian); color: var(--color-snow); }
+.app-nav .right { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+
+/* ============================ Footer ============================== */
+.app-footer {
+  margin-top: auto;
+  padding: 80px 24px 40px;
+  display: flex; flex-direction: column; gap: 48px;
+}
+.app-footer .brand-lg {
+  font-family: var(--font-cosmica);
+  font-size: 96px; line-height: 1; font-weight: 700;
+  letter-spacing: -0.04em;
+  color: var(--color-obsidian);
+}
+.app-footer .brand-lg .it { font-weight: 300; color: var(--color-ash); }
+.app-footer .links { display: flex; gap: 24px; flex-wrap: wrap; align-items: center; }
+.app-footer .links a {
+  font-family: var(--font-cosmica); font-size: 14px; font-weight: 500;
+  color: var(--color-ink); padding: 6px 0;
+  transition: color var(--dur-2) var(--ease-out);
+}
+.app-footer .links a:hover { color: var(--color-steel); }
+.app-footer .copy {
+  font-family: var(--font-cosmica); font-size: 12px; font-weight: 400;
+  color: var(--color-steel); margin-left: auto;
+}
+
+/* ============================ Eyebrow / label ============================ */
+.eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-cosmica); font-size: 12px;
+  font-weight: 500; color: var(--color-steel);
+}
+.eyebrow .dot {
+  display: inline-block; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--color-obsidian);
+}
+
+/* ============================ Layout primitives ============================ */
+.container { width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 80px 24px; }
+.row-between { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; }
+.page-pad { padding-left: 24px; padding-right: 24px; }
+
+/* ============================ Buttons ============================ */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-cosmica); font-size: 14px; font-weight: 500;
+  padding: 12px 18px;
+  border-radius: 10000px;
+  border: 0; cursor: pointer;
+  transition: transform var(--dur-2) var(--ease-out), background var(--dur-2) var(--ease-out), opacity var(--dur-2) var(--ease-out);
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--color-obsidian); color: var(--color-snow);
+  box-shadow: var(--shadow-button-primary);
+}
+.btn-primary:hover { transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0); }
+.btn-outline {
+  background: var(--color-snow); color: var(--color-graphite);
+  border: 1px solid var(--color-graphite);
+}
+.btn-outline:hover { background: var(--color-mist); }
+.btn-dark-soft {
+  background: var(--color-obsidian); color: var(--color-snow);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 16px;
+  padding: 12px 16px;
+}
+.btn-dark-soft:hover { background: #1a1a1d; }
+.btn-ghost {
+  background: transparent; color: var(--color-ink);
+  padding: 12px 14px;
+}
+.btn-ghost:hover { color: var(--color-steel); }
+
+/* ============================ Badges / Tags ============================ */
+.badge {
+  display: inline-flex; align-items: center;
+  font-family: var(--font-cosmica); font-size: 12px; font-weight: 500;
+  padding: 4px 10px; border-radius: 12px;
+}
+.badge-dark { background: var(--color-graphite); color: var(--color-snow); }
+.badge-overlay {
+  background: transparent; color: var(--color-snow);
+  border: 1px solid rgba(255,255,255,0.4);
+}
+.badge-outline {
+  background: transparent; color: var(--color-ink);
+  border: 1px solid var(--color-pebble);
+}
+
+/* ============================ Cards ============================ */
+.card-white {
+  background: var(--surface-card); border-radius: var(--radius-card);
+  padding: 28px;
+}
+.card-muted {
+  background: var(--surface-card-muted); border-radius: 28px;
+  padding: 24px;
+}
+.card-dark {
+  background: var(--surface-dark); border-radius: var(--radius-card);
+  padding: 28px; color: var(--color-snow);
+}
+.card-dark h2, .card-dark h3 { color: var(--color-snow); }
+
+/* ============================ Project tile (portfolio) ============================ */
+.proj-tile {
+  position: relative; display: block;
+  aspect-ratio: 4 / 5;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--color-graphite);
+  cursor: pointer;
+  text-decoration: none; color: inherit;
+  transition: transform var(--dur-3) var(--ease-out);
+}
+.proj-tile:hover { transform: translateY(-4px); }
+.proj-tile .fill { position: absolute; inset: 0; }
+.proj-tile .label-row {
+  position: absolute; left: 20px; right: 20px; bottom: 20px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.proj-tile .title {
+  font-family: var(--font-cosmica); font-size: 20px; font-weight: 600;
+  color: var(--color-snow); letter-spacing: -0.01em;
+}
+.proj-tile .badges { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* ============================ Fill recipes for tiles ============================ */
+.fill-obsidian { background: var(--color-obsidian); }
+.fill-graphite { background: var(--color-graphite); }
+.fill-slate    { background: var(--color-slate); }
+.fill-steel    { background: var(--color-steel); }
+.fill-ash      { background: var(--color-ash); }
+.fill-mist     { background: var(--color-mist); }
+.fill-fog      { background: var(--color-fog); }
+.fill-snow     { background: var(--color-snow); }
+
+/* Pattern fills — abstract project covers without imagery */
+.fill-grid {
+  background-color: var(--color-obsidian);
+  background-image:
+    linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+.fill-dot {
+  background-color: var(--color-graphite);
+  background-image: radial-gradient(circle, rgba(255,255,255,0.12) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+}
+.fill-stripes {
+  background: repeating-linear-gradient(
+    135deg,
+    var(--color-slate),
+    var(--color-slate) 24px,
+    var(--color-graphite) 24px,
+    var(--color-graphite) 48px
+  );
+}
+
+/* Wordmark display */
+.brand-display {
+  font-family: var(--font-cosmica); line-height: 1; font-weight: 700;
+  letter-spacing: -0.04em; color: var(--color-obsidian);
+}
+.brand-display .it { font-weight: 300; color: var(--color-ash); }
+
+/* Inputs */
+.input {
+  width: 100%; box-sizing: border-box;
+  background: var(--color-snow);
+  border: 0; border-radius: var(--radius-input);
+  padding: 14px 16px;
+  font-family: var(--font-cosmica); font-size: 14px; color: var(--color-ink);
+  outline: none;
+  transition: box-shadow var(--dur-2) var(--ease-out);
+}
+.input::placeholder { color: var(--color-ash); }
+.input:focus { box-shadow: 0 0 0 2px var(--color-obsidian); }
+.textarea { resize: vertical; min-height: 140px; line-height: 1.6; }
