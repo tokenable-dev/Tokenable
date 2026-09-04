@@ -12,7 +12,6 @@
   html, body { margin: 0; padding: 0; background: #0a0a0b; }
   html.lenis, html.lenis body { height: auto; }
   .lenis.lenis-smooth { scroll-behavior: auto !important; }
-  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
   .lenis.lenis-stopped { overflow: hidden; }
   * { box-sizing: border-box; }
   body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
@@ -142,144 +141,147 @@
   #logoMarqueeTrack { animation: logoScroll 26s linear infinite; }
   #heroCover #topNav { background: transparent !important; border-bottom-color: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
 
-  /* Shared team shell: scrollable fixed layer; Lenis must not steal wheel here */
+  /*
+   * One variable drives everything: the card width. The contributor row and the
+   * partner logo strip are both `--vt-cols` cards wide, so they always line up.
+   * fitTeamLayer() lowers --vt-card until the whole block fits the pinned layer,
+   * which is what keeps the logo strip on screen on short laptops.
+   */
   #teamLayer {
+    --vt-cols: 4;
     --vt-gap: 14px;
-    --vt-row-w: min(1480px, calc(100vw - 40px));
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    overscroll-behavior: contain;
+    --vt-card-max: 180px;
+    --vt-card: var(--vt-card-max);
+    --vt-row-w: calc(var(--vt-card) * var(--vt-cols) + var(--vt-gap) * (var(--vt-cols) - 1));
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    justify-content: flex-start !important;
-    padding: 28px 16px 24px !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    padding: 20px !important;
     box-sizing: border-box !important;
-    -webkit-overflow-scrolling: touch;
   }
-  #teamLayer::-webkit-scrollbar { width: 0; height: 0; }
   #teamLayer > img.vt-wall,
-  #teamLayer > div.vt-fx { position: fixed !important; inset: 0 !important; pointer-events: none; }
+  #teamLayer > div.vt-fx { position: absolute !important; pointer-events: none !important; }
   #teamHeader {
-    position: relative !important; top: auto !important; left: auto !important; right: auto !important;
-    margin: 0 auto 14px !important; flex: 0 0 auto !important; width: 100%; max-width: var(--vt-row-w);
+    position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+    margin: 0 auto 16px !important; padding: 0 !important;
+    flex: 0 0 auto !important; width: 100% !important; max-width: var(--vt-row-w) !important;
   }
   #framesRow {
-    position: relative !important; top: auto !important; bottom: auto !important; left: auto !important; right: auto !important;
+    position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
     transform: none !important; margin: 0 auto !important; padding: 0 !important;
-    flex: 0 0 auto !important; z-index: 2 !important;
     display: flex !important; flex-wrap: wrap !important;
-    justify-content: center !important; align-content: flex-start !important;
+    justify-content: center !important; align-content: center !important;
     gap: var(--vt-gap) !important;
     width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
     height: auto !important; overflow: visible !important;
+    flex: 0 0 auto !important; z-index: 2 !important;
   }
   #framesRow > .tk-team {
-    min-width: 0 !important; height: auto !important; flex: 0 0 auto !important; overflow: hidden !important;
+    width: var(--vt-card) !important;
+    max-width: var(--vt-card) !important;
+    flex: 0 0 var(--vt-card) !important;
+    min-width: 0 !important; height: auto !important; overflow: hidden !important;
   }
   #framesRow > .tk-team * { min-width: 0 !important; max-width: 100% !important; box-sizing: border-box !important; }
-
-  /* Logo strip stays in flow + sticky so it never disappears under the fold */
+  /* Clamped so every card in a row keeps the same height */
+  #framesRow > .tk-team .tk-team-bio {
+    display: -webkit-box !important;
+    -webkit-line-clamp: 3 !important;
+    -webkit-box-orient: vertical !important;
+    overflow: hidden !important;
+  }
+  /* Density fallback fitTeamLayer switches on for very short viewports */
+  #framesRow.tk-compact > .tk-team .tk-team-bio { -webkit-line-clamp: 2 !important; font-size: 10.5px !important; }
+  #framesRow.tk-compact > .tk-team [style*="padding:12px"] { padding: 8px 9px 9px !important; gap: 4px !important; }
+  #framesRow.tk-compact > .tk-team span[style*="Newsreader"] { font-size: 14px !important; }
+  #framesRow.tk-compact > .tk-team [style*="letter-spacing:.12em"] { font-size: 9.5px !important; }
+  #framesRow.tk-compact > .tk-team [style*="padding:4px 9px"] { padding: 3px 6px !important; font-size: 9px !important; }
   #logoStrip {
-    position: sticky !important; bottom: 0 !important; left: auto !important; right: auto !important; top: auto !important;
-    z-index: 6 !important; display: flex !important; flex-wrap: nowrap !important;
+    position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+    transform: none !important; margin: 18px auto 0 !important; padding: 0 !important;
+    display: flex !important; flex-wrap: nowrap !important;
     justify-content: space-between !important; align-items: center !important;
-    gap: 8px !important; margin: auto auto 0 !important; padding: 14px 0 8px !important;
+    gap: 8px !important;
     width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
-    flex: 0 0 auto !important; box-sizing: border-box !important;
-    background: linear-gradient(180deg, rgba(10,11,16,0) 0%, rgba(10,11,16,.88) 28%, rgba(10,11,16,.98) 100%) !important;
+    flex: 0 0 auto !important; z-index: 3 !important; box-sizing: border-box !important;
+    background: none !important;
   }
   #logoStrip > span {
-    width: auto !important; min-width: 0 !important; max-width: none !important; height: 28px !important;
+    width: auto !important; min-width: 0 !important; max-width: none !important; height: 26px !important;
     flex: 1 1 0 !important; padding: 0 !important;
   }
   #logoStrip img { width: auto !important; min-width: 0 !important; max-width: 100% !important; max-height: 100% !important; }
   #logoMarquee { display: none !important; }
 
-  /* Desktop large: all 7 on one row */
-  @media (min-width: 1200px) {
-    #teamLayer { --vt-row-w: min(1480px, calc(100vw - 48px)); --vt-gap: 12px; padding: 32px 20px 20px !important; }
-    #framesRow { flex-wrap: nowrap !important; }
-    #framesRow > .tk-team {
-      flex: 1 1 0 !important;
-      width: auto !important;
-      max-width: 200px !important;
-      min-width: 0 !important;
-    }
-    #framesRow > .tk-team span[style*="Newsreader"] { font-size: clamp(14px, 1.15vw, 17px) !important; }
-    #framesRow > .tk-team .tk-team-bio { font-size: 11px !important; line-height: 1.4 !important; }
+  /* 15" laptops and larger: all seven contributors on one row */
+  @media (min-width: 1600px) {
+    #teamLayer { --vt-cols: 7; --vt-gap: 14px; --vt-card-max: 192px; }
   }
 
-  /* Tablet / mid desktop: exactly 4 on top, 3 centered below */
-  @media (min-width: 681px) and (max-width: 1199px) {
-    #teamLayer { --vt-row-w: min(920px, calc(100vw - 40px)); --vt-gap: 14px; padding: 28px 16px 18px !important; }
-    #framesRow {
-      display: flex !important;
-      flex-wrap: wrap !important;
-      justify-content: center !important;
-      gap: 14px !important;
-    }
-    #framesRow > .tk-team {
-      box-sizing: border-box !important;
-      width: calc((100% - 42px) / 4) !important;
-      max-width: calc((100% - 42px) / 4) !important;
-      flex: 0 0 calc((100% - 42px) / 4) !important;
-    }
+  /* Short viewports: reclaim the vertical budget from the chrome, not the cards */
+  @media (min-width: 681px) and (max-height: 800px) {
+    #teamLayer { padding: 12px 20px !important; }
+    #teamHeader { margin: 0 auto 10px !important; }
+    #teamHeader > div { font-size: 10px !important; }
+    #teamHeader h2 { font-size: clamp(22px, 2.6vw, 32px) !important; margin: 6px 0 3px !important; }
+    #logoStrip { margin-top: 12px !important; }
+    #logoStrip > span { height: 22px !important; }
   }
 
-  /* Phones: clean 2-col cards + bottom logo marquee */
+  /*
+   * Phones: drop the pinned vault dive entirely. Hero and team become two normal
+   * stacked sections, so nothing is clipped and the page scrolls natively.
+   */
   @media (max-width: 680px) {
+    /* The team layer precedes the hero in the DOM because it is painted behind
+       it. Once they are in normal flow that order has to be flipped back. */
+    #vt-root {
+      height: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    #heroCover {
+      order: 1 !important;
+      position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+      height: 100svh !important; flex: 0 0 auto !important; z-index: 1 !important;
+      opacity: 1 !important; visibility: visible !important; transform: none !important;
+    }
     #teamLayer {
-      --vt-row-w: calc(100vw - 28px);
-      --vt-gap: 10px;
-      padding: 22px 14px 72px !important;
+      order: 2 !important;
+      position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+      height: auto !important; min-height: 100svh !important; flex: 0 0 auto !important;
+      transform: none !important; z-index: 1 !important;
+      --vt-cols: 2; --vt-gap: 10px;
+      padding: 30px 14px 26px !important;
       justify-content: flex-start !important;
     }
-    #teamHeader { margin: 0 auto 12px !important; padding: 0 !important; }
-    #teamHeader h2 { font-size: clamp(24px, 7vw, 34px) !important; margin: 8px 0 4px !important; }
+    #teamHeader { width: 100% !important; max-width: 420px !important; margin: 0 auto 14px !important; }
+    #teamHeader h2 { font-size: clamp(24px, 7.2vw, 34px) !important; margin: 8px 0 4px !important; }
     #framesRow {
       display: grid !important;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
       gap: 10px !important;
-      width: var(--vt-row-w) !important;
-      max-width: var(--vt-row-w) !important;
+      width: 100% !important; max-width: 420px !important;
     }
-    #framesRow > .tk-team {
-      width: 100% !important;
-      max-width: 100% !important;
-      flex: none !important;
-    }
+    #framesRow > .tk-team { width: 100% !important; max-width: 100% !important; flex: none !important; }
     #framesRow > .tk-team > div { border-radius: 14px !important; }
     #framesRow > .tk-team > div > div { border-radius: 13px !important; }
-    #framesRow > .tk-team [style*="padding:12px"] {
-      padding: 8px 8px 10px !important;
-      gap: 4px !important;
-    }
-    #framesRow > .tk-team span[style*="Newsreader"] { font-size: 13.5px !important; }
+    #framesRow > .tk-team [style*="padding:12px"] { padding: 9px 9px 10px !important; gap: 5px !important; }
+    #framesRow > .tk-team span[style*="Newsreader"] { font-size: 14px !important; }
     #framesRow > .tk-team [style*="letter-spacing:.12em"] { font-size: 9px !important; letter-spacing: .1em !important; }
-    #framesRow > .tk-team .tk-team-bio {
-      font-size: 10px !important;
-      line-height: 1.35 !important;
-      display: -webkit-box !important;
-      -webkit-line-clamp: 3 !important;
-      -webkit-box-orient: vertical !important;
-      overflow: hidden !important;
-    }
-    #framesRow > .tk-team [style*="padding:4px 9px"] {
-      padding: 3px 6px !important;
-      font-size: 9px !important;
-      border-radius: 5px !important;
-    }
+    #framesRow > .tk-team .tk-team-bio { font-size: 10px !important; line-height: 1.4 !important; }
+    #framesRow > .tk-team [style*="padding:4px 9px"] { padding: 3px 6px !important; font-size: 9px !important; border-radius: 5px !important; }
     #logoStrip { display: none !important; }
     #logoMarquee {
       display: flex !important;
-      position: fixed !important;
-      left: 0 !important; right: 0 !important; bottom: 0 !important;
-      top: auto !important;
-      z-index: 8 !important;
-      height: 56px !important;
-      align-items: center !important;
+      position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+      width: 100% !important; max-width: 420px !important; height: 48px !important;
+      margin: 20px auto 0 !important; flex: 0 0 auto !important; z-index: 3 !important;
+      background: none !important; align-items: center !important; overflow: hidden !important;
     }
+    #logoMarquee > div[style*="height:1px"] { display: none !important; }
     #scrollHint { display: none !important; }
   }
   @media (prefers-reduced-motion: reduce) { #logoMarqueeTrack { animation: none !important; } }
@@ -289,7 +291,7 @@
 <div id="vt-root" style="position:relative; width:100%; height:360vh; background:#09090b;">
 
   <!-- ============ BOTTOM LAYER: TEAM (z:0, fixed) ============ -->
-  <section id="teamLayer" data-lenis-prevent style="position:fixed; inset:0; z-index:0; overflow:hidden; background:#0a0b10;">
+  <section id="teamLayer" style="position:fixed; inset:0; z-index:0; overflow:hidden; background:#0a0b10;">
     <img class="vt-wall" src="/landing/vault-wall.png" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 50%; z-index:0; filter:brightness(.62) contrast(1.22) saturate(1.05);">
     <div class="vt-fx" aria-hidden="true" style="position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(6,7,11,.24) 0%, rgba(6,7,11,.4) 46%, rgba(6,7,11,.82) 100%);"></div>
     <div class="vt-fx" aria-hidden="true" style="position:absolute; top:-8%; left:50%; transform:translateX(-50%); width:124%; height:64%; z-index:1; pointer-events:none; background:radial-gradient(ellipse 58% 100% at 50% 0%, rgba(214,204,255,.32) 0%, rgba(150,150,220,.14) 32%, transparent 68%); mix-blend-mode:screen;"></div>
@@ -319,7 +321,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">CEO</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">REITIUM founder. Compliant crowdfunding / broker-dealer securities platforms.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">REITIUM founder. Compliant crowdfunding / broker-dealer securities platforms.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Reitium</span></div>
             </div>
             </div>
@@ -341,7 +343,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">CFO</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">M&A and corporate finance. KPMG, Hyundai Securities, and private equity at KERR Asset Management.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">M&A and corporate finance. KPMG, Hyundai Securities, and private equity at KERR Asset Management.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">KPMG</span></div>
             </div>
             </div>
@@ -363,7 +365,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Advisory CTO</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Binance CTO. Product and engineering at Microsoft, Facebook, Google.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Binance CTO. Product and engineering at Microsoft, Facebook, Google.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Microsoft</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Meta</span></div>
             </div>
             </div>
@@ -385,7 +387,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Compliance</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Binance Deputy CCO. Former Kraken Global Head of Compliance and Board Member at Kraken Bank.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Binance Deputy CCO. Former Kraken Global Head of Compliance and Board Member at Kraken Bank.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Binance</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Kraken</span></div>
             </div>
             </div>
@@ -407,7 +409,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Marketing Advisor</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Global CMO at Binance. Head of Brand & Partnerships at OKX; Global Brand Partnerships at CAA.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Global CMO at Binance. Head of Brand & Partnerships at OKX; Global Brand Partnerships at CAA.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Binance</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">OKX</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">CAA</span></div>
             </div>
             </div>
@@ -429,7 +431,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Head of Product</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Official Software Developer Partner for Shinhan Financial Group. 20+ years in software, product, web, mobile, DeFi and AI.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Official Software Developer Partner for Shinhan Financial Group. 20+ years in software, product, web, mobile, DeFi and AI.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Shinhan</span></div>
             </div>
             </div>
@@ -451,7 +453,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">COO</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Real estate and commercial finance at RBC (Royal Bank of Canada), BMO Financial, and CT Green Financial.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Real estate and commercial finance at RBC (Royal Bank of Canada), BMO Financial, and CT Green Financial.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">RBC</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">BMO</span></div>
             </div>
             </div>
@@ -658,33 +660,53 @@ class Component extends DCLogic {
     this.setupVaultTransition();
   }
 
-  syncLogoStripWidth() {
+  /*
+   * The team layer is pinned to the viewport, so its content has to fit inside it.
+   * Shrink the card width until the header, the contributor rows and the partner
+   * logos all fit; otherwise the logo strip falls off the bottom of short screens.
+   */
+  fitTeamLayer() {
     const layer = document.getElementById('teamLayer');
     const frames = document.getElementById('framesRow');
-    const logos = document.getElementById('logoStrip');
-    if (!frames || !logos) return;
-    // Prefer CSS --vt-row-w so logos match the profile row at every breakpoint
-    let w = 0;
-    if (layer) {
-      const raw = getComputedStyle(layer).getPropertyValue('--vt-row-w').trim();
-      if (raw) {
-        const probe = document.createElement('div');
-        probe.style.cssText = 'position:absolute;visibility:hidden;width:' + raw + ';pointer-events:none;';
-        document.body.appendChild(probe);
-        w = Math.round(probe.getBoundingClientRect().width);
-        probe.remove();
-      }
+    if (!layer || !frames) return;
+    // Phones stack hero and team as ordinary sections, so there is nothing to fit.
+    if (window.matchMedia('(max-width: 680px)').matches) {
+      layer.style.removeProperty('--vt-card');
+      return;
     }
-    if (!w) w = Math.round(frames.getBoundingClientRect().width);
-    if (!w) return;
-    logos.style.setProperty('width', w + 'px', 'important');
-    logos.style.setProperty('max-width', w + 'px', 'important');
-    logos.style.setProperty('left', 'auto', 'important');
-    logos.style.setProperty('right', 'auto', 'important');
-    logos.style.setProperty('transform', 'none', 'important');
-    logos.style.setProperty('justify-content', 'space-between', 'important');
-    logos.style.setProperty('flex-wrap', 'nowrap', 'important');
-    logos.style.setProperty('box-sizing', 'border-box', 'important');
+    const header = document.getElementById('teamHeader');
+    const logos = document.getElementById('logoStrip');
+    const cs = getComputedStyle(layer);
+    const cols = parseInt(cs.getPropertyValue('--vt-cols'), 10) || 4;
+    const gap = parseFloat(cs.getPropertyValue('--vt-gap')) || 14;
+    const maxCard = parseFloat(cs.getPropertyValue('--vt-card-max')) || 180;
+    const availW = layer.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const availH = layer.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    if (!(availW > 0) || !(availH > 0)) return;
+    const outer = (el) => {
+      if (!el) return 0;
+      const s = getComputedStyle(el);
+      return el.offsetHeight + (parseFloat(s.marginTop) || 0) + (parseFloat(s.marginBottom) || 0);
+    };
+    const MIN_CARD = 88;
+    const apply = (w) => layer.style.setProperty('--vt-card', w + 'px');
+    const overflows = () => outer(header) + outer(frames) + outer(logos) > availH;
+    const shrinkToFit = () => {
+      let card = Math.floor((availW - gap * (cols - 1)) / cols);
+      card = Math.max(MIN_CARD, Math.min(maxCard, card));
+      apply(card);
+      let guard = 0;
+      while (card > MIN_CARD && guard++ < 48 && overflows()) {
+        card -= 6;
+        apply(Math.max(MIN_CARD, card));
+      }
+      return !overflows();
+    };
+    frames.classList.remove('tk-compact');
+    if (!shrinkToFit()) {
+      frames.classList.add('tk-compact');
+      shrinkToFit();
+    }
   }
 
   setupVaultTransition() {
@@ -700,11 +722,20 @@ class Component extends DCLogic {
       } catch (e) {}
     };
     this._startMarquee();
-    this.syncLogoStripWidth();
-    window.addEventListener('resize', () => this.syncLogoStripWidth(), { passive: true });
-    // Re-measure after fonts/images/layout settle
-    [100, 400, 1000, 2000].forEach((ms) => setTimeout(() => this.syncLogoStripWidth(), ms));
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.syncLogoStripWidth());
+    this.fitTeamLayer();
+    this._onTeamResize = () => {
+      if (this._fitRaf) cancelAnimationFrame(this._fitRaf);
+      this._fitRaf = requestAnimationFrame(() => {
+        this.fitTeamLayer();
+        if (this._st) { try { this._st.refresh(); } catch (e) {} }
+      });
+    };
+    window.addEventListener('resize', this._onTeamResize, { passive: true });
+    window.addEventListener('orientationchange', this._onTeamResize, { passive: true });
+    // Re-measure once fonts and photos have settled
+    [100, 400, 1000, 2000].forEach((ms) => setTimeout(() => this.fitTeamLayer(), ms));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.fitTeamLayer());
+
     this._vtTries = 0;
     this._vtBoot = () => {
       const g = window.gsap, ST = window.ScrollTrigger;
@@ -714,59 +745,71 @@ class Component extends DCLogic {
         return;
       }
       g.registerPlugin(ST);
-      // Buttery wheel inertia + ScrollTrigger sync
-      if (window.Lenis && !this._lenis) {
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (!reduceMotion) {
-          const lenis = new window.Lenis({
-            duration: 1.35,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smoothWheel: true,
-            wheelMultiplier: 0.92,
-            touchMultiplier: 1.05,
-            // Allow #teamLayer[data-lenis-prevent] to scroll its own overflow
-            prevent: (node) => !!(node && node.closest && node.closest('[data-lenis-prevent]')),
-          });
-          lenis.on('scroll', ST.update);
-          g.ticker.add((time) => { lenis.raf(time * 1000); });
-          g.ticker.lagSmoothing(0);
-          this._lenis = lenis;
-        }
-      }
-      const title = document.querySelector('#heroCover #heroTitle');
-      const textWrap = title ? title.parentElement : null;
-      const cards = document.querySelector('#heroCover #cardsCanvas');
-      g.set(bg, { transformPerspective: 1200, transformOrigin: '50% 46%', force3D: true });
-      g.set('#teamLayer', { scale: 1.12, transformOrigin: '50% 48%', force3D: true });
-      g.set('#heroCover', { force3D: true });
-      const tl = g.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: '#vt-root',
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.25,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const el = document.getElementById('heroCover');
-            if (!el) return;
-            el.style.pointerEvents = self.progress > 0.62 ? 'none' : 'auto';
-            el.style.visibility = self.progress > 0.96 ? 'hidden' : 'visible';
-            if (self.progress > 0.7) this.syncLogoStripWidth();
-          }
-        }
-      });
-      // Soft overlapping fades for a silkier dive into the vault
-      tl.to('#scrollHint', { opacity: 0, y: 20, ease: 'power1.inOut', duration: 0.2 }, 0);
-      if (textWrap) tl.to(textWrap, { opacity: 0, y: -56, filter: 'blur(8px)', ease: 'power2.inOut', duration: 0.48 }, 0.02);
-      if (cards) tl.to(cards, { opacity: 0, y: 28, ease: 'power2.inOut', duration: 0.42 }, 0.06);
-      tl.to(bg, { scale: 2.7, z: 780, ease: 'power2.inOut', duration: 1.05 }, 0.04);
-      tl.to('#heroCover', { opacity: 0, ease: 'power1.inOut', duration: 0.45 }, 0.58);
-      tl.to('#teamLayer', { scale: 1, ease: 'power2.inOut', duration: 0.62 }, 0.42);
       this._st = ST;
+      // Wheel inertia, driven by the GSAP ticker so ScrollTrigger stays in sync
+      if (window.Lenis && !this._lenis && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const lenis = new window.Lenis({
+          duration: 1.35,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
+          wheelMultiplier: 0.92,
+          touchMultiplier: 1.05,
+        });
+        lenis.on('scroll', ST.update);
+        g.ticker.add((time) => { lenis.raf(time * 1000); });
+        g.ticker.lagSmoothing(0);
+        this._lenis = lenis;
+      }
       const wl = document.getElementById('wlWidget');
       if (wl) wl.style.zIndex = '10050';
+
+      // The vault dive only runs where the hero and team are stacked layers.
+      const mm = g.matchMedia();
+      this._mm = mm;
+      mm.add('(min-width: 681px)', () => {
+        const cover = document.getElementById('heroCover');
+        const title = document.querySelector('#heroCover #heroTitle');
+        const textWrap = title ? title.parentElement : null;
+        const cards = document.querySelector('#heroCover #cardsCanvas');
+        const hint = document.getElementById('scrollHint');
+        g.set(bg, { transformPerspective: 1200, transformOrigin: '50% 46%', force3D: true });
+        g.set('#teamLayer', { scale: 1.12, transformOrigin: '50% 48%', force3D: true });
+        g.set('#heroCover', { force3D: true });
+        this.fitTeamLayer();
+
+        const tl = g.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: '#vt-root',
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1.25,
+            invalidateOnRefresh: true,
+            onRefresh: () => this.fitTeamLayer(),
+            onUpdate: (self) => {
+              if (!cover) return;
+              cover.style.pointerEvents = self.progress > 0.62 ? 'none' : 'auto';
+              cover.style.visibility = self.progress > 0.96 ? 'hidden' : 'visible';
+            }
+          }
+        });
+        tl.to('#scrollHint', { opacity: 0, y: 20, ease: 'power1.inOut', duration: 0.2 }, 0);
+        if (textWrap) tl.to(textWrap, { opacity: 0, y: -56, filter: 'blur(8px)', ease: 'power2.inOut', duration: 0.48 }, 0.02);
+        if (cards) tl.to(cards, { opacity: 0, y: 28, ease: 'power2.inOut', duration: 0.42 }, 0.06);
+        tl.to(bg, { scale: 2.7, z: 780, ease: 'power2.inOut', duration: 1.05 }, 0.04);
+        tl.to('#heroCover', { opacity: 0, ease: 'power1.inOut', duration: 0.45 }, 0.58);
+        tl.to('#teamLayer', { scale: 1, ease: 'power2.inOut', duration: 0.62 }, 0.42);
+
+        return () => {
+          if (tl.scrollTrigger) tl.scrollTrigger.kill();
+          tl.kill();
+          const targets = [bg, textWrap, cards, hint, cover, document.getElementById('teamLayer')].filter(Boolean);
+          g.set(targets, { clearProps: 'opacity,transform,filter,visibility' });
+          if (cover) { cover.style.pointerEvents = ''; cover.style.visibility = ''; }
+          this.fitTeamLayer();
+        };
+      });
+
       requestAnimationFrame(() => { try { ST.refresh(); } catch (e) {} });
     };
     this._vtBoot();
@@ -1124,8 +1167,14 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    if (this._onTeamResize) {
+      window.removeEventListener('resize', this._onTeamResize);
+      window.removeEventListener('orientationchange', this._onTeamResize);
+    }
+    if (this._fitRaf) cancelAnimationFrame(this._fitRaf);
     if (this._raf) cancelAnimationFrame(this._raf);
     if (this._poll) clearInterval(this._poll);
+    if (this._mm) { try { this._mm.revert(); } catch (e) {} this._mm = null; }
     if (this._lenis) { try { this._lenis.destroy(); } catch (e) {} this._lenis = null; }
     if (this._st && this._st.getAll) this._st.getAll().forEach((t) => t.kill());
     if (this._cardsPointer) {
