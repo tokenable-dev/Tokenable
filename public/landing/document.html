@@ -12,7 +12,6 @@
   html, body { margin: 0; padding: 0; background: #0a0a0b; }
   html.lenis, html.lenis body { height: auto; }
   .lenis.lenis-smooth { scroll-behavior: auto !important; }
-  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
   .lenis.lenis-stopped { overflow: hidden; }
   * { box-sizing: border-box; }
   body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
@@ -318,7 +317,7 @@
 <div id="vt-root" style="position:relative; width:100%; height:360vh; background:#09090b;">
 
   <!-- ============ BOTTOM LAYER: TEAM (z:0, fixed) ============ -->
-  <section id="teamLayer" data-lenis-prevent style="position:fixed; inset:0; z-index:0; overflow:hidden; background:#0a0b10;">
+  <section id="teamLayer" style="position:fixed; inset:0; z-index:0; overflow:hidden; background:#0a0b10;">
     <img class="vt-wall" src="/landing/vault-wall.png" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:50% 50%; z-index:0; filter:brightness(.62) contrast(1.22) saturate(1.05);">
     <div class="vt-fx" aria-hidden="true" style="position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(6,7,11,.24) 0%, rgba(6,7,11,.4) 46%, rgba(6,7,11,.82) 100%);"></div>
     <div class="vt-fx" aria-hidden="true" style="position:absolute; top:-8%; left:50%; transform:translateX(-50%); width:124%; height:64%; z-index:1; pointer-events:none; background:radial-gradient(ellipse 58% 100% at 50% 0%, rgba(214,204,255,.32) 0%, rgba(150,150,220,.14) 32%, transparent 68%); mix-blend-mode:screen;"></div>
@@ -687,33 +686,45 @@ class Component extends DCLogic {
     this.setupVaultTransition();
   }
 
-  syncLogoStripWidth() {
+  /*
+   * The team layer is pinned to the viewport, so its content has to fit inside it.
+   * Shrink the card width until the header, the contributor rows and the partner
+   * logos all fit; otherwise the logo strip falls off the bottom of short screens.
+   */
+  fitTeamLayer() {
     const layer = document.getElementById('teamLayer');
     const frames = document.getElementById('framesRow');
-    const logos = document.getElementById('logoStrip');
-    if (!frames || !logos) return;
-    // Prefer CSS --vt-row-w so logos match the profile row at every breakpoint
-    let w = 0;
-    if (layer) {
-      const raw = getComputedStyle(layer).getPropertyValue('--vt-row-w').trim();
-      if (raw) {
-        const probe = document.createElement('div');
-        probe.style.cssText = 'position:absolute;visibility:hidden;width:' + raw + ';pointer-events:none;';
-        document.body.appendChild(probe);
-        w = Math.round(probe.getBoundingClientRect().width);
-        probe.remove();
-      }
+    if (!layer || !frames) return;
+    // Phones stack hero and team as ordinary sections, so there is nothing to fit.
+    if (window.matchMedia('(max-width: 680px)').matches) {
+      layer.style.removeProperty('--vt-card');
+      return;
     }
-    if (!w) w = Math.round(frames.getBoundingClientRect().width);
-    if (!w) return;
-    logos.style.setProperty('width', w + 'px', 'important');
-    logos.style.setProperty('max-width', w + 'px', 'important');
-    logos.style.setProperty('left', 'auto', 'important');
-    logos.style.setProperty('right', 'auto', 'important');
-    logos.style.setProperty('transform', 'none', 'important');
-    logos.style.setProperty('justify-content', 'space-between', 'important');
-    logos.style.setProperty('flex-wrap', 'nowrap', 'important');
-    logos.style.setProperty('box-sizing', 'border-box', 'important');
+    const header = document.getElementById('teamHeader');
+    const logos = document.getElementById('logoStrip');
+    const cs = getComputedStyle(layer);
+    const cols = parseInt(cs.getPropertyValue('--vt-cols'), 10) || 4;
+    const gap = parseFloat(cs.getPropertyValue('--vt-gap')) || 14;
+    const maxCard = parseFloat(cs.getPropertyValue('--vt-card-max')) || 180;
+    const availW = layer.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    const availH = layer.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    if (!(availW > 0) || !(availH > 0)) return;
+    const outer = (el) => {
+      if (!el) return 0;
+      const s = getComputedStyle(el);
+      return el.offsetHeight + (parseFloat(s.marginTop) || 0) + (parseFloat(s.marginBottom) || 0);
+    };
+    const MIN_CARD = 104;
+    const apply = (w) => layer.style.setProperty('--vt-card', w + 'px');
+    let card = Math.floor((availW - gap * (cols - 1)) / cols);
+    card = Math.max(MIN_CARD, Math.min(maxCard, card));
+    apply(card);
+    let guard = 0;
+    while (card > MIN_CARD && guard++ < 48 &&
+           outer(header) + outer(frames) + outer(logos) > availH) {
+      card -= 6;
+      apply(Math.max(MIN_CARD, card));
+    }
   }
 
   setupVaultTransition() {
@@ -729,11 +740,20 @@ class Component extends DCLogic {
       } catch (e) {}
     };
     this._startMarquee();
-    this.syncLogoStripWidth();
-    window.addEventListener('resize', () => this.syncLogoStripWidth(), { passive: true });
-    // Re-measure after fonts/images/layout settle
-    [100, 400, 1000, 2000].forEach((ms) => setTimeout(() => this.syncLogoStripWidth(), ms));
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.syncLogoStripWidth());
+    this.fitTeamLayer();
+    this._onTeamResize = () => {
+      if (this._fitRaf) cancelAnimationFrame(this._fitRaf);
+      this._fitRaf = requestAnimationFrame(() => {
+        this.fitTeamLayer();
+        if (this._st) { try { this._st.refresh(); } catch (e) {} }
+      });
+    };
+    window.addEventListener('resize', this._onTeamResize, { passive: true });
+    window.addEventListener('orientationchange', this._onTeamResize, { passive: true });
+    // Re-measure once fonts and photos have settled
+    [100, 400, 1000, 2000].forEach((ms) => setTimeout(() => this.fitTeamLayer(), ms));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.fitTeamLayer());
+
     this._vtTries = 0;
     this._vtBoot = () => {
       const g = window.gsap, ST = window.ScrollTrigger;
@@ -743,59 +763,71 @@ class Component extends DCLogic {
         return;
       }
       g.registerPlugin(ST);
-      // Buttery wheel inertia + ScrollTrigger sync
-      if (window.Lenis && !this._lenis) {
-        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        if (!reduceMotion) {
-          const lenis = new window.Lenis({
-            duration: 1.35,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smoothWheel: true,
-            wheelMultiplier: 0.92,
-            touchMultiplier: 1.05,
-            // Allow #teamLayer[data-lenis-prevent] to scroll its own overflow
-            prevent: (node) => !!(node && node.closest && node.closest('[data-lenis-prevent]')),
-          });
-          lenis.on('scroll', ST.update);
-          g.ticker.add((time) => { lenis.raf(time * 1000); });
-          g.ticker.lagSmoothing(0);
-          this._lenis = lenis;
-        }
-      }
-      const title = document.querySelector('#heroCover #heroTitle');
-      const textWrap = title ? title.parentElement : null;
-      const cards = document.querySelector('#heroCover #cardsCanvas');
-      g.set(bg, { transformPerspective: 1200, transformOrigin: '50% 46%', force3D: true });
-      g.set('#teamLayer', { scale: 1.12, transformOrigin: '50% 48%', force3D: true });
-      g.set('#heroCover', { force3D: true });
-      const tl = g.timeline({
-        defaults: { ease: 'none' },
-        scrollTrigger: {
-          trigger: '#vt-root',
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.25,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            const el = document.getElementById('heroCover');
-            if (!el) return;
-            el.style.pointerEvents = self.progress > 0.62 ? 'none' : 'auto';
-            el.style.visibility = self.progress > 0.96 ? 'hidden' : 'visible';
-            if (self.progress > 0.7) this.syncLogoStripWidth();
-          }
-        }
-      });
-      // Soft overlapping fades for a silkier dive into the vault
-      tl.to('#scrollHint', { opacity: 0, y: 20, ease: 'power1.inOut', duration: 0.2 }, 0);
-      if (textWrap) tl.to(textWrap, { opacity: 0, y: -56, filter: 'blur(8px)', ease: 'power2.inOut', duration: 0.48 }, 0.02);
-      if (cards) tl.to(cards, { opacity: 0, y: 28, ease: 'power2.inOut', duration: 0.42 }, 0.06);
-      tl.to(bg, { scale: 2.7, z: 780, ease: 'power2.inOut', duration: 1.05 }, 0.04);
-      tl.to('#heroCover', { opacity: 0, ease: 'power1.inOut', duration: 0.45 }, 0.58);
-      tl.to('#teamLayer', { scale: 1, ease: 'power2.inOut', duration: 0.62 }, 0.42);
       this._st = ST;
+      // Wheel inertia, driven by the GSAP ticker so ScrollTrigger stays in sync
+      if (window.Lenis && !this._lenis && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const lenis = new window.Lenis({
+          duration: 1.35,
+          easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          smoothWheel: true,
+          wheelMultiplier: 0.92,
+          touchMultiplier: 1.05,
+        });
+        lenis.on('scroll', ST.update);
+        g.ticker.add((time) => { lenis.raf(time * 1000); });
+        g.ticker.lagSmoothing(0);
+        this._lenis = lenis;
+      }
       const wl = document.getElementById('wlWidget');
       if (wl) wl.style.zIndex = '10050';
+
+      // The vault dive only runs where the hero and team are stacked layers.
+      const mm = g.matchMedia();
+      this._mm = mm;
+      mm.add('(min-width: 681px)', () => {
+        const cover = document.getElementById('heroCover');
+        const title = document.querySelector('#heroCover #heroTitle');
+        const textWrap = title ? title.parentElement : null;
+        const cards = document.querySelector('#heroCover #cardsCanvas');
+        const hint = document.getElementById('scrollHint');
+        g.set(bg, { transformPerspective: 1200, transformOrigin: '50% 46%', force3D: true });
+        g.set('#teamLayer', { scale: 1.12, transformOrigin: '50% 48%', force3D: true });
+        g.set('#heroCover', { force3D: true });
+        this.fitTeamLayer();
+
+        const tl = g.timeline({
+          defaults: { ease: 'none' },
+          scrollTrigger: {
+            trigger: '#vt-root',
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1.25,
+            invalidateOnRefresh: true,
+            onRefresh: () => this.fitTeamLayer(),
+            onUpdate: (self) => {
+              if (!cover) return;
+              cover.style.pointerEvents = self.progress > 0.62 ? 'none' : 'auto';
+              cover.style.visibility = self.progress > 0.96 ? 'hidden' : 'visible';
+            }
+          }
+        });
+        tl.to('#scrollHint', { opacity: 0, y: 20, ease: 'power1.inOut', duration: 0.2 }, 0);
+        if (textWrap) tl.to(textWrap, { opacity: 0, y: -56, filter: 'blur(8px)', ease: 'power2.inOut', duration: 0.48 }, 0.02);
+        if (cards) tl.to(cards, { opacity: 0, y: 28, ease: 'power2.inOut', duration: 0.42 }, 0.06);
+        tl.to(bg, { scale: 2.7, z: 780, ease: 'power2.inOut', duration: 1.05 }, 0.04);
+        tl.to('#heroCover', { opacity: 0, ease: 'power1.inOut', duration: 0.45 }, 0.58);
+        tl.to('#teamLayer', { scale: 1, ease: 'power2.inOut', duration: 0.62 }, 0.42);
+
+        return () => {
+          if (tl.scrollTrigger) tl.scrollTrigger.kill();
+          tl.kill();
+          const targets = [bg, textWrap, cards, hint, cover, document.getElementById('teamLayer')].filter(Boolean);
+          g.set(targets, { clearProps: 'opacity,transform,filter,visibility' });
+          if (cover) { cover.style.pointerEvents = ''; cover.style.visibility = ''; }
+          this.fitTeamLayer();
+        };
+      });
+
       requestAnimationFrame(() => { try { ST.refresh(); } catch (e) {} });
     };
     this._vtBoot();
@@ -1153,8 +1185,14 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
+    if (this._onTeamResize) {
+      window.removeEventListener('resize', this._onTeamResize);
+      window.removeEventListener('orientationchange', this._onTeamResize);
+    }
+    if (this._fitRaf) cancelAnimationFrame(this._fitRaf);
     if (this._raf) cancelAnimationFrame(this._raf);
     if (this._poll) clearInterval(this._poll);
+    if (this._mm) { try { this._mm.revert(); } catch (e) {} this._mm = null; }
     if (this._lenis) { try { this._lenis.destroy(); } catch (e) {} this._lenis = null; }
     if (this._st && this._st.getAll) this._st.getAll().forEach((t) => t.kill());
     if (this._cardsPointer) {
