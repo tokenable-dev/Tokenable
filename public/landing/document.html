@@ -7,8 +7,13 @@
 <script src="/landing/three.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
 <style>
   html, body { margin: 0; padding: 0; background: #0a0a0b; }
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: hidden; }
   * { box-sizing: border-box; }
   body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
   ::selection { background: #2F6BFF; color: #0a0a0b; }
@@ -146,11 +151,11 @@
     flex: 1 1 0 !important; padding: 0 !important;
   }
   #logoStrip img { width: auto !important; min-width: 0 !important; max-width: 100% !important; max-height: 100% !important; }
-  /* desktop / tablet: cards match HTML clamp(120px,13.2vw,200px) */
-  #teamLayer { --vt-row-w: min(860px, calc(100vw - 48px)); }
+  /* Match Vault Transition HTML: clamp(120px, 13.2vw, 220px) — do NOT stretch to fill 4 cols */
+  #teamLayer { --vt-row-w: min(1120px, calc(100vw - 48px)); }
   #framesRow > .tk-team {
-    width: clamp(120px, 13.2vw, 200px) !important;
-    max-width: 200px !important;
+    width: clamp(120px, 13.2vw, 220px) !important;
+    max-width: 220px !important;
   }
   #framesRow > .tk-team .tk-team-name { font-size: 17px !important; }
   #framesRow > .tk-team .tk-team-bio { font-size: 11.5px !important; line-height: 1.45 !important; }
@@ -163,24 +168,24 @@
       position: relative !important; top: auto !important; bottom: auto !important; left: auto !important; right: auto !important;
       transform: none !important; display: flex !important; flex-wrap: wrap !important;
       justify-content: center !important; align-content: flex-start !important;
-      gap: 14px !important; padding: 0 !important; margin: 0 auto !important; flex: 0 0 auto !important;
-      width: var(--vt-row-w) !important; max-width: none !important; height: auto !important; overflow: visible !important;
+      gap: 18px !important; padding: 0 !important; margin: 0 auto !important; flex: 0 0 auto !important;
+      width: fit-content !important; max-width: var(--vt-row-w) !important; height: auto !important; overflow: visible !important;
     }
     #framesRow > .tk-team {
-      width: clamp(140px, calc((100% - 42px) / 4), 200px) !important;
-      max-width: 200px !important;
+      width: clamp(120px, 13.2vw, 220px) !important;
+      max-width: 220px !important;
       min-width: 0 !important; height: auto !important; flex: 0 0 auto !important; overflow: hidden !important;
     }
     #framesRow > .tk-team * { min-width: 0 !important; max-width: 100% !important; }
     #logoStrip {
       position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
       margin: 28px auto 0 !important; padding: 0 !important; flex: 0 0 auto !important;
-      width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
+      width: fit-content !important; max-width: var(--vt-row-w) !important;
       justify-content: space-between !important; flex-wrap: nowrap !important;
     }
   }
   @media (min-width: 1600px) {
-    #teamLayer { --vt-row-w: min(900px, calc(100vw - 64px)); }
+    #teamLayer { --vt-row-w: min(1280px, calc(100vw - 64px)); }
   }
   /* phones: 2-col grid, matching widths */
   @media (max-width: 680px) {
@@ -207,7 +212,7 @@
 </style>
 </helmet>
 
-<div id="vt-root" style="position:relative; width:100%; height:320vh; background:#09090b;">
+<div id="vt-root" style="position:relative; width:100%; height:360vh; background:#09090b;">
 
   <!-- ============ BOTTOM LAYER: TEAM (z:0, fixed) ============ -->
   <section id="teamLayer" style="position:fixed; inset:0; z-index:0; overflow:hidden; background:#0a0b10;">
@@ -224,7 +229,7 @@
     </div>
 
     <div id="framesRow" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); display:flex; gap:18px; padding:0 28px; z-index:2; max-width:100vw;">
-        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,200px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
+        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
             <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
@@ -246,7 +251,7 @@
             </div>
           </div>
         </div>
-        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,200px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
+        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
             <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
@@ -268,7 +273,7 @@
             </div>
           </div>
         </div>
-        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,200px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
+        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
             <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
@@ -290,7 +295,7 @@
             </div>
           </div>
         </div>
-        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,200px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
+        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
             <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
@@ -312,7 +317,7 @@
             </div>
           </div>
         </div>
-        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,200px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
+        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
             <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
@@ -334,7 +339,7 @@
             </div>
           </div>
         </div>
-        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,200px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
+        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
             <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
@@ -356,7 +361,7 @@
             </div>
           </div>
         </div>
-        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,200px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
+        <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
           <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
             <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
@@ -623,11 +628,28 @@ class Component extends DCLogic {
         return;
       }
       g.registerPlugin(ST);
+      // Buttery wheel inertia + ScrollTrigger sync
+      if (window.Lenis && !this._lenis) {
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (!reduceMotion) {
+          const lenis = new window.Lenis({
+            duration: 1.35,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            wheelMultiplier: 0.92,
+            touchMultiplier: 1.05,
+          });
+          lenis.on('scroll', ST.update);
+          g.ticker.add((time) => { lenis.raf(time * 1000); });
+          g.ticker.lagSmoothing(0);
+          this._lenis = lenis;
+        }
+      }
       const title = document.querySelector('#heroCover #heroTitle');
       const textWrap = title ? title.parentElement : null;
       const cards = document.querySelector('#heroCover #cardsCanvas');
-      g.set(bg, { transformPerspective: 1100, transformOrigin: '50% 46%', force3D: true });
-      g.set('#teamLayer', { scale: 1.1, transformOrigin: '50% 48%', force3D: true });
+      g.set(bg, { transformPerspective: 1200, transformOrigin: '50% 46%', force3D: true });
+      g.set('#teamLayer', { scale: 1.12, transformOrigin: '50% 48%', force3D: true });
       g.set('#heroCover', { force3D: true });
       const tl = g.timeline({
         defaults: { ease: 'none' },
@@ -635,7 +657,7 @@ class Component extends DCLogic {
           trigger: '#vt-root',
           start: 'top top',
           end: 'bottom bottom',
-          scrub: 1.6,
+          scrub: 1.25,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
@@ -647,16 +669,17 @@ class Component extends DCLogic {
           }
         }
       });
-      // Longer, overlapping fades for a silkier dive into the vault
-      tl.to('#scrollHint', { opacity: 0, y: 18, ease: 'power1.inOut', duration: 0.18 }, 0);
-      if (textWrap) tl.to(textWrap, { opacity: 0, y: -48, filter: 'blur(6px)', ease: 'power2.inOut', duration: 0.42 }, 0.02);
-      if (cards) tl.to(cards, { opacity: 0, y: 24, ease: 'power2.inOut', duration: 0.38 }, 0.08);
-      tl.to(bg, { scale: 2.55, z: 720, ease: 'power2.inOut', duration: 1 }, 0.06);
-      tl.to('#heroCover', { opacity: 0, ease: 'power1.inOut', duration: 0.4 }, 0.62);
-      tl.to('#teamLayer', { scale: 1, ease: 'power2.inOut', duration: 0.55 }, 0.48);
+      // Soft overlapping fades for a silkier dive into the vault
+      tl.to('#scrollHint', { opacity: 0, y: 20, ease: 'power1.inOut', duration: 0.2 }, 0);
+      if (textWrap) tl.to(textWrap, { opacity: 0, y: -56, filter: 'blur(8px)', ease: 'power2.inOut', duration: 0.48 }, 0.02);
+      if (cards) tl.to(cards, { opacity: 0, y: 28, ease: 'power2.inOut', duration: 0.42 }, 0.06);
+      tl.to(bg, { scale: 2.7, z: 780, ease: 'power2.inOut', duration: 1.05 }, 0.04);
+      tl.to('#heroCover', { opacity: 0, ease: 'power1.inOut', duration: 0.45 }, 0.58);
+      tl.to('#teamLayer', { scale: 1, ease: 'power2.inOut', duration: 0.62 }, 0.42);
       this._st = ST;
       const wl = document.getElementById('wlWidget');
       if (wl) wl.style.zIndex = '10050';
+      requestAnimationFrame(() => { try { ST.refresh(); } catch (e) {} });
     };
     this._vtBoot();
   }
@@ -784,6 +807,7 @@ class Component extends DCLogic {
     };
     const open = () => {
       portalWaitlist();
+      if (this._lenis) try { this._lenis.stop(); } catch (e) {}
       pill.style.display = 'none';
       card.style.display = 'block';
       card.style.position = 'fixed';
@@ -868,6 +892,7 @@ class Component extends DCLogic {
       scrim.style.opacity = '0';
       scrim.style.pointerEvents = 'none';
       pill.style.display = 'inline-flex';
+      if (this._lenis) try { this._lenis.start(); } catch (e) {}
     };
     scrim.addEventListener('click', close);
     pill.addEventListener('click', open);
@@ -1013,6 +1038,8 @@ class Component extends DCLogic {
     if (this._onScroll) window.removeEventListener('scroll', this._onScroll);
     if (this._raf) cancelAnimationFrame(this._raf);
     if (this._poll) clearInterval(this._poll);
+    if (this._lenis) { try { this._lenis.destroy(); } catch (e) {} this._lenis = null; }
+    if (this._st && this._st.getAll) this._st.getAll().forEach((t) => t.kill());
     if (this._cardsPointer) {
       const p = this._cardsPointer;
       window.removeEventListener('mousemove', p.move);
