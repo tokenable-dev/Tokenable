@@ -207,17 +207,23 @@
       min-width: 0 !important;
     }
     #framesRow > .tk-team span[style*="Newsreader"] { font-size: clamp(14px, 1.15vw, 17px) !important; }
-    #framesRow > .tk-team [style*="font-size:11.5px"] { font-size: 11px !important; line-height: 1.4 !important; }
+    #framesRow > .tk-team .tk-team-bio { font-size: 11px !important; line-height: 1.4 !important; }
   }
 
-  /* Tablet / mid desktop: exactly 4 on top, 3 on bottom */
+  /* Tablet / mid desktop: exactly 4 on top, 3 centered below */
   @media (min-width: 681px) and (max-width: 1199px) {
     #teamLayer { --vt-row-w: min(920px, calc(100vw - 40px)); --vt-gap: 14px; padding: 28px 16px 18px !important; }
-    #framesRow { flex-wrap: wrap !important; justify-content: center !important; }
+    #framesRow {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      gap: 14px !important;
+    }
     #framesRow > .tk-team {
-      width: calc((100% - (var(--vt-gap) * 3)) / 4) !important;
-      max-width: calc((100% - (var(--vt-gap) * 3)) / 4) !important;
-      flex: 0 0 calc((100% - (var(--vt-gap) * 3)) / 4) !important;
+      box-sizing: border-box !important;
+      width: calc((100% - 42px) / 4) !important;
+      max-width: calc((100% - 42px) / 4) !important;
+      flex: 0 0 calc((100% - 42px) / 4) !important;
     }
   }
 
@@ -234,7 +240,7 @@
     #framesRow {
       display: grid !important;
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-      gap: var(--vt-gap) !important;
+      gap: 10px !important;
       width: var(--vt-row-w) !important;
       max-width: var(--vt-row-w) !important;
     }
@@ -251,7 +257,7 @@
     }
     #framesRow > .tk-team span[style*="Newsreader"] { font-size: 13.5px !important; }
     #framesRow > .tk-team [style*="letter-spacing:.12em"] { font-size: 9px !important; letter-spacing: .1em !important; }
-    #framesRow > .tk-team [style*="font-size:11.5px"] {
+    #framesRow > .tk-team .tk-team-bio {
       font-size: 10px !important;
       line-height: 1.35 !important;
       display: -webkit-box !important;
