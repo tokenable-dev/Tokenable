@@ -180,6 +180,7 @@
   #framesRow > .tk-team * { min-width: 0 !important; max-width: 100% !important; box-sizing: border-box !important; }
 
   /* Logo strip stays in flow + sticky so it never disappears under the fold */
+  #teamLayer { scroll-padding-bottom: 56px; }
   #logoStrip {
     position: sticky !important; bottom: 0 !important; left: auto !important; right: auto !important; top: auto !important;
     z-index: 6 !important; display: flex !important; flex-wrap: nowrap !important;
@@ -212,19 +213,46 @@
 
   /* Tablet / mid desktop: exactly 4 on top, 3 centered below */
   @media (min-width: 681px) and (max-width: 1199px) {
-    #teamLayer { --vt-row-w: min(920px, calc(100vw - 40px)); --vt-gap: 14px; padding: 28px 16px 18px !important; }
+    #teamLayer { --vt-row-w: min(920px, calc(100vw - 40px)); --vt-gap: 10px; padding: 18px 16px 12px !important; }
+    #teamHeader { margin: 0 auto 8px !important; }
+    #teamHeader h2 { font-size: clamp(26px, 3.1vw, 38px) !important; margin: 6px 0 4px !important; }
     #framesRow {
       display: flex !important;
       flex-wrap: wrap !important;
       justify-content: center !important;
-      gap: 14px !important;
+      gap: 10px !important;
     }
     #framesRow > .tk-team {
       box-sizing: border-box !important;
-      width: calc((100% - 42px) / 4) !important;
-      max-width: calc((100% - 42px) / 4) !important;
-      flex: 0 0 calc((100% - 42px) / 4) !important;
+      width: calc((100% - 30px) / 4) !important;
+      max-width: calc((100% - 30px) / 4) !important;
+      flex: 0 0 calc((100% - 30px) / 4) !important;
     }
+    /* Compact cards so 4+3 + sticky logos fit ~900px without covering bios */
+    #framesRow > .tk-team [style*="aspect-ratio:1/1"] {
+      aspect-ratio: 1 / 0.78 !important;
+      max-height: 168px !important;
+    }
+    #framesRow > .tk-team [style*="padding:12px"] {
+      padding: 8px 8px 9px !important;
+      gap: 4px !important;
+    }
+    #framesRow > .tk-team span[style*="Newsreader"] { font-size: 15px !important; }
+    #framesRow > .tk-team [style*="letter-spacing:.12em"] { font-size: 10px !important; }
+    #framesRow > .tk-team .tk-team-bio {
+      font-size: 10.5px !important;
+      line-height: 1.35 !important;
+      display: -webkit-box !important;
+      -webkit-line-clamp: 3 !important;
+      -webkit-box-orient: vertical !important;
+      overflow: hidden !important;
+    }
+    #framesRow > .tk-team [style*="padding:4px 9px"] {
+      padding: 3px 6px !important;
+      font-size: 9.5px !important;
+    }
+    #logoStrip { padding: 10px 0 6px !important; }
+    #logoStrip > span { height: 24px !important; }
   }
 
   /* Phones: clean 2-col cards + bottom logo marquee */
@@ -319,7 +347,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">CEO</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">REITIUM founder. Compliant crowdfunding / broker-dealer securities platforms.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">REITIUM founder. Compliant crowdfunding / broker-dealer securities platforms.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Reitium</span></div>
             </div>
             </div>
@@ -341,7 +369,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">CFO</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">M&A and corporate finance. KPMG, Hyundai Securities, and private equity at KERR Asset Management.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">M&A and corporate finance. KPMG, Hyundai Securities, and private equity at KERR Asset Management.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">KPMG</span></div>
             </div>
             </div>
@@ -363,7 +391,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Advisory CTO</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Binance CTO. Product and engineering at Microsoft, Facebook, Google.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Binance CTO. Product and engineering at Microsoft, Facebook, Google.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Microsoft</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Meta</span></div>
             </div>
             </div>
@@ -385,7 +413,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Compliance</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Binance Deputy CCO. Former Kraken Global Head of Compliance and Board Member at Kraken Bank.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Binance Deputy CCO. Former Kraken Global Head of Compliance and Board Member at Kraken Bank.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Binance</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Kraken</span></div>
             </div>
             </div>
@@ -407,7 +435,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Marketing Advisor</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Global CMO at Binance. Head of Brand & Partnerships at OKX; Global Brand Partnerships at CAA.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Global CMO at Binance. Head of Brand & Partnerships at OKX; Global Brand Partnerships at CAA.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Binance</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">OKX</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">CAA</span></div>
             </div>
             </div>
@@ -429,7 +457,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Head of Product</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Official Software Developer Partner for Shinhan Financial Group. 20+ years in software, product, web, mobile, DeFi and AI.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Official Software Developer Partner for Shinhan Financial Group. 20+ years in software, product, web, mobile, DeFi and AI.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Shinhan</span></div>
             </div>
             </div>
@@ -451,7 +479,7 @@
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">COO</div>
               <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Real estate and commercial finance at RBC (Royal Bank of Canada), BMO Financial, and CT Green Financial.</div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Real estate and commercial finance at RBC (Royal Bank of Canada), BMO Financial, and CT Green Financial.</div>
               <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">RBC</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">BMO</span></div>
             </div>
             </div>
