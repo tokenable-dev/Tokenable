@@ -137,20 +137,18 @@
   #logoMarqueeTrack { animation: logoScroll 26s linear infinite; }
   #heroCover #topNav { background: transparent !important; border-bottom-color: transparent !important; backdrop-filter: none !important; -webkit-backdrop-filter: none !important; }
   #logoMarquee { display: none !important; }
-  #logoStrip { display: flex !important; flex-wrap: wrap !important; justify-content: center !important; align-items: center !important; gap: 14px 28px !important; z-index: 3 !important; background: none !important; box-sizing: border-box !important; }
-  #logoStrip span { width: auto !important; min-width: 0 !important; height: 28px !important; }
-  #logoStrip img { width: auto !important; min-width: 0 !important; max-width: 120px !important; max-height: 100% !important; }
-  /* wide desktop: logo strip width matches profile row */
-  @media (min-width: 1920px) {
-    #logoStrip {
-      left: 50% !important; right: auto !important; transform: translateX(-50%) !important;
-      padding: 0 !important; flex-wrap: nowrap !important; justify-content: space-between !important;
-      gap: clamp(12px,1.4vw,28px) !important;
-    }
-    #logoStrip span { height: 30px !important; width: auto !important; flex: 1 1 0 !important; max-width: 140px !important; }
+  #logoStrip {
+    display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; align-items: center !important;
+    gap: 10px !important; z-index: 3 !important; background: none !important; box-sizing: border-box !important;
   }
-  /* tablet / laptop: wrap cards 4+3, logo width == frames width */
-  @media (max-width: 1919px) and (min-width: 681px) {
+  #logoStrip > span {
+    width: auto !important; min-width: 0 !important; max-width: none !important; height: 28px !important;
+    flex: 1 1 0 !important; padding: 0 !important;
+  }
+  #logoStrip img { width: auto !important; min-width: 0 !important; max-width: 100% !important; max-height: 100% !important; }
+  /* desktop / tablet shared column: profiles + logos share --vt-row-w */
+  #teamLayer { --vt-row-w: min(1100px, calc(100vw - 48px)); }
+  @media (min-width: 681px) {
     #teamLayer { overflow-y: auto !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; padding: 40px 0 60px !important; }
     #teamLayer::-webkit-scrollbar { display: none; }
     #teamLayer > img.vt-wall, #teamLayer > div.vt-fx { position: fixed !important; }
@@ -160,7 +158,7 @@
       transform: none !important; display: flex !important; flex-wrap: wrap !important;
       justify-content: center !important; align-content: flex-start !important;
       gap: 16px !important; padding: 0 !important; margin: 0 auto !important; flex: 0 0 auto !important;
-      width: min(900px, calc(100vw - 48px)) !important; max-width: none !important; height: auto !important; overflow: visible !important;
+      width: var(--vt-row-w) !important; max-width: none !important; height: auto !important; overflow: visible !important;
     }
     #framesRow > * {
       width: calc((100% - 48px) / 4) !important; max-width: calc((100% - 48px) / 4) !important;
@@ -170,12 +168,17 @@
     #logoStrip {
       position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
       margin: 28px auto 0 !important; padding: 0 !important; flex: 0 0 auto !important;
-      width: min(900px, calc(100vw - 48px)) !important; justify-content: space-between !important; flex-wrap: wrap !important;
+      width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
+      justify-content: space-between !important; flex-wrap: nowrap !important;
     }
+  }
+  /* ultra-wide: slightly wider shared row */
+  @media (min-width: 1600px) {
+    #teamLayer { --vt-row-w: min(1280px, calc(100vw - 64px)); }
   }
   /* phones: 2-col grid, matching widths */
   @media (max-width: 680px) {
-    #teamLayer { overflow-y: auto !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; padding: 30px 0 48px !important; }
+    #teamLayer { --vt-row-w: calc(100vw - 32px); overflow-y: auto !important; display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: flex-start !important; padding: 30px 0 48px !important; }
     #teamLayer::-webkit-scrollbar { display: none; }
     #teamLayer > img.vt-wall, #teamLayer > div.vt-fx { position: fixed !important; }
     #teamHeader { position: relative !important; top: auto !important; left: auto !important; right: auto !important; margin: 0 auto 16px !important; flex: 0 0 auto !important; }
@@ -183,14 +186,15 @@
       position: relative !important; top: auto !important; bottom: auto !important; left: auto !important; right: auto !important;
       transform: none !important; display: grid !important; grid-template-columns: 1fr 1fr !important;
       gap: 12px !important; padding: 0 !important; margin: 0 auto !important; align-content: start !important;
-      width: calc(100vw - 32px) !important; max-width: none !important; height: auto !important; overflow: visible !important; flex: 0 0 auto !important;
+      width: var(--vt-row-w) !important; max-width: none !important; height: auto !important; overflow: visible !important; flex: 0 0 auto !important;
     }
     #framesRow > * { width: 100% !important; max-width: none !important; height: auto !important; }
     #logoStrip {
       position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
-      margin: 24px auto 0 !important; padding: 0 !important; width: calc(100vw - 32px) !important; flex: 0 0 auto !important;
-      justify-content: space-between !important;
+      margin: 24px auto 0 !important; padding: 0 !important; width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
+      flex: 0 0 auto !important; justify-content: space-between !important; flex-wrap: nowrap !important; gap: 6px !important;
     }
+    #logoStrip > span { height: 22px !important; }
     #scrollHint { display: none !important; }
   }
   @media (prefers-reduced-motion: reduce) { #logoMarqueeTrack { animation: none !important; } }
@@ -571,23 +575,17 @@ class Component extends DCLogic {
     const frames = document.getElementById('framesRow');
     const logos = document.getElementById('logoStrip');
     if (!frames || !logos) return;
-    // Match logo strip content width to profile row on wide desktop
-    if (window.matchMedia('(min-width: 1920px)').matches) {
-      const w = frames.getBoundingClientRect().width;
-      logos.style.width = w + 'px';
-      logos.style.left = '50%';
-      logos.style.right = 'auto';
-      logos.style.transform = 'translateX(-50%)';
-      logos.style.padding = '0';
-      logos.style.justifyContent = 'space-between';
-    } else {
-      logos.style.width = '';
-      logos.style.left = '';
-      logos.style.right = '';
-      logos.style.transform = '';
-      logos.style.padding = '';
-      logos.style.justifyContent = '';
-    }
+    const w = Math.round(frames.getBoundingClientRect().width);
+    if (!w) return;
+    logos.style.setProperty('width', w + 'px', 'important');
+    logos.style.setProperty('max-width', w + 'px', 'important');
+    logos.style.setProperty('left', 'auto', 'important');
+    logos.style.setProperty('right', 'auto', 'important');
+    logos.style.setProperty('transform', 'none', 'important');
+    logos.style.setProperty('padding', '0', 'important');
+    logos.style.setProperty('justify-content', 'space-between', 'important');
+    logos.style.setProperty('flex-wrap', 'nowrap', 'important');
+    logos.style.setProperty('box-sizing', 'border-box', 'important');
   }
 
   setupVaultTransition() {
@@ -605,6 +603,9 @@ class Component extends DCLogic {
     this._startMarquee();
     this.syncLogoStripWidth();
     window.addEventListener('resize', () => this.syncLogoStripWidth(), { passive: true });
+    // Re-measure after fonts/images/layout settle
+    [100, 400, 1000, 2000].forEach((ms) => setTimeout(() => this.syncLogoStripWidth(), ms));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.syncLogoStripWidth());
     this._vtTries = 0;
     this._vtBoot = () => {
       const g = window.gsap, ST = window.ScrollTrigger;
