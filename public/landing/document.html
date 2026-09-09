@@ -149,63 +149,95 @@
    */
   #teamLayer {
     --vt-cols: 4;
-    --vt-gap: 14px;
-    --vt-card-max: 180px;
+    --vt-rows: 2;
+    --vt-gap: 16px;
+    --vt-card-max: 213px;
+    --vt-card-h-max: 375px;
     --vt-card: var(--vt-card-max);
+    --vt-card-h: var(--vt-card-h-max);
     --vt-row-w: calc(var(--vt-card) * var(--vt-cols) + var(--vt-gap) * (var(--vt-cols) - 1));
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
+    --vt-block-h: calc(var(--vt-card-h) * var(--vt-rows) + var(--vt-gap) * (var(--vt-rows) - 1));
+    --vt-title-gap: 64px;
+    --vt-logo-gap: 52px;
+    display: block !important;
     overflow: hidden !important;
-    padding: 20px !important;
+    padding: 0 !important;
     box-sizing: border-box !important;
   }
   #teamLayer > img.vt-wall,
   #teamLayer > div.vt-fx { position: absolute !important; pointer-events: none !important; }
+  /* Title sits above the vertically-centered card block */
   #teamHeader {
-    position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
-    margin: 0 auto 16px !important; padding: 0 !important;
-    flex: 0 0 auto !important; width: 100% !important; max-width: var(--vt-row-w) !important;
+    position: absolute !important;
+    left: 0 !important; right: 0 !important;
+    top: calc(50% - (var(--vt-block-h) / 2) - var(--vt-title-gap)) !important;
+    bottom: auto !important;
+    transform: translateY(-100%) !important;
+    margin: 0 !important; padding: 0 20px !important;
+    width: 100% !important; max-width: none !important;
+    text-align: center !important;
+    z-index: 3 !important;
   }
+  #teamHeader > div { display: none !important; }
+  #teamHeader h2 { margin: 0 !important; }
+  /* Cards are centered in the viewport */
   #framesRow {
-    position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
-    transform: none !important; margin: 0 auto !important; padding: 0 !important;
+    position: absolute !important;
+    top: 50% !important; left: 50% !important;
+    right: auto !important; bottom: auto !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important; padding: 0 !important;
     display: flex !important; flex-wrap: wrap !important;
     justify-content: center !important; align-content: center !important;
     gap: var(--vt-gap) !important;
     width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
     height: auto !important; overflow: visible !important;
-    flex: 0 0 auto !important; z-index: 2 !important;
+    z-index: 2 !important;
   }
   #framesRow > .tk-team {
     width: var(--vt-card) !important;
     max-width: var(--vt-card) !important;
+    height: var(--vt-card-h) !important;
     flex: 0 0 var(--vt-card) !important;
-    min-width: 0 !important; height: auto !important; overflow: hidden !important;
+    min-width: 0 !important; overflow: hidden !important;
   }
+  #framesRow > .tk-team > div,
+  #framesRow > .tk-team > div > div { height: 100% !important; }
   #framesRow > .tk-team * { min-width: 0 !important; max-width: 100% !important; box-sizing: border-box !important; }
-  /* Clamped so every card in a row keeps the same height */
+  /* Photo shares the card with the bio so copy is never ellipsized */
+  #framesRow > .tk-team [style*="aspect-ratio:1/1"] {
+    aspect-ratio: auto !important;
+    flex: 0 0 50% !important;
+    height: 50% !important;
+    max-height: 50% !important;
+  }
+  #framesRow > .tk-team .tk-team-plate {
+    flex: 1 1 auto !important;
+    overflow: visible !important;
+  }
   #framesRow > .tk-team .tk-team-bio {
-    display: -webkit-box !important;
-    -webkit-line-clamp: 3 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
+    display: block !important;
+    overflow: visible !important;
+    -webkit-line-clamp: unset !important;
+    text-overflow: clip !important;
   }
   /* Density fallback fitTeamLayer switches on for very short viewports */
-  #framesRow.tk-compact > .tk-team .tk-team-bio { -webkit-line-clamp: 2 !important; font-size: 10.5px !important; }
-  #framesRow.tk-compact > .tk-team [style*="padding:12px"] { padding: 8px 9px 9px !important; gap: 4px !important; }
-  #framesRow.tk-compact > .tk-team span[style*="Newsreader"] { font-size: 14px !important; }
+  #framesRow.tk-compact > .tk-team .tk-team-plate { padding: 10px 10px 11px !important; gap: 6px !important; }
+  #framesRow.tk-compact > .tk-team span[style*="Newsreader"] { font-size: 15px !important; }
   #framesRow.tk-compact > .tk-team [style*="letter-spacing:.12em"] { font-size: 9.5px !important; }
-  #framesRow.tk-compact > .tk-team [style*="padding:4px 9px"] { padding: 3px 6px !important; font-size: 9px !important; }
+  #framesRow.tk-compact > .tk-team .tk-team-bio { font-size: 11px !important; line-height: 1.4 !important; }
   #logoStrip {
-    position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
-    transform: none !important; margin: 18px auto 0 !important; padding: 0 !important;
+    position: absolute !important;
+    left: 50% !important; right: auto !important;
+    top: calc(50% + (var(--vt-block-h) / 2) + var(--vt-logo-gap)) !important;
+    bottom: auto !important;
+    transform: translateX(-50%) !important;
+    margin: 0 !important; padding: 0 !important;
     display: flex !important; flex-wrap: nowrap !important;
     justify-content: space-between !important; align-items: center !important;
     gap: 8px !important;
     width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
-    flex: 0 0 auto !important; z-index: 3 !important; box-sizing: border-box !important;
+    z-index: 3 !important; box-sizing: border-box !important;
     background: none !important;
   }
   #logoStrip > span {
@@ -215,19 +247,135 @@
   #logoStrip img { width: auto !important; min-width: 0 !important; max-width: 100% !important; max-height: 100% !important; }
   #logoMarquee { display: none !important; }
 
-  /* 15" laptops and larger: all seven contributors on one row */
+  /* Large monitors: all seven contributors on one row */
   @media (min-width: 1600px) {
-    #teamLayer { --vt-cols: 7; --vt-gap: 14px; --vt-card-max: 192px; }
+    #teamLayer {
+      --vt-cols: 7;
+      --vt-rows: 1;
+      --vt-gap: 16px;
+      --vt-card-max: 220px;
+      --vt-card-h-max: 400px;
+      --vt-title-gap: 72px;
+      --vt-logo-gap: 56px;
+    }
   }
 
-  /* Short viewports: reclaim the vertical budget from the chrome, not the cards */
-  @media (min-width: 681px) and (max-height: 800px) {
-    #teamLayer { padding: 12px 20px !important; }
-    #teamHeader { margin: 0 auto 10px !important; }
-    #teamHeader > div { font-size: 10px !important; }
-    #teamHeader h2 { font-size: clamp(22px, 2.6vw, 32px) !important; margin: 6px 0 3px !important; }
-    #logoStrip { margin-top: 12px !important; }
+  /* Short desktop viewports: tighten chrome around the centered cards */
+  @media (min-width: 1200px) and (max-height: 800px) {
+    #teamLayer { --vt-title-gap: 44px; --vt-logo-gap: 36px; }
+    #teamHeader h2 { font-size: clamp(22px, 2.6vw, 32px) !important; }
     #logoStrip > span { height: 22px !important; }
+  }
+
+  /*
+   * Tablets / iPads: drop the pinned vault dive. Always force a centered 4+3
+   * grid (second row of 3 is centered). Target card size is 181×362 and scales
+   * down only enough to fit four across. Partner logos use the static strip.
+   */
+  @media (min-width: 681px) and (max-width: 1199px) {
+    #vt-root {
+      height: auto !important;
+      display: flex !important;
+      flex-direction: column !important;
+    }
+    #heroCover {
+      order: 1 !important;
+      position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+      height: 100svh !important; flex: 0 0 auto !important; z-index: 1 !important;
+      opacity: 1 !important; visibility: visible !important; transform: none !important;
+    }
+    #teamLayer {
+      order: 2 !important;
+      position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
+      height: auto !important; min-height: auto !important; flex: 0 0 auto !important;
+      transform: none !important; z-index: 1 !important;
+      display: flex !important; flex-direction: column !important; align-items: center !important;
+      justify-content: flex-start !important;
+      overflow: visible !important;
+      --vt-cols: 4;
+      --vt-rows: 2;
+      --vt-gap: 12px;
+      --vt-pad-x: 16px;
+      --vt-row-w: min(778px, calc(100vw - (var(--vt-pad-x) * 2)));
+      --vt-card: min(181px, calc((var(--vt-row-w) - (var(--vt-gap) * 3)) / 4));
+      --vt-card-h: calc(var(--vt-card) * 2);
+      padding: 48px var(--vt-pad-x) 52px !important;
+    }
+    #teamHeader {
+      position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+      transform: none !important;
+      width: 100% !important; max-width: var(--vt-row-w) !important;
+      margin: 0 auto 24px !important; padding: 0 !important;
+      text-align: center !important;
+    }
+    #teamHeader h2 { font-size: clamp(30px, 4vw, 42px) !important; margin: 0 !important; }
+    #framesRow {
+      position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+      transform: none !important; margin: 0 auto !important; padding: 0 !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      align-content: flex-start !important;
+      gap: var(--vt-gap) !important;
+      width: calc(var(--vt-card) * 4 + var(--vt-gap) * 3) !important;
+      max-width: 100% !important;
+    }
+    #framesRow > .tk-team {
+      width: var(--vt-card) !important;
+      max-width: var(--vt-card) !important;
+      height: var(--vt-card-h) !important;
+      flex: 0 0 var(--vt-card) !important;
+      aspect-ratio: auto !important;
+    }
+    #framesRow > .tk-team > div,
+    #framesRow > .tk-team > div > div { border-radius: 16px !important; height: 100% !important; }
+    #framesRow > .tk-team [style*="aspect-ratio:1/1"] {
+      aspect-ratio: auto !important;
+      flex: 0 0 50% !important;
+      height: 50% !important;
+      max-height: 50% !important;
+    }
+    #framesRow > .tk-team .tk-team-plate { padding: 12px 11px 14px !important; gap: 7px !important; overflow: visible !important; }
+    #framesRow > .tk-team span[style*="Newsreader"] { font-size: 16px !important; }
+    #framesRow > .tk-team [style*="letter-spacing:.12em"] { font-size: 10px !important; }
+    #framesRow > .tk-team .tk-team-bio { font-size: 11.5px !important; line-height: 1.45 !important; }
+    /* Static partner logos under the cards — same set as desktop */
+    #logoStrip {
+      display: flex !important;
+      position: relative !important;
+      top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+      transform: none !important;
+      width: calc(var(--vt-card) * 4 + var(--vt-gap) * 3) !important;
+      max-width: 100% !important;
+      margin: 36px auto 0 !important;
+      padding: 0 !important;
+      flex-wrap: wrap !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 16px 22px !important;
+      background: none !important;
+      z-index: 3 !important;
+    }
+    #logoStrip > span {
+      display: inline-flex !important;
+      flex: 0 0 auto !important;
+      width: 78px !important;
+      height: 30px !important;
+      padding: 0 !important;
+      align-items: center !important;
+      justify-content: center !important;
+    }
+    #logoStrip img {
+      display: block !important;
+      width: auto !important;
+      height: auto !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      object-fit: contain !important;
+      opacity: .95 !important;
+    }
+    #logoMarquee { display: none !important; }
+    #scrollHint { display: none !important; }
   }
 
   /*
@@ -253,26 +401,32 @@
       position: relative !important; top: auto !important; right: auto !important; bottom: auto !important; left: auto !important;
       height: auto !important; min-height: 100svh !important; flex: 0 0 auto !important;
       transform: none !important; z-index: 1 !important;
-      --vt-cols: 2; --vt-gap: 10px;
+      display: flex !important; flex-direction: column !important; align-items: center !important;
+      --vt-cols: 2; --vt-rows: 4; --vt-gap: 10px;
       padding: 30px 14px 26px !important;
       justify-content: flex-start !important;
     }
-    #teamHeader { width: 100% !important; max-width: 420px !important; margin: 0 auto 14px !important; }
+    #teamHeader {
+      position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+      transform: none !important;
+      width: 100% !important; max-width: 420px !important; margin: 0 auto 14px !important; padding: 0 !important;
+    }
     #teamHeader h2 { font-size: clamp(24px, 7.2vw, 34px) !important; margin: 8px 0 4px !important; }
     #framesRow {
+      position: relative !important; top: auto !important; left: auto !important; right: auto !important; bottom: auto !important;
+      transform: none !important; margin: 0 auto !important;
       display: grid !important;
       grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
       gap: 10px !important;
       width: 100% !important; max-width: 420px !important;
     }
-    #framesRow > .tk-team { width: 100% !important; max-width: 100% !important; flex: none !important; }
-    #framesRow > .tk-team > div { border-radius: 14px !important; }
-    #framesRow > .tk-team > div > div { border-radius: 13px !important; }
-    #framesRow > .tk-team [style*="padding:12px"] { padding: 9px 9px 10px !important; gap: 5px !important; }
-    #framesRow > .tk-team span[style*="Newsreader"] { font-size: 14px !important; }
+    #framesRow > .tk-team { width: 100% !important; max-width: 100% !important; height: auto !important; flex: none !important; }
+    #framesRow > .tk-team > div,
+    #framesRow > .tk-team > div > div { border-radius: 14px !important; }
+    #framesRow > .tk-team .tk-team-plate { padding: 12px 11px 13px !important; gap: 7px !important; }
+    #framesRow > .tk-team span[style*="Newsreader"] { font-size: 16px !important; }
     #framesRow > .tk-team [style*="letter-spacing:.12em"] { font-size: 9px !important; letter-spacing: .1em !important; }
-    #framesRow > .tk-team .tk-team-bio { font-size: 10px !important; line-height: 1.4 !important; }
-    #framesRow > .tk-team [style*="padding:4px 9px"] { padding: 3px 6px !important; font-size: 9px !important; border-radius: 5px !important; }
+    #framesRow > .tk-team .tk-team-bio { font-size: 11px !important; line-height: 1.45 !important; }
     #logoStrip { display: none !important; }
     #logoMarquee {
       display: flex !important;
@@ -288,7 +442,7 @@
 </style>
 </helmet>
 
-<div id="vt-root" style="position:relative; width:100%; height:360vh; background:#09090b;">
+<div id="vt-root" style="position:relative; width:100%; height:200vh; background:#09090b;">
 
   <!-- ============ BOTTOM LAYER: TEAM (z:0, fixed) ============ -->
   <section id="teamLayer" style="position:fixed; inset:0; z-index:0; overflow:hidden; background:#0a0b10;">
@@ -299,169 +453,148 @@
     <div class="vt-fx" aria-hidden="true" style="position:absolute; inset:0; z-index:1; pointer-events:none; background:radial-gradient(130% 112% at 50% 44%, transparent 40%, rgba(0,0,0,.72) 100%);"></div>
 
     <div id="teamHeader" style="position:absolute; top:calc(50% - 412px); left:0; right:0; text-align:center; z-index:3; padding:0 20px;">
-      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.28em; text-transform:uppercase; color:#5b9aff;">The Team</div>
-      <h2 style="margin:12px 0 6px; font-family:'Newsreader',serif; font-weight:400; font-size:clamp(28px,3.2vw,46px); letter-spacing:-.025em; color:#f4f4f5;">Built by industry leaders.</h2>
-      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8a90a0;">Crypto · Tech · Finance · Sports Marketing</div>
+      <div style="visibility:hidden; font-family:'JetBrains Mono',monospace; font-size:12px; letter-spacing:.28em; text-transform:uppercase; color:#5b9aff;">The Team</div>
+      <h2 style="margin:12px 0 6px; font-family:'Newsreader',serif; font-weight:400; font-size:clamp(28px,3.2vw,46px); letter-spacing:-.025em; color:#f4f4f5;">The team</h2>
+      <div style="visibility:hidden; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#8a90a0;">Crypto · Tech · Finance · Sports Marketing</div>
     </div>
 
     <div id="framesRow" style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); display:flex; gap:18px; padding:0 28px; z-index:2; max-width:100vw;">
         <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
-          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
-            <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
+          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:0; background:transparent;">
+            <div style="position:relative; width:100%; height:100%; border-radius:20px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
             <div aria-hidden="true" style="position:absolute; top:-12%; left:-12%; width:52%; height:124%; transform:rotate(17deg); background:linear-gradient(90deg, transparent, rgba(255,255,255,.07) 50%, transparent); pointer-events:none; z-index:6;"></div>
-            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #2F6BFF, transparent); z-index:5;"></div>
+            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:transparent; z-index:5;"></div>
             <div style="position:relative; width:100%; aspect-ratio:1/1; flex:0 0 auto; overflow:hidden; background:#07080c;">
               <img src="/landing/team/thomas.jpg" alt="Thomas Park" style="width:100%; height:100%; object-fit:cover; object-position:50% 50%; display:block;">
-              <div style="position:absolute; inset:0; box-shadow:inset 0 -30px 40px -20px rgba(15,16,23,.95); pointer-events:none;"></div>
             </div>
-            <div style="position:relative; flex:1 1 auto; min-height:0; padding:12px 12px; display:flex; flex-direction:column; gap:7px; overflow:hidden;">
+            <div class="tk-team-plate" style="position:relative; flex:1 1 auto; min-height:0; padding:16px 15px; display:flex; flex-direction:column; gap:9px; overflow:hidden;">
               <div style="display:flex; align-items:baseline; gap:8px;">
-                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:17px; color:#f4f4f5; line-height:1.1;">Thomas Park</span>
+                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:19px; color:#f4f4f5; line-height:1.1;">Thomas Park</span>
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">CEO</div>
-              <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">REITIUM founder. Compliant crowdfunding / broker-dealer securities platforms.</div>
-              <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Reitium</span></div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:12px; line-height:1.5; color:#a1a1aa;">REITIUM founder. Compliant crowdfunding / broker-dealer securities platforms.</div>
             </div>
             </div>
           </div>
         </div>
         <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
-          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
-            <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
+          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:0; background:transparent;">
+            <div style="position:relative; width:100%; height:100%; border-radius:20px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
             <div aria-hidden="true" style="position:absolute; top:-12%; left:-12%; width:52%; height:124%; transform:rotate(17deg); background:linear-gradient(90deg, transparent, rgba(255,255,255,.07) 50%, transparent); pointer-events:none; z-index:6;"></div>
-            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #2F6BFF, transparent); z-index:5;"></div>
+            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:transparent; z-index:5;"></div>
             <div style="position:relative; width:100%; aspect-ratio:1/1; flex:0 0 auto; overflow:hidden; background:#07080c;">
               <img src="/landing/team/luke.jpg" alt="Luke Shim" style="width:100%; height:100%; object-fit:cover; object-position:50% 50%; display:block;">
-              <div style="position:absolute; inset:0; box-shadow:inset 0 -30px 40px -20px rgba(15,16,23,.95); pointer-events:none;"></div>
             </div>
-            <div style="position:relative; flex:1 1 auto; min-height:0; padding:12px 12px; display:flex; flex-direction:column; gap:7px; overflow:hidden;">
+            <div class="tk-team-plate" style="position:relative; flex:1 1 auto; min-height:0; padding:16px 15px; display:flex; flex-direction:column; gap:9px; overflow:hidden;">
               <div style="display:flex; align-items:baseline; gap:8px;">
-                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:17px; color:#f4f4f5; line-height:1.1;">Luke Shim</span>
+                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:19px; color:#f4f4f5; line-height:1.1;">Luke Shim</span>
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">CFO</div>
-              <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">M&A and corporate finance. KPMG, Hyundai Securities, and private equity at KERR Asset Management.</div>
-              <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">KPMG</span></div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:12px; line-height:1.5; color:#a1a1aa;">M&A and corporate finance. KPMG, Hyundai Securities, and private equity at KERR Asset Management.</div>
             </div>
             </div>
           </div>
         </div>
         <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
-          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
-            <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
+          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:0; background:transparent;">
+            <div style="position:relative; width:100%; height:100%; border-radius:20px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
             <div aria-hidden="true" style="position:absolute; top:-12%; left:-12%; width:52%; height:124%; transform:rotate(17deg); background:linear-gradient(90deg, transparent, rgba(255,255,255,.07) 50%, transparent); pointer-events:none; z-index:6;"></div>
-            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #2F6BFF, transparent); z-index:5;"></div>
+            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:transparent; z-index:5;"></div>
             <div style="position:relative; width:100%; aspect-ratio:1/1; flex:0 0 auto; overflow:hidden; background:#07080c;">
               <img src="/landing/team/rohit.jpg" alt="Rohit Wad" style="width:100%; height:100%; object-fit:cover; object-position:50% 50%; display:block;">
-              <div style="position:absolute; inset:0; box-shadow:inset 0 -30px 40px -20px rgba(15,16,23,.95); pointer-events:none;"></div>
             </div>
-            <div style="position:relative; flex:1 1 auto; min-height:0; padding:12px 12px; display:flex; flex-direction:column; gap:7px; overflow:hidden;">
+            <div class="tk-team-plate" style="position:relative; flex:1 1 auto; min-height:0; padding:16px 15px; display:flex; flex-direction:column; gap:9px; overflow:hidden;">
               <div style="display:flex; align-items:baseline; gap:8px;">
-                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:17px; color:#f4f4f5; line-height:1.1;">Rohit Wad</span>
+                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:19px; color:#f4f4f5; line-height:1.1;">Rohit Wad</span>
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Advisory CTO</div>
-              <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Binance CTO. Product and engineering at Microsoft, Facebook, Google.</div>
-              <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Microsoft</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Meta</span></div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:12px; line-height:1.5; color:#a1a1aa;">Former Binance CTO. Product and engineering at Microsoft, Facebook, Google.</div>
             </div>
             </div>
           </div>
         </div>
         <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
-          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
-            <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
+          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:0; background:transparent;">
+            <div style="position:relative; width:100%; height:100%; border-radius:20px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
             <div aria-hidden="true" style="position:absolute; top:-12%; left:-12%; width:52%; height:124%; transform:rotate(17deg); background:linear-gradient(90deg, transparent, rgba(255,255,255,.07) 50%, transparent); pointer-events:none; z-index:6;"></div>
-            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #2F6BFF, transparent); z-index:5;"></div>
+            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:transparent; z-index:5;"></div>
             <div style="position:relative; width:100%; aspect-ratio:1/1; flex:0 0 auto; overflow:hidden; background:#07080c;">
               <img src="/landing/team/steve.jpg" alt="Steve Christie" style="width:100%; height:100%; object-fit:cover; object-position:50% 50%; display:block;">
-              <div style="position:absolute; inset:0; box-shadow:inset 0 -30px 40px -20px rgba(15,16,23,.95); pointer-events:none;"></div>
             </div>
-            <div style="position:relative; flex:1 1 auto; min-height:0; padding:12px 12px; display:flex; flex-direction:column; gap:7px; overflow:hidden;">
+            <div class="tk-team-plate" style="position:relative; flex:1 1 auto; min-height:0; padding:16px 15px; display:flex; flex-direction:column; gap:9px; overflow:hidden;">
               <div style="display:flex; align-items:baseline; gap:8px;">
-                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:17px; color:#f4f4f5; line-height:1.1;">Steve Christie</span>
+                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:19px; color:#f4f4f5; line-height:1.1;">Steve Christie</span>
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Compliance</div>
-              <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Binance Deputy CCO. Former Kraken Global Head of Compliance and Board Member at Kraken Bank.</div>
-              <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Binance</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Kraken</span></div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:12px; line-height:1.5; color:#a1a1aa;">Former Binance Deputy CCO. Former Kraken Global Head of Compliance and Board Member at Kraken Bank.</div>
             </div>
             </div>
           </div>
         </div>
         <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
-          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
-            <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
+          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:0; background:transparent;">
+            <div style="position:relative; width:100%; height:100%; border-radius:20px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
             <div aria-hidden="true" style="position:absolute; top:-12%; left:-12%; width:52%; height:124%; transform:rotate(17deg); background:linear-gradient(90deg, transparent, rgba(255,255,255,.07) 50%, transparent); pointer-events:none; z-index:6;"></div>
-            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #2F6BFF, transparent); z-index:5;"></div>
+            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:transparent; z-index:5;"></div>
             <div style="position:relative; width:100%; aspect-ratio:1/1; flex:0 0 auto; overflow:hidden; background:#07080c;">
               <img src="/landing/team/rachel.jpg" alt="Rachel Conlan" style="width:100%; height:100%; object-fit:cover; object-position:50% 50%; display:block;">
-              <div style="position:absolute; inset:0; box-shadow:inset 0 -30px 40px -20px rgba(15,16,23,.95); pointer-events:none;"></div>
             </div>
-            <div style="position:relative; flex:1 1 auto; min-height:0; padding:12px 12px; display:flex; flex-direction:column; gap:7px; overflow:hidden;">
+            <div class="tk-team-plate" style="position:relative; flex:1 1 auto; min-height:0; padding:16px 15px; display:flex; flex-direction:column; gap:9px; overflow:hidden;">
               <div style="display:flex; align-items:baseline; gap:8px;">
-                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:17px; color:#f4f4f5; line-height:1.1;">Rachel Conlan</span>
+                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:19px; color:#f4f4f5; line-height:1.1;">Rachel Conlan</span>
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Marketing Advisor</div>
-              <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Former Global CMO at Binance. Head of Brand & Partnerships at OKX; Global Brand Partnerships at CAA.</div>
-              <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Binance</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">OKX</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">CAA</span></div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:12px; line-height:1.5; color:#a1a1aa;">Former Global CMO at Binance. Head of Brand & Partnerships at OKX; Global Brand Partnerships at CAA.</div>
             </div>
             </div>
           </div>
         </div>
         <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
-          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
-            <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
+          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:0; background:transparent;">
+            <div style="position:relative; width:100%; height:100%; border-radius:20px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
             <div aria-hidden="true" style="position:absolute; top:-12%; left:-12%; width:52%; height:124%; transform:rotate(17deg); background:linear-gradient(90deg, transparent, rgba(255,255,255,.07) 50%, transparent); pointer-events:none; z-index:6;"></div>
-            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #2F6BFF, transparent); z-index:5;"></div>
+            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:transparent; z-index:5;"></div>
             <div style="position:relative; width:100%; aspect-ratio:1/1; flex:0 0 auto; overflow:hidden; background:#07080c;">
               <img src="/landing/team/eric.jpg" alt="Eric Heo" style="width:100%; height:100%; object-fit:cover; object-position:50% 50%; display:block;">
-              <div style="position:absolute; inset:0; box-shadow:inset 0 -30px 40px -20px rgba(15,16,23,.95); pointer-events:none;"></div>
             </div>
-            <div style="position:relative; flex:1 1 auto; min-height:0; padding:12px 12px; display:flex; flex-direction:column; gap:7px; overflow:hidden;">
+            <div class="tk-team-plate" style="position:relative; flex:1 1 auto; min-height:0; padding:16px 15px; display:flex; flex-direction:column; gap:9px; overflow:hidden;">
               <div style="display:flex; align-items:baseline; gap:8px;">
-                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:17px; color:#f4f4f5; line-height:1.1;">Eric Heo</span>
+                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:19px; color:#f4f4f5; line-height:1.1;">Eric Heo</span>
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">Head of Product</div>
-              <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Official Software Developer Partner for Shinhan Financial Group. 20+ years in software, product, web, mobile, DeFi and AI.</div>
-              <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">Shinhan</span></div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:12px; line-height:1.5; color:#a1a1aa;">Official Software Developer Partner for Shinhan Financial Group. 20+ years in software, product, web, mobile, DeFi and AI.</div>
             </div>
             </div>
           </div>
         </div>
         <div class="tk-team" style="position:relative; width:clamp(120px,13.2vw,220px); height:auto; flex:0 0 auto; display:flex; flex-direction:column;">
-          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:1px; background:linear-gradient(160deg, rgba(255,255,255,.26) 0%, rgba(255,255,255,.05) 26%, rgba(255,255,255,.02) 54%, rgba(120,132,155,.14) 78%, rgba(255,255,255,.16) 100%); box-shadow:0 26px 50px rgba(0,0,0,.55), 0 2px 8px rgba(0,0,0,.4);">
-            <div style="position:relative; width:100%; height:100%; border-radius:19px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06), inset 0 -22px 44px rgba(0,0,0,.5);">
+          <div style="position:relative; width:100%; height:100%; border-radius:20px; padding:0; background:transparent;">
+            <div style="position:relative; width:100%; height:100%; border-radius:20px; overflow:hidden; display:flex; flex-direction:column; background:linear-gradient(160deg, rgba(30,33,44,.97) 0%, rgba(16,18,26,.98) 55%, rgba(10,12,18,.99) 100%); box-shadow:inset 0 1px 1px rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06);">
             <div aria-hidden="true" style="position:absolute; top:0; left:0; right:0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,.13), rgba(255,255,255,.03) 55%, transparent); pointer-events:none; z-index:6;"></div>
             <div aria-hidden="true" style="position:absolute; top:-12%; left:-12%; width:52%; height:124%; transform:rotate(17deg); background:linear-gradient(90deg, transparent, rgba(255,255,255,.07) 50%, transparent); pointer-events:none; z-index:6;"></div>
-            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg, transparent, #2F6BFF, transparent); z-index:5;"></div>
+            <div style="position:absolute; top:0; left:0; right:0; height:2px; background:transparent; z-index:5;"></div>
             <div style="position:relative; width:100%; aspect-ratio:1/1; flex:0 0 auto; overflow:hidden; background:#07080c;">
               <img src="/landing/team/dennis.jpg" alt="Dennis Ng" style="width:100%; height:100%; object-fit:cover; object-position:50% 50%; display:block;">
-              <div style="position:absolute; inset:0; box-shadow:inset 0 -30px 40px -20px rgba(15,16,23,.95); pointer-events:none;"></div>
             </div>
-            <div style="position:relative; flex:1 1 auto; min-height:0; padding:12px 12px; display:flex; flex-direction:column; gap:7px; overflow:hidden;">
+            <div class="tk-team-plate" style="position:relative; flex:1 1 auto; min-height:0; padding:16px 15px; display:flex; flex-direction:column; gap:9px; overflow:hidden;">
               <div style="display:flex; align-items:baseline; gap:8px;">
-                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:17px; color:#f4f4f5; line-height:1.1;">Dennis Ng</span>
+                <span style="font-family:'Newsreader',serif; font-weight:500; font-size:19px; color:#f4f4f5; line-height:1.1;">Dennis Ng</span>
               </div>
               <div style="margin-top:-4px; font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:#8a90a0;">COO</div>
-              <div style="height:1px; background:rgba(255,255,255,.1);"></div>
-              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:11.5px; line-height:1.45; color:#a1a1aa;">Real estate and commercial finance at RBC (Royal Bank of Canada), BMO Financial, and CT Green Financial.</div>
-              <div style="margin-top:auto; display:flex; flex-wrap:wrap; gap:5px;"><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">RBC</span><span style="font-family:'JetBrains Mono',monospace; font-size:10.5px; letter-spacing:.06em; text-transform:uppercase; color:#c8ccd4; padding:4px 9px; border-radius:7px; background:#26282e;">BMO</span></div>
+              <div class="tk-team-bio" style="font-family:'Inter',sans-serif; font-weight:300; font-size:12px; line-height:1.5; color:#a1a1aa;">Real estate and commercial finance at RBC (Royal Bank of Canada), BMO Financial, and CT Green Financial.</div>
             </div>
             </div>
           </div>
         </div>
     </div>
 
-    <div id="logoStrip" style="position:absolute; top:calc(50% + 316px); left:0; right:0; z-index:3; display:flex; flex-wrap:nowrap; justify-content:center; align-items:center; gap:clamp(12px,1.8vw,34px); padding:0 32px;">
+    <div id="logoStrip" style="position:absolute; top:calc(50% + 268px); left:0; right:0; z-index:3; display:flex; flex-wrap:nowrap; justify-content:center; align-items:center; gap:clamp(12px,1.8vw,34px); padding:0 32px;">
         <span style="display:inline-flex; align-items:center; justify-content:center; height:30px; width:clamp(66px,7.4vw,104px); flex:0 0 auto;">
           <img src="/landing/logos/reitium2-t.png" alt="Reitium" style="max-height:100%; max-width:100%; width:auto; height:auto; object-fit:contain; display:block; opacity:.95;">
         </span>
@@ -669,17 +802,20 @@ class Component extends DCLogic {
     const layer = document.getElementById('teamLayer');
     const frames = document.getElementById('framesRow');
     if (!layer || !frames) return;
-    // Phones stack hero and team as ordinary sections, so there is nothing to fit.
-    if (window.matchMedia('(max-width: 680px)').matches) {
+    // Phones + tablets stack hero and team as ordinary sections, so there is nothing to fit.
+    if (window.matchMedia('(max-width: 1199px)').matches) {
       layer.style.removeProperty('--vt-card');
+      layer.style.removeProperty('--vt-card-h');
       return;
     }
     const header = document.getElementById('teamHeader');
     const logos = document.getElementById('logoStrip');
     const cs = getComputedStyle(layer);
     const cols = parseInt(cs.getPropertyValue('--vt-cols'), 10) || 4;
-    const gap = parseFloat(cs.getPropertyValue('--vt-gap')) || 14;
-    const maxCard = parseFloat(cs.getPropertyValue('--vt-card-max')) || 180;
+    const gap = parseFloat(cs.getPropertyValue('--vt-gap')) || 16;
+    const maxCard = parseFloat(cs.getPropertyValue('--vt-card-max')) || 213;
+    const maxH = parseFloat(cs.getPropertyValue('--vt-card-h-max')) || 375;
+    const ratio = maxH / maxCard;
     const availW = layer.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
     const availH = layer.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
     if (!(availW > 0) || !(availH > 0)) return;
@@ -688,8 +824,12 @@ class Component extends DCLogic {
       const s = getComputedStyle(el);
       return el.offsetHeight + (parseFloat(s.marginTop) || 0) + (parseFloat(s.marginBottom) || 0);
     };
-    const MIN_CARD = 88;
-    const apply = (w) => layer.style.setProperty('--vt-card', w + 'px');
+    const MIN_CARD = 112;
+    const apply = (w) => {
+      const width = Math.max(MIN_CARD, w);
+      layer.style.setProperty('--vt-card', width + 'px');
+      layer.style.setProperty('--vt-card-h', Math.round(width * ratio) + 'px');
+    };
     const overflows = () => outer(header) + outer(frames) + outer(logos) > availH;
     const shrinkToFit = () => {
       let card = Math.floor((availW - gap * (cols - 1)) / cols);
@@ -697,8 +837,8 @@ class Component extends DCLogic {
       apply(card);
       let guard = 0;
       while (card > MIN_CARD && guard++ < 48 && overflows()) {
-        card -= 6;
-        apply(Math.max(MIN_CARD, card));
+        card -= 4;
+        apply(card);
       }
       return !overflows();
     };
@@ -749,10 +889,10 @@ class Component extends DCLogic {
       // Wheel inertia, driven by the GSAP ticker so ScrollTrigger stays in sync
       if (window.Lenis && !this._lenis && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
         const lenis = new window.Lenis({
-          duration: 1.35,
+          duration: 0.9,
           easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
           smoothWheel: true,
-          wheelMultiplier: 0.92,
+          wheelMultiplier: 1.2,
           touchMultiplier: 1.05,
         });
         lenis.on('scroll', ST.update);
@@ -766,7 +906,7 @@ class Component extends DCLogic {
       // The vault dive only runs where the hero and team are stacked layers.
       const mm = g.matchMedia();
       this._mm = mm;
-      mm.add('(min-width: 681px)', () => {
+      mm.add('(min-width: 1200px)', () => {
         const cover = document.getElementById('heroCover');
         const title = document.querySelector('#heroCover #heroTitle');
         const textWrap = title ? title.parentElement : null;
@@ -783,22 +923,22 @@ class Component extends DCLogic {
             trigger: '#vt-root',
             start: 'top top',
             end: 'bottom bottom',
-            scrub: 1.25,
+            scrub: 0.55,
             invalidateOnRefresh: true,
             onRefresh: () => this.fitTeamLayer(),
             onUpdate: (self) => {
               if (!cover) return;
-              cover.style.pointerEvents = self.progress > 0.62 ? 'none' : 'auto';
-              cover.style.visibility = self.progress > 0.96 ? 'hidden' : 'visible';
+              cover.style.pointerEvents = self.progress > 0.55 ? 'none' : 'auto';
+              cover.style.visibility = self.progress > 0.92 ? 'hidden' : 'visible';
             }
           }
         });
-        tl.to('#scrollHint', { opacity: 0, y: 20, ease: 'power1.inOut', duration: 0.2 }, 0);
-        if (textWrap) tl.to(textWrap, { opacity: 0, y: -56, filter: 'blur(8px)', ease: 'power2.inOut', duration: 0.48 }, 0.02);
-        if (cards) tl.to(cards, { opacity: 0, y: 28, ease: 'power2.inOut', duration: 0.42 }, 0.06);
-        tl.to(bg, { scale: 2.7, z: 780, ease: 'power2.inOut', duration: 1.05 }, 0.04);
-        tl.to('#heroCover', { opacity: 0, ease: 'power1.inOut', duration: 0.45 }, 0.58);
-        tl.to('#teamLayer', { scale: 1, ease: 'power2.inOut', duration: 0.62 }, 0.42);
+        tl.to('#scrollHint', { opacity: 0, y: 12, ease: 'power1.in', duration: 0.12 }, 0);
+        if (textWrap) tl.to(textWrap, { opacity: 0, y: -36, filter: 'blur(6px)', ease: 'power2.in', duration: 0.32 }, 0);
+        if (cards) tl.to(cards, { opacity: 0, y: 18, ease: 'power2.in', duration: 0.28 }, 0.04);
+        tl.to(bg, { scale: 2.85, z: 860, ease: 'power3.in', duration: 0.9 }, 0.06);
+        tl.to('#heroCover', { opacity: 0, ease: 'power2.in', duration: 0.28 }, 0.68);
+        tl.to('#teamLayer', { scale: 1, ease: 'power2.out', duration: 0.42 }, 0.52);
 
         return () => {
           if (tl.scrollTrigger) tl.scrollTrigger.kill();
