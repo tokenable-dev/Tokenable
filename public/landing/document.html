@@ -151,14 +151,15 @@
     --vt-cols: 4;
     --vt-rows: 2;
     --vt-gap: 16px;
-    --vt-card-max: 213px;
-    --vt-card-h-max: 375px;
+    --vt-card-max: 220px;
+    --vt-card-h-max: 388px;
     --vt-card: var(--vt-card-max);
     --vt-card-h: var(--vt-card-h-max);
     --vt-row-w: calc(var(--vt-card) * var(--vt-cols) + var(--vt-gap) * (var(--vt-cols) - 1));
     --vt-block-h: calc(var(--vt-card-h) * var(--vt-rows) + var(--vt-gap) * (var(--vt-rows) - 1));
-    --vt-title-gap: 64px;
-    --vt-logo-gap: 52px;
+    --vt-title-gap: 40px;
+    --vt-logo-gap: 28px;
+    --vt-title-h: 52px;
     display: block !important;
     overflow: hidden !important;
     padding: 0 !important;
@@ -166,20 +167,20 @@
   }
   #teamLayer > img.vt-wall,
   #teamLayer > div.vt-fx { position: absolute !important; pointer-events: none !important; }
-  /* Title sits above the vertically-centered card block */
+  /* Title sits above the vertically-centered card block; clamped so it never clips */
   #teamHeader {
     position: absolute !important;
     left: 0 !important; right: 0 !important;
-    top: calc(50% - (var(--vt-block-h) / 2) - var(--vt-title-gap)) !important;
+    top: max(18px, calc(50% - (var(--vt-block-h) / 2) - var(--vt-title-gap) - var(--vt-title-h))) !important;
     bottom: auto !important;
-    transform: translateY(-100%) !important;
+    transform: none !important;
     margin: 0 !important; padding: 0 20px !important;
     width: 100% !important; max-width: none !important;
     text-align: center !important;
     z-index: 3 !important;
   }
   #teamHeader > div { display: none !important; }
-  #teamHeader h2 { margin: 0 !important; }
+  #teamHeader h2 { margin: 0 !important; line-height: 1.15 !important; }
   /* Cards are centered in the viewport */
   #framesRow {
     position: absolute !important;
@@ -232,19 +233,34 @@
     top: calc(50% + (var(--vt-block-h) / 2) + var(--vt-logo-gap)) !important;
     bottom: auto !important;
     transform: translateX(-50%) !important;
-    margin: 0 !important; padding: 0 !important;
+    margin: 0 !important; padding: 0 8px !important;
     display: flex !important; flex-wrap: nowrap !important;
     justify-content: space-between !important; align-items: center !important;
-    gap: 8px !important;
+    gap: 10px !important;
     width: var(--vt-row-w) !important; max-width: var(--vt-row-w) !important;
-    z-index: 3 !important; box-sizing: border-box !important;
+    height: 32px !important;
+    z-index: 5 !important; box-sizing: border-box !important;
     background: none !important;
+    overflow: visible !important;
+    pointer-events: none !important;
   }
   #logoStrip > span {
-    width: auto !important; min-width: 0 !important; max-width: none !important; height: 26px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: auto !important; min-width: 52px !important; max-width: none !important;
+    height: 28px !important;
     flex: 1 1 0 !important; padding: 0 !important;
   }
-  #logoStrip img { width: auto !important; min-width: 0 !important; max-width: 100% !important; max-height: 100% !important; }
+  #logoStrip img {
+    display: block !important;
+    width: auto !important;
+    height: 100% !important;
+    max-width: 100% !important;
+    max-height: 28px !important;
+    object-fit: contain !important;
+    opacity: 1 !important;
+  }
   #logoMarquee { display: none !important; }
 
   /* Large monitors: all seven contributors on one row */
@@ -255,16 +271,18 @@
       --vt-gap: 16px;
       --vt-card-max: 220px;
       --vt-card-h-max: 400px;
-      --vt-title-gap: 72px;
-      --vt-logo-gap: 56px;
+      --vt-title-gap: 56px;
+      --vt-logo-gap: 32px;
     }
   }
 
   /* Short desktop viewports: tighten chrome around the centered cards */
   @media (min-width: 1200px) and (max-height: 800px) {
-    #teamLayer { --vt-title-gap: 44px; --vt-logo-gap: 36px; }
+    #teamLayer { --vt-title-gap: 28px; --vt-logo-gap: 20px; --vt-title-h: 40px; }
     #teamHeader h2 { font-size: clamp(22px, 2.6vw, 32px) !important; }
-    #logoStrip > span { height: 22px !important; }
+    #logoStrip { height: 28px !important; }
+    #logoStrip > span { height: 24px !important; }
+    #logoStrip img { max-height: 24px !important; }
   }
 
   /*
@@ -812,31 +830,40 @@ class Component extends DCLogic {
     const logos = document.getElementById('logoStrip');
     const cs = getComputedStyle(layer);
     const cols = parseInt(cs.getPropertyValue('--vt-cols'), 10) || 4;
+    const rows = parseInt(cs.getPropertyValue('--vt-rows'), 10) || 2;
     const gap = parseFloat(cs.getPropertyValue('--vt-gap')) || 16;
-    const maxCard = parseFloat(cs.getPropertyValue('--vt-card-max')) || 213;
-    const maxH = parseFloat(cs.getPropertyValue('--vt-card-h-max')) || 375;
+    const maxCard = parseFloat(cs.getPropertyValue('--vt-card-max')) || 220;
+    const maxH = parseFloat(cs.getPropertyValue('--vt-card-h-max')) || 388;
+    const titleGap = parseFloat(cs.getPropertyValue('--vt-title-gap')) || 40;
+    const logoGap = parseFloat(cs.getPropertyValue('--vt-logo-gap')) || 28;
+    const titleH = parseFloat(cs.getPropertyValue('--vt-title-h')) || 52;
     const ratio = maxH / maxCard;
     const availW = layer.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
     const availH = layer.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
     if (!(availW > 0) || !(availH > 0)) return;
-    const outer = (el) => {
-      if (!el) return 0;
-      const s = getComputedStyle(el);
-      return el.offsetHeight + (parseFloat(s.marginTop) || 0) + (parseFloat(s.marginBottom) || 0);
-    };
     const MIN_CARD = 112;
+    const logoH = 36;
+    const headerH = Math.max(titleH, 44);
     const apply = (w) => {
       const width = Math.max(MIN_CARD, w);
       layer.style.setProperty('--vt-card', width + 'px');
       layer.style.setProperty('--vt-card-h', Math.round(width * ratio) + 'px');
     };
-    const overflows = () => outer(header) + outer(frames) + outer(logos) > availH;
+    const blockH = () => {
+      const h = parseFloat(getComputedStyle(layer).getPropertyValue('--vt-card-h')) || maxH;
+      return h * rows + gap * Math.max(0, rows - 1);
+    };
+    // Keep title + cards + logos inside the viewport (title is clamped from the top)
+    const overflows = () => headerH + titleGap + blockH() + logoGap + logoH > availH - 24;
     const shrinkToFit = () => {
+      const maxBlock = availH - headerH - titleGap - logoGap - logoH - 24;
+      const maxCardH = Math.floor((maxBlock - gap * Math.max(0, rows - 1)) / rows);
+      const maxFromHeight = Math.floor(maxCardH / ratio);
       let card = Math.floor((availW - gap * (cols - 1)) / cols);
-      card = Math.max(MIN_CARD, Math.min(maxCard, card));
+      card = Math.max(MIN_CARD, Math.min(maxCard, card, maxFromHeight));
       apply(card);
       let guard = 0;
-      while (card > MIN_CARD && guard++ < 48 && overflows()) {
+      while (card > MIN_CARD && guard++ < 64 && overflows()) {
         card -= 4;
         apply(card);
       }
