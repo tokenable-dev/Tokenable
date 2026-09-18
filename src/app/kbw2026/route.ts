@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const KBW2026_DESTINATION = "https://tokenable-dev.com/event";
+const KBW2026_DESTINATION = "https://app.tokenable.io/event";
 
 export function GET(request: Request) {
   const destination = new URL(KBW2026_DESTINATION);
