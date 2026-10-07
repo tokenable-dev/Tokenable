@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import { LandingShell } from "@/components/landing/LandingShell";
-import "./landing.css";
+import { redirect } from "next/navigation";
+import { eventRedirectUrl } from "@/lib/event-redirect";
 
 const siteUrl = "https://tokenable.io";
 const ogImage = "/og.jpg";
@@ -48,16 +48,13 @@ export const viewport: Viewport = {
   themeColor: "#0a0a0b",
 };
 
-export default function HomePage() {
-  return (
-    <>
-      <h1 className="landing-seo-title">
-        Own a piece of the world&apos;s rarest collectibles.
-      </h1>
-      <p className="landing-seo-title">
-        Tokenized, authenticated, and vaulted collectibles for collectors and investors.
-      </p>
-      <LandingShell />
-    </>
-  );
+type HomeSearchParams = Record<string, string | string[] | undefined>;
+
+export default async function HomePage({
+  searchParams,
+}: {
+  searchParams: Promise<HomeSearchParams>;
+}) {
+  const params = await searchParams;
+  redirect(eventRedirectUrl(params).toString());
 }
